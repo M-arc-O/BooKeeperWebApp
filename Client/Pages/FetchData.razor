@@ -1,6 +1,11 @@
 ﻿@page "/fetchdata"
+
 @using BooKeeperWebAppShared
+@using Microsoft.AspNetCore.Authorization
+
 @inject HttpClient Http
+
+@attribute [Authorize()]
 
 <PageTitle>Weather forecast</PageTitle>
 

@@ -7,12 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{56342A88-B81C-4B1C-980D-0F3C092CFC40}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml = .github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml
 		package.json = package.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{9BD54251-BFC9-4CDF-95F8-C1A0F84ACEDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooKeeperWebApp.Shared", "BooKeeperWebAppShared\BooKeeperWebApp.Shared.csproj", "{1474435C-F50F-4C43-8E37-A7C52958A075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooKeeperWebApp.Shared", "BooKeeperWebAppShared\BooKeeperWebApp.Shared.csproj", "{1474435C-F50F-4C43-8E37-A7C52958A075}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
