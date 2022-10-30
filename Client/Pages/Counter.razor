@@ -1,5 +1,4 @@
 ﻿@page "/counter"
-@inject HttpClient Http
 
 <PageTitle>Counter</PageTitle>
 
@@ -9,21 +8,11 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
-<p>Message: @message</p>
-
-<button class="btn btn-primary" @onclick="GetMessage">Click me</button>
-
 @code {
     private int currentCount = 0;
-    private string message = "Hello";
 
     private void IncrementCount()
     {
         currentCount++;
-    }
-
-    private async void GetMessage() 
-    {
-        message = await Http.GetStringAsync("api/JustHello?name=cloudies");
     }
 }

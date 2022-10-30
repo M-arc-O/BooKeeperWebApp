@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "Api": {
+    "BooKeeperWebApp": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7277",
+      "commandLineArgs": "--port 7071",
       "launchBrowser": false
     }
   }

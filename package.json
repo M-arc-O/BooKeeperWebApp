@@ -1,0 +1,11 @@
+{
+  "name": "bookeeperwebapp",
+  "version": "1.0.0",
+  "description": "bookeeperwebapp",
+  "scripts": {
+    "start": "swa start http://localhost:5000 --api-devserver-url http://localhost:7071"
+  },
+  "keywords": [],
+  "author": "MarcoTrapman",
+  "license": "ISC"
+}
