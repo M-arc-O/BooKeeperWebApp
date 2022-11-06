@@ -1,5 +1,4 @@
 ﻿using BooKeeperWebApp.Shared.Extensions;
-using BooKeeperWebApp.Shared.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 using System.Security.Claims;
