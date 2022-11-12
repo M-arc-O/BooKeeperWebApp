@@ -7,13 +7,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{56342A88-B81C-4B1C-980D-0F3C092CFC40}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		.github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml = .github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml
+		Directory.Build.props = Directory.Build.props
 		package.json = package.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{9BD54251-BFC9-4CDF-95F8-C1A0F84ACEDC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooKeeperWebApp.Shared", "BooKeeperWebAppShared\BooKeeperWebApp.Shared.csproj", "{1474435C-F50F-4C43-8E37-A7C52958A075}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooKeeperWebApp.Database.Migration", "BooKeeperWebApp.Database.Migration\BooKeeperWebApp.Database.Migration.csproj", "{526AD643-488D-4DAA-9FB9-4FCAB7AB23E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooKeeperWebApp.Infrastructure", "BooKeeperWebApp.Infrastructure\BooKeeperWebApp.Infrastructure.csproj", "{4D41A9DC-7088-4919-8A1B-A044F72CA3B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooKeeperWebApp.Business", "BooKeeperWebApp.Business\BooKeeperWebApp.Business.csproj", "{641A0AA3-5301-4CD3-8933-6B50DFC13C31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +41,18 @@ Global
 		{1474435C-F50F-4C43-8E37-A7C52958A075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1474435C-F50F-4C43-8E37-A7C52958A075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1474435C-F50F-4C43-8E37-A7C52958A075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{526AD643-488D-4DAA-9FB9-4FCAB7AB23E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{526AD643-488D-4DAA-9FB9-4FCAB7AB23E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{526AD643-488D-4DAA-9FB9-4FCAB7AB23E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{526AD643-488D-4DAA-9FB9-4FCAB7AB23E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D41A9DC-7088-4919-8A1B-A044F72CA3B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D41A9DC-7088-4919-8A1B-A044F72CA3B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D41A9DC-7088-4919-8A1B-A044F72CA3B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D41A9DC-7088-4919-8A1B-A044F72CA3B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{641A0AA3-5301-4CD3-8933-6B50DFC13C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{641A0AA3-5301-4CD3-8933-6B50DFC13C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{641A0AA3-5301-4CD3-8933-6B50DFC13C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{641A0AA3-5301-4CD3-8933-6B50DFC13C31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

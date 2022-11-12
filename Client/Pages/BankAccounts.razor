@@ -1,0 +1,67 @@
+﻿@page "/bankaccounts"
+
+@using BooKeeperWebApp.Shared
+@using Microsoft.AspNetCore.Authorization
+
+@inject HttpClient Http
+
+@attribute [Authorize()]
+
+<PageTitle>Bank Accounts</PageTitle>
+
+<h1>Bank Accounts</h1>
+
+<p>
+    <label>
+        New title
+        <input @bind="newbankAccountName" />
+    </label>
+    <button @onclick="AddBankAccount">
+        Update heading
+    </button>
+</p>
+
+@if (bankAccounts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bankAccount in bankAccounts)
+            {
+                <tr>
+                    <td>@bankAccount.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string newbankAccountName = "";
+    private BankAccount[]? bankAccounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBankAccounts();
+    }
+
+    protected async Task AddBankAccount()
+    {
+        var bankAccount = new BankAccount(Guid.Empty, newbankAccountName);
+        await Http.PostAsJsonAsync<BankAccount>("/api/AddBankAccount", bankAccount);
+        await LoadBankAccounts();
+    }
+
+    private async Task LoadBankAccounts()
+    {
+        bankAccounts = await Http.GetFromJsonAsync<BankAccount[]>("/api/GetBankAccounts") ?? new BankAccount[] { };
+    }
+}
