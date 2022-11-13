@@ -22,6 +22,9 @@
         },
         "staticWebAppAppArtifactLocation": {
             "value": "wwwroot"
+        },        
+        "keyVaultSpObjectId": {
+            "value": "187d9f91-68c0-4d5e-b948-486eaf594d80"
         },
         "keyVaultSpApplicationId": {
             "value": "187d9f91-68c0-4d5e-b948-486eaf594d80"
