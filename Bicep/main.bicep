@@ -22,8 +22,8 @@ param staticWebAppAppArtifactLocation string
 @description('Resource tags')
 param resourceTags object
 
-@description('Service principal object id for key vault access policy')
-param keyVaultSpObjectId string
+@description('Service principal application id for key vault access policy')
+param keyVaultSpApplicationId string
 
 @description('Database admin login name')
 @secure()
@@ -48,11 +48,12 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
     }
     accessPolicies: [
       {
-        objectId: keyVaultSpObjectId
         tenantId: subscription().tenantId
+        applicationId: keyVaultSpApplicationId
         permissions: {
           keys: [ 'all' ]
           secrets: [ 'all' ]
+          certificates: [ 'all' ]
         }
       }
     ]

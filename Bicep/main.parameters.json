@@ -23,8 +23,8 @@
         "staticWebAppAppArtifactLocation": {
             "value": "wwwroot"
         },
-        "keyVaultSpObjectId": {
-            "value": "f76a78c0-763f-426d-b58d-a398b1af0ec0"
+        "keyVaultSpApplicationId": {
+            "value": "187d9f91-68c0-4d5e-b948-486eaf594d80"
         },
         "adminLoginName": {
             "value": "<FROM-SECRET>"
