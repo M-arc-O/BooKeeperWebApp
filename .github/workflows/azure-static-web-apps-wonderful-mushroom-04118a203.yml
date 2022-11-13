@@ -10,8 +10,22 @@ on:
       - main
 
 jobs:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      bicepChanged: ${{ steps.filter.outputs.bicep }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          bicep:
+            - '/Bicep/**'
+
   deploy_resources_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    needs: paths-filter
+    if: needs.paths-filter.outputs.bicepChanged == 'true' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed'))
     runs-on: ubuntu-latest
     name: Deploy Azure Resources
     steps:
@@ -29,8 +43,8 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-          template: ./main.bicep
-          parameters: ./main.parameters.json adminLoginName=${{ secrets.AZURE_DB_ADMIN_NAME }} adminLoginPassword=${{ secrets.AZURE_DB_ADMIN_PASSWORD }}
+          template: ./Bicep/main.bicep
+          parameters: ./Bicep/main.parameters.json adminLoginName=${{ secrets.AZURE_DB_ADMIN_NAME }} adminLoginPassword=${{ secrets.AZURE_DB_ADMIN_PASSWORD }}
           failOnStdErr: false
 
   build_and_deploy_job:
@@ -47,7 +61,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with: 
-          keyvault: "raceventura-kv"
+          keyvault: "bookeeper-kv"
           secrets: 'webAppApiKey'
         id: myGetSecretAction
       - name: Build And Deploy
