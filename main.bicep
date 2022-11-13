@@ -32,8 +32,16 @@ param adminLoginPassword string
 
 var applicationNameLower = toLower(applicationName)
 
-resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: '${applicationNameLower}-kv'
+  location: location
+  properties: {
+    tenantId: subscription().tenantId
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+  }
 }
 
 resource staticWebApp 'Microsoft.Web/staticSites@2021-01-15' = {
