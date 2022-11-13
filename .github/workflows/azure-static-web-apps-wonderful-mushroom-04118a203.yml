@@ -48,7 +48,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with: 
-          keyvault: $KV_NAME
+          keyvault: 'bookeeper-kv'
           secrets: 'webAppApiKey'
         id: myGetSecretAction
       - name: Build And Deploy
@@ -75,7 +75,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with: 
-          keyvault: $KV_NAME
+          keyvault: 'bookeeper-kv'
           secrets: 'webAppApiKey'
         id: myGetSecretAction
       - name: Close Pull Request
