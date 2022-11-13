@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml = .github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml
-		Directory.Build.props = Directory.Build.props
 		package.json = package.json
 	EndProjectSection
 EndProject
