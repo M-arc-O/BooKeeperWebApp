@@ -1,4 +1,7 @@
-name: Azure Static Web Apps CI/CD
+name: BooKeeper Azure Static Web Apps CI/CD
+
+env:
+  KV_NAME: bookeeper-kv
 
 on:
   push:
@@ -61,7 +64,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with: 
-          keyvault: "bookeeper-kv"
+          keyvault: $KV_NAME
           secrets: 'webAppApiKey'
         id: myGetSecretAction
       - name: Build And Deploy
@@ -88,7 +91,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with: 
-          keyvault: "raceventura-kv"
+          keyvault: $KV_NAME
           secrets: 'webAppApiKey'
         id: myGetSecretAction
       - name: Close Pull Request
