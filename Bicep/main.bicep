@@ -40,6 +40,8 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   location: location
   properties: {
     tenantId: subscription().tenantId
+    enabledForTemplateDeployment: true
+    enabledForDeployment: true
     sku: {
       family: 'A'
       name: 'standard'
