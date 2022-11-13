@@ -51,9 +51,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
         tenantId: subscription().tenantId
         objectId: keyVaultSpObjectId
         permissions: {
-          keys: [ 'all' ]
-          secrets: [ 'all' ]
-          certificates: [ 'all' ]
+          keys: [ 'get', 'list', 'create' ]
+          secrets: [ 'get', 'list', 'set' ]
+          certificates: [ 'get', 'list', 'create' ]
         }
       }
     ]
