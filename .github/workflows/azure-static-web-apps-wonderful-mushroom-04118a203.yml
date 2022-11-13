@@ -13,22 +13,8 @@ on:
       - main
 
 jobs:
-  paths-filter:
-    runs-on: ubuntu-latest
-    outputs:
-      bicepChanged: ${{ steps.filter.outputs.bicep }}
-    steps:
-    - uses: actions/checkout@v2
-    - uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          bicep:
-            - '/Bicep/**'
-
   deploy_resources_job:
-    needs: paths-filter
-    if: needs.paths-filter.outputs.bicepChanged == 'true' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed'))
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Deploy Azure Resources
     steps:
