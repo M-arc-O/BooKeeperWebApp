@@ -41,7 +41,7 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az keyvault set-policy -n $KV_NAME --key-permissions all --spn 187d9f91-68c0-4d5e-b948-486eaf594d80
+            az keyvault set-policy -n $KV_NAME --key-permissions all --secret-permissions all --certificate-permissions all --spn 187d9f91-68c0-4d5e-b948-486eaf594d80
 
   build_and_deploy_job:
     needs: deploy_resources_job
