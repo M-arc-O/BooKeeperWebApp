@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "applicationName": {
+            "value": "BooKeeper"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "staticWebAppSku": {
+            "value": "Free"
+        },
+        "staticWebAppSkuNuma": {
+            "value": "Free"
+        },
+        "staticWebAppAppLocation": {
+            "value": "Client"
+        },
+        "staticWebAppApiLocation": {
+            "value": "Api"
+        },
+        "staticWebAppAppArtifactLocation": {
+            "value": "wwwroot"
+        },
+        "adminLoginName": {
+            "value": "<FROM-SECRET>"
+        },
+        "adminLoginPassword": {
+            "value": "<FROM-SECRET>"
+        },
+        "resourceTags": {
+            "value": {
+                "Project": "BooKeeper"
+            }
+        }
+    }
+}
