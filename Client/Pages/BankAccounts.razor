@@ -1,6 +1,7 @@
 ﻿@page "/bankaccounts"
 
 @using BooKeeperWebApp.Shared
+@using BooKeeperWebApp.Shared.Models;
 @using Microsoft.AspNetCore.Authorization
 
 @inject HttpClient Http
@@ -10,6 +11,8 @@
 <PageTitle>Bank Accounts</PageTitle>
 
 <h1>Bank Accounts</h1>
+
+<p>Connection string: @connectionString</p>
 
 <p>
     <label>
@@ -47,9 +50,12 @@ else
 @code {
     private string newbankAccountName = "";
     private BankAccount[]? bankAccounts;
+    private string connectionString = "Get string";
+
 
     protected override async Task OnInitializedAsync()
     {
+        connectionString = (await Http.GetFromJsonAsync<TestModel>("/api/GetConnectionString"))?.ConnectionString ?? "No string found";
         await LoadBankAccounts();
     }
 

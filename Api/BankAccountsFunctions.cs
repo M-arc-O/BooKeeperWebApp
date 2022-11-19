@@ -1,8 +1,13 @@
+using System.IO;
 using System.Net;
+using System.Reflection;
 using BooKeeperWebApp.Business;
 using BooKeeperWebApp.Shared;
+using BooKeeperWebApp.Shared.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 
 namespace Api
 {
@@ -15,6 +20,26 @@ namespace Api
             )
         {
             _bankAccountBusiness = bankAccountBusiness;
+        }
+
+        [Function("GetConnectionString")]
+        public async Task<HttpResponseData> GetConnectionString([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+        {
+            var location = Assembly.GetExecutingAssembly().Location;
+            var directory = Path.GetDirectoryName(location);
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(directory)
+                .AddJsonFile("local.settings.json", optional: true, reloadOnChange: false)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var test = new TestModel(configuration.GetValue<string>("BooKeeperWebAppConnectionString"));
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(test);
+
+            return response;
         }
 
         [Function("GetBankAccounts")]
