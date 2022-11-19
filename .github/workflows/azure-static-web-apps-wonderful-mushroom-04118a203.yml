@@ -14,27 +14,27 @@ on:
       - main
 
 jobs:
-  # deploy_resources_job:
-  #   if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-  #   runs-on: ubuntu-latest
-  #   name: Deploy Azure Resources
-  #   steps:
-  #     - uses: actions/checkout@main
-  #     - name: azure login
-  #       uses: azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
-  #     - name: deploy bicep file
-  #       uses: azure/arm-deploy@v1
-  #       with:
-  #         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  #         resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-  #         template: ./Bicep/main.bicep
-  #         parameters: ./Bicep/main.parameters.json adminLoginName=${{ secrets.AZURE_DB_ADMIN_NAME }} adminLoginPassword=${{ secrets.AZURE_DB_ADMIN_PASSWORD }}
-  #         failOnStdErr: false
+  deploy_resources_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Deploy Azure Resources
+    steps:
+      - uses: actions/checkout@main
+      - name: azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
+      - name: deploy bicep file
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+          template: ./Bicep/main.bicep
+          parameters: ./Bicep/main.parameters.json adminLoginName=${{ secrets.AZURE_DB_ADMIN_NAME }} adminLoginPassword=${{ secrets.AZURE_DB_ADMIN_PASSWORD }}
+          failOnStdErr: false
 
   build_and_deploy_job:
-  #  needs: deploy_resources_job
+    needs: deploy_resources_job
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
@@ -54,12 +54,12 @@ jobs:
         id: ip
         uses: haythem/public-ip@v1.3
 
-      - name: Add IP to database whitelist
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.42.0
-          inlineScript: |
-            az sql server firewall-rule create --resource-group rg-bookeeper --server BooKeeper-dbs --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
+      # - name: Add IP to database whitelist
+      #   uses: azure/CLI@v1
+      #   with:
+      #     azcliversion: 2.42.0
+      #     inlineScript: |
+      #       az sql server firewall-rule create --resource-group rg-bookeeper --server BooKeeper-dbs --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
       - name: Build Migration project
         working-directory: ./BooKeeperWebApp.Database.Migration
         run: dotnet build --configuration Release

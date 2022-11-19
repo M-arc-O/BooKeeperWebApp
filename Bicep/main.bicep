@@ -121,6 +121,6 @@ resource dbConnectionString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'dbConnectionString'
   parent: keyVault // Pass key vault symbolic name as parent
   properties: {
-    value: 'Server=tcp:${applicationName}-dbs.${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+    value: 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
   }
 }
