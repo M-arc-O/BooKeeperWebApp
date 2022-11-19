@@ -62,7 +62,7 @@ jobs:
       - uses: Amadevus/pwsh-script@v2
         id: my-script
         with:
-          script: 'Tree / /F'
+          script: 'Tree ./ /F'
       - run: echo "${{ steps.my-script.outputs.result }}"
         
       
