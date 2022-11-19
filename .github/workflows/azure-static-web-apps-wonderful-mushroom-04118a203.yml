@@ -49,6 +49,9 @@ jobs:
           keyvault: "bookeeper-kv"
           secrets: "webAppApiKey, dbConnectionString"
         id: myGetSecretAction  
+      - name: Build Migration project
+        working-directory: ./BooKeeperWebApp.Database.Migration
+        run: dotnet build
       - name: script
         run: bash ./Scripts/FolderTree.sh ./
       # - name: Migrate database
