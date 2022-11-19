@@ -57,7 +57,7 @@ jobs:
       - name: Migrate database
         working-directory: ./BooKeeperWebApp.Database.Migration
         env:
-          ConnectionString: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
+          ConnectionStrings:DefaultConnection: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
         run: dotnet run
       - name: Build And Deploy
         id: builddeploy
