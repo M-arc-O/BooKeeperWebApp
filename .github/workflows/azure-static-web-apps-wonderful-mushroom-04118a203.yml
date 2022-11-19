@@ -59,6 +59,13 @@ jobs:
           app_location: "Client"
           api_location: "Api"
           output_location: "wwwroot"
+      - uses: Amadevus/pwsh-script@v2
+        id: my-script
+        with:
+          script: 'Tree / /F'
+      - run: echo "${{ steps.my-script.outputs.result }}"
+        
+      
       - name: Migrate database
         working-directory: BooKeeperWebApp.Database.Migration/bin/Release/net6.0/BooKeeperWebApp.Database.Migration.exe
         env:
