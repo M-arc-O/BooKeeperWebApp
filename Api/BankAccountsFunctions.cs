@@ -25,19 +25,28 @@ namespace Api
         [Function("GetConnectionString")]
         public async Task<HttpResponseData> GetConnectionString([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
-            var location = Assembly.GetExecutingAssembly().Location;
-            var directory = Path.GetDirectoryName(location);
+            var test = "Getting string";
 
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(directory)
-                .AddJsonFile("local.settings.json", optional: true, reloadOnChange: false)
-                .AddEnvironmentVariables()
-                .Build();
+            try
+            {
+                var location = Assembly.GetExecutingAssembly().Location;
+                var directory = Path.GetDirectoryName(location);
 
-            var test = new TestModel(configuration.GetValue<string>("BooKeeperWebAppConnectionString"));
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(directory)
+                    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: false)
+                    .AddEnvironmentVariables()
+                    .Build();
+
+                test = configuration.GetValue<string>("BooKeeperWebAppConnectionString");
+            }
+            catch (Exception ex)
+            {
+                test = $"Backend error: {ex.Message}";
+            }
 
             var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(test);
+            await response.WriteAsJsonAsync(new TestModel(test));
 
             return response;
         }

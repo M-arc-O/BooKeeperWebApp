@@ -55,8 +55,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        connectionString = (await Http.GetFromJsonAsync<TestModel>("/api/GetConnectionString"))?.ConnectionString ?? "No string found";
-        await LoadBankAccounts();
+        try
+        {
+            connectionString = (await Http.GetFromJsonAsync<TestModel>("/api/GetConnectionString"))?.ConnectionString ?? "No string found";
+        }
+        catch (Exception ex)
+        {
+            connectionString = $"Frontend error: {ex.Message}";
+        }
+
+        //await LoadBankAccounts();
     }
 
     protected async Task AddBankAccount()
