@@ -34,6 +34,18 @@ jobs:
           parameters: ./Bicep/main.parameters.json adminLoginName=${{ secrets.AZURE_DB_ADMIN_NAME }} adminLoginPassword=${{ secrets.AZURE_DB_ADMIN_PASSWORD }}
           failOnStdErr: false
 
+      - uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: "bookeeper-kv"
+          secrets: "dbConnectionString"
+        id: myGetSecretAction
+
+      - name: Migrate database
+        working-directory: ./BooKeeperWebApp.Database.Migration/bin/Release/net6.0/BooKeeperWebApp.Database.Migration.exe
+        env:
+          ConnectionString: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
+        run: dotnet run
+
   build_and_deploy_job:
     needs: deploy_resources_job
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -47,9 +59,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
-        with: 
-          keyvault: 'bookeeper-kv'
-          secrets: 'webAppApiKey'
+        with:
+          keyvault: "bookeeper-kv"
+          secrets: "webAppApiKey"
         id: myGetSecretAction
       - name: Build And Deploy
         id: builddeploy
@@ -74,9 +86,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
-        with: 
-          keyvault: 'bookeeper-kv'
-          secrets: 'webAppApiKey'
+        with:
+          keyvault: "bookeeper-kv"
+          secrets: "webAppApiKey"
         id: myGetSecretAction
       - name: Close Pull Request
         id: closepullrequest
