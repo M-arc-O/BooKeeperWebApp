@@ -12,8 +12,6 @@
 
 <h1>Bank Accounts</h1>
 
-<p>Connection string: @connectionString</p>
-
 <p>
     <label>
         New title
@@ -50,21 +48,18 @@ else
 @code {
     private string newbankAccountName = "";
     private BankAccount[]? bankAccounts;
-    private string connectionString = "Get string";
 
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            connectionString = (await Http.GetFromJsonAsync<TestModel>("/api/GetConnectionString"))?.ConnectionString ?? "No string found";
+            await LoadBankAccounts();
         }
         catch (Exception ex)
         {
-            connectionString = $"Frontend error: {ex.Message}";
-        }
-
-        //await LoadBankAccounts();
+            bankAccounts = new[] { new BankAccount(Guid.NewGuid(), $"Frontend error: {ex.Message}") };
+        }        
     }
 
     protected async Task AddBankAccount()

@@ -15,48 +15,25 @@ namespace Api
     {
         private readonly IBankAccountBusiness _bankAccountBusiness;
 
-        public BankAccountFunctions(
-            IBankAccountBusiness bankAccountBusiness
-            )
+        public BankAccountFunctions(IBankAccountBusiness bankAccountBusiness)
         {
             _bankAccountBusiness = bankAccountBusiness;
-        }
-
-        [Function("GetConnectionString")]
-        public async Task<HttpResponseData> GetConnectionString([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
-        {
-            var test = "Getting string";
-
-            try
-            {
-                var location = Assembly.GetExecutingAssembly().Location;
-                var directory = Path.GetDirectoryName(location);
-
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(directory)
-                    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: false)
-                    .AddEnvironmentVariables()
-                    .Build();
-
-                test = configuration.GetValue<string>("BooKeeperWebAppConnectionString");
-            }
-            catch (Exception ex)
-            {
-                test = $"Backend error: {ex.Message}";
-            }
-
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(new TestModel(test));
-
-            return response;
         }
 
         [Function("GetBankAccounts")]
         public async Task<HttpResponseData> GetBankAccounts([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
         {
-            var bankAccounts = _bankAccountBusiness.GetBankAccounts();
             var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(bankAccounts);
+
+            try
+            {
+                var bankAccounts = _bankAccountBusiness.GetBankAccounts();
+                await response.WriteAsJsonAsync(bankAccounts);
+            }
+            catch (Exception ex) 
+            {
+                var bankAcounts = new[] { new BankAccount(Guid.NewGuid(), ex.Message) };
+            }
 
             return response;
         }
