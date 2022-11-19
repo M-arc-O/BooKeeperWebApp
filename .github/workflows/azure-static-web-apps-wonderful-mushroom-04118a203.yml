@@ -59,7 +59,7 @@ jobs:
         with:
           azcliversion: 2.42.0
           inlineScript: |
-            az sql server firewall-rule create --resource-group rg-bookeeper --server BooKeeper-dbs --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
+            az sql server firewall-rule create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server BooKeeper-dbs --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
       - name: Build Migration project
         working-directory: ./BooKeeperWebApp.Database.Migration
         run: dotnet build --configuration Release
@@ -70,6 +70,12 @@ jobs:
         env:
           ConnectionStrings:DefaultConnection: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
         run: dotnet run
+      - name: Remove IP from database whitelist
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.42.0
+          inlineScript: |
+            az sql server firewall-rule delete --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server BooKeeper-dbs --name PipelineRule
       # - name: Build And Deploy
       #   id: builddeploy
       #   uses: Azure/static-web-apps-deploy@v1
