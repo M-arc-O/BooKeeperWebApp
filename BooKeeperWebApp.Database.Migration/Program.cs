@@ -10,6 +10,7 @@ var builder = new ConfigurationBuilder()
     .Build();
 
 var connectionString = builder.GetConnectionString("DefaultConnection");
+Console.WriteLine(connectionString);
 EnsureDatabase.For.SqlDatabase(connectionString);
 
 Console.WriteLine(connectionString);
