@@ -51,15 +51,14 @@ jobs:
         id: myGetSecretAction  
       - name: Build Migration project
         working-directory: ./BooKeeperWebApp.Database.Migration
-        run: dotnet build
+        run: dotnet build --configuration Release
       - name: script
         run: bash ./Scripts/FolderTree.sh ./
-      # - name: Migrate database
-      #   working-directory: BooKeeperWebApp.Database.Migration/bin/Release/net6.0/BooKeeperWebApp.Database.Migration.exe
-      #   env:
-      #     ConnectionString: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
-      #   run: dotnet build
-      #   run: dotnet run
+      - name: Migrate database
+        working-directory: ./BooKeeperWebApp.Database.Migration/bin/Release/net6.0/BooKeeperWebApp.Database.Migration.exe
+        env:
+          ConnectionString: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
+        run: dotnet run
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
