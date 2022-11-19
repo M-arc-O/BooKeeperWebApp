@@ -48,7 +48,15 @@ jobs:
         with:
           keyvault: "bookeeper-kv"
           secrets: "webAppApiKey, dbConnectionString"
-        id: myGetSecretAction
+        id: myGetSecretAction  
+      - name: script
+        run: bash ./Scripts/FolderTree.sh ./
+      # - name: Migrate database
+      #   working-directory: BooKeeperWebApp.Database.Migration/bin/Release/net6.0/BooKeeperWebApp.Database.Migration.exe
+      #   env:
+      #     ConnectionString: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
+      #   run: dotnet build
+      #   run: dotnet run
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -59,18 +67,6 @@ jobs:
           app_location: "Client"
           api_location: "Api"
           output_location: "wwwroot"
-      - uses: Amadevus/pwsh-script@v2
-        id: my-script
-        with:
-          script: 'Tree ./ /F'
-      - run: echo "${{ steps.my-script.outputs.result }}"
-        
-      
-      - name: Migrate database
-        working-directory: BooKeeperWebApp.Database.Migration/bin/Release/net6.0/BooKeeperWebApp.Database.Migration.exe
-        env:
-          ConnectionString: ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
-        run: dotnet run
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
