@@ -47,7 +47,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with:
-          keyvault: "bookeeper-kv"
+          keyvault: ${{ env.KV_NAME }}
           secrets: "webAppApiKey, dbConnectionString"
         id: myGetSecretAction  
       - name: Public IP
@@ -59,7 +59,7 @@ jobs:
         with:
           azcliversion: 2.42.0
           inlineScript: |
-            az sql server firewall-rule create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server BooKeeper-dbs --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
+            az sql server firewall-rule create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server ${{ env.DB_SERVER_NAME }} --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
       - name: Build Migration project
         working-directory: ./BooKeeperWebApp.Database.Migration
         run: dotnet build --configuration Release
@@ -75,17 +75,17 @@ jobs:
         with:
           azcliversion: 2.42.0
           inlineScript: |
-            az sql server firewall-rule delete --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server BooKeeper-dbs --name PipelineRule
-      # - name: Build And Deploy
-      #   id: builddeploy
-      #   uses: Azure/static-web-apps-deploy@v1
-      #   with:
-      #     azure_static_web_apps_api_token: ${{ steps.myGetSecretAction.outputs.webAppApiKey }}
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     action: "upload"
-      #     app_location: "Client"
-      #     api_location: "Api"
-      #     output_location: "wwwroot"
+            az sql server firewall-rule delete --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server ${{ env.DB_SERVER_NAME }} --name PipelineRule
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.myGetSecretAction.outputs.webAppApiKey }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "Client"
+          api_location: "Api"
+          output_location: "wwwroot"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -97,7 +97,7 @@ jobs:
           creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
       - uses: Azure/get-keyvault-secrets@v1
         with:
-          keyvault: "bookeeper-kv"
+          keyvault: ${{ env.KV_NAME }}
           secrets: "webAppApiKey"
         id: myGetSecretAction
       - name: Close Pull Request
