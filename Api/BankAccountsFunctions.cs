@@ -33,6 +33,7 @@ namespace Api
             catch (Exception ex) 
             {
                 var bankAcounts = new[] { new BankAccount(Guid.NewGuid(), ex.Message) };
+                await response.WriteAsJsonAsync(bankAccounts);
             }
 
             return response;
