@@ -77,6 +77,12 @@ resource staticWebApp 'Microsoft.Web/staticSites@2021-01-15' = {
   }
 }
 
+resource name_appsettings 'Microsoft.Web/staticSites/config@2021-01-15' = {
+  parent: staticWebApp
+  name: 'appsettings'
+  properties: { BooKeeperWebAppConnectionString: dbConnectionString.properties.value }
+}
+
 resource webAppApiKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'webAppApiKey'
   parent: keyVault
