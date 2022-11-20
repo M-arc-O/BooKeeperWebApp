@@ -68,7 +68,7 @@ jobs:
         uses: azure/powershell@v1
         with:
           inlineScript: |
-            $instanceName = ${{ steps.myGetSecretAction.outputs.dbConnectionString }}
+            $instanceName = "${{ steps.myGetSecretAction.outputs.dbConnectionString }}" -AsSecureString
             $loginName = "BooKeeperUser"
             $password = "test123"
 
