@@ -34,6 +34,7 @@ param adminLoginName string
 param adminLoginPassword string
 
 var applicationNameLower = toLower(applicationName)
+var connectionString = 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
 resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: '${applicationNameLower}-kv'
@@ -80,7 +81,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2021-01-15' = {
 resource name_appsettings 'Microsoft.Web/staticSites/config@2021-01-15' = {
   parent: staticWebApp
   name: 'appsettings'
-  properties: { BooKeeperWebAppConnectionString: dbConnectionString.properties.value }
+  properties: { BooKeeperWebAppConnectionString: connectionString }
 }
 
 resource webAppApiKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
@@ -136,6 +137,6 @@ resource dbConnectionString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'dbConnectionString'
   parent: keyVault // Pass key vault symbolic name as parent
   properties: {
-    value: 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+    value: connectionString
   }
 }
