@@ -23,7 +23,7 @@ $sqlConn = New-Object System.Data.SqlClient.SqlConnection $connectionString
 
 $sqlcmd = New-Object System.Data.SqlClient.SqlCommand
 $sqlcmd.Connection = $sqlConn
-$query = “IF NOT EXISTS (SELECT name FROM sys.sql_logins WHERE name='${loginName}')
+$query = "IF NOT EXISTS (SELECT name FROM sys.sql_logins WHERE name='${loginName}')
     BEGIN
         CREATE LOGIN testLogin WITH PASSWORD='${password}';
     END
