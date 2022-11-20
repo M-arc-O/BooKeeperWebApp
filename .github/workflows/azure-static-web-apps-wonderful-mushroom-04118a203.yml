@@ -2,7 +2,7 @@ name: BooKeeper Azure Static Web Apps CI/CD
 
 env:
   KV_NAME: bookeeper-kv
-  DB_SERVER_NAME: BooKeeper-dbs
+  DB_SERVER_NAME: bookeeper-dbs
 
 on:
   push:
@@ -64,31 +64,10 @@ jobs:
             az sql server firewall-rule create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP_NAME }} --server ${{ env.DB_SERVER_NAME }} --name PipelineRule --start-ip-address ${{ steps.ip.outputs.ipv4 }} --end-ip-address ${{ steps.ip.outputs.ipv4 }}
       # - name: script
       #   run: bash ./Scripts/FolderTree.sh ./
-      - name: Run Azure PowerShell script
-        uses: azure/powershell@v1
-        with:
-          inlineScript: |
-            $instanceName = "${{ steps.myGetSecretAction.outputs.dbConnectionString }}" -AsSecureString
-            $loginName = "BooKeeperUser"
-            $password = "test123"
-
-            $server = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Server -ArgumentList $instanceName
-
-            # drop login if it exists
-            if ($server.Logins.Contains($loginName)) 
-            {   
-              Write-Host("Deleting the existing login $loginName.")
-                $server.Logins[$loginName].Drop() 
-            }
-
-            $login = New-Object `
-            -TypeName Microsoft.SqlServer.Management.Smo.Login `
-            -ArgumentList $server, $loginName
-            $login.LoginType = [Microsoft.SqlServer.Management.Smo.LoginType]::SqlLogin
-            $login.PasswordExpirationEnabled = $false
-            $login.Create($password)
-            Write-Host("Login $loginName created successfully.")
-          azPSVersion: "latest"
+      - name: Build
+        shell: pwsh
+        run: |
+          .\Scripts\CreateDatabaseLogin.ps1 -dbServerName ${{ env.DB_SERVER_NAME }} -dbAdminUserName ${{ secrets.AZURE_DB_ADMIN_NAME }} -dbAdminPassword ${{ secrets.AZURE_DB_ADMIN_PASSWORD }} -loginName ${{ secrets.AZURE_DB_USER_NAME }} -password ${{ secrets.AZURE_DB_USER_PASSWORD }}
       - name: Migrate database
         working-directory: ./BooKeeperWebApp.Database.Migration
         env:
