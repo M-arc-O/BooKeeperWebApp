@@ -23,8 +23,14 @@
         "staticWebAppAppArtifactLocation": {
             "value": "wwwroot"
         },
+        "keyVaultName": {
+            "value": "<FROM-PIPELINE>"
+        },
         "keyVaultSpObjectId": {
             "value": "08ff8bee-1c23-4729-888c-88c788593903"
+        },
+        "databaseName": {
+            "value": "<FROM-PIPELINE>"
         },
         "adminLoginName": {
             "value": "<FROM-SECRET>"

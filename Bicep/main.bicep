@@ -22,8 +22,14 @@ param staticWebAppAppArtifactLocation string
 @description('Resource tags')
 param resourceTags object
 
+@description('Key vault name')
+param keyVaultName string
+
 @description('Service principal object id for key vault access policy')
 param keyVaultSpObjectId string
+
+@description('Database name')
+param databaseName string
 
 @description('Database admin login name')
 @secure()
@@ -41,12 +47,11 @@ param dbUserLoginName string
 @secure()
 param dbUserLoginPassword string
 
-var applicationNameLower = toLower(applicationName)
 var adminConnectionString = 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 var userConnectionString = 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${dbUserLoginName};Password=${dbUserLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
 resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
-  name: '${applicationNameLower}-kv'
+  name: keyVaultName
   location: location
   properties: {
     tenantId: subscription().tenantId
@@ -102,7 +107,7 @@ resource webAppApiKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 }
 
 resource dataBaseServer 'Microsoft.Sql/servers@2021-11-01-preview' = {
-  name: '${applicationName}-dbs'
+  name: databaseName
   location: location
   properties: {
     administratorLogin: adminLoginName
