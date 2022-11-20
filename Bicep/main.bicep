@@ -96,6 +96,15 @@ resource dataBaseServer 'Microsoft.Sql/servers@2021-11-01-preview' = {
   }
 }
 
+resource allAzureIpsFirewallRul 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+  name: 'AllowAllWindowsAzureIps'
+  parent: dataBaseServer
+  properties: {
+    endIpAddress: '0.0.0.0'
+    startIpAddress: '0.0.0.0'
+  }
+}
+
 resource database 'Microsoft.Sql/servers/databases@2021-11-01-preview' = {
   parent: dataBaseServer
   name: '${applicationName}-db'
