@@ -24,15 +24,13 @@ $sqlConn = New-Object System.Data.SqlClient.SqlConnection $connectionString
 $sqlcmd = New-Object System.Data.SqlClient.SqlCommand
 $sqlcmd.Connection = $sqlConn
 
-Write-Host("Login name = '${loginName}'")
-
 $query = "IF NOT EXISTS (SELECT name FROM sys.sql_logins WHERE name='${loginName}')
     BEGIN
-        CREATE LOGIN testLogin WITH PASSWORD='${password}';
+        CREATE LOGIN ${loginName} WITH PASSWORD='${password}';
     END
 ELSE
     BEGIN
-        ALTER LOGIN testLogin WITH PASSWORD='${password}';
+        ALTER LOGIN ${loginName} WITH PASSWORD='${password}';
     END;"
 $sqlcmd.CommandText = $query
 
