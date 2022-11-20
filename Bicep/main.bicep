@@ -33,8 +33,17 @@ param adminLoginName string
 @secure()
 param adminLoginPassword string
 
+@description('Database admin login name')
+@secure()
+param dbUserLoginName string
+
+@description('Database admin login password')
+@secure()
+param dbUserLoginPassword string
+
 var applicationNameLower = toLower(applicationName)
-var connectionString = 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+var adminConnectionString = 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${adminLoginName};Password=${adminLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+var userConnectionString = 'Server=tcp:${applicationName}-dbs${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${applicationName}-db;Persist Security Info=False;User ID=${dbUserLoginName};Password=${dbUserLoginPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
 resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: '${applicationNameLower}-kv'
@@ -81,7 +90,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2021-01-15' = {
 resource name_appsettings 'Microsoft.Web/staticSites/config@2021-01-15' = {
   parent: staticWebApp
   name: 'appsettings'
-  properties: { BooKeeperWebAppConnectionString: connectionString }
+  properties: { BooKeeperWebAppConnectionString: userConnectionString }
 }
 
 resource webAppApiKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
@@ -137,6 +146,6 @@ resource dbConnectionString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'dbConnectionString'
   parent: keyVault // Pass key vault symbolic name as parent
   properties: {
-    value: connectionString
+    value: adminConnectionString
   }
 }

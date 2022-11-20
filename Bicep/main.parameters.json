@@ -32,6 +32,12 @@
         "adminLoginPassword": {
             "value": "<FROM-SECRET>"
         },
+        "dbUserLoginName": {
+            "value": "<FROM-SECRET>"
+        },
+        "dbUserLoginPassword": {
+            "value": "<FROM-SECRET>"
+        },
         "resourceTags": {
             "value": {
                 "Project": "BooKeeper"

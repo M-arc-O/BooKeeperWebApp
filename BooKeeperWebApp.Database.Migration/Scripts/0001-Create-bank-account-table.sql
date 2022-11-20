@@ -1,4 +1,9 @@
-﻿CREATE TABLE [dbo].[BankAccount](
+﻿CREATE USER BooKeeperDbUser FOR LOGIN BooKeeperDbUser;
+ALTER ROLE db_datareader ADD MEMBER BooKeeperDbUser;
+ALTER ROLE db_datawriter ADD MEMBER BooKeeperDbUser;
+GRANT UNMASK TO BooKeeperDbUser;
+
+CREATE TABLE [dbo].[BankAccount](
 	[Id] [UNIQUEIDENTIFIER] NOT NULL,
 	[Name] [NVARCHAR](100) NOT NULL
  CONSTRAINT [PK_BankAccount] PRIMARY KEY CLUSTERED
