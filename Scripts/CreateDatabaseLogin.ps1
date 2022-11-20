@@ -23,6 +23,9 @@ $sqlConn = New-Object System.Data.SqlClient.SqlConnection $connectionString
 
 $sqlcmd = New-Object System.Data.SqlClient.SqlCommand
 $sqlcmd.Connection = $sqlConn
+
+Write-Host("Login name = '${loginName}'")
+
 $query = "IF NOT EXISTS (SELECT name FROM sys.sql_logins WHERE name='${loginName}')
     BEGIN
         CREATE LOGIN testLogin WITH PASSWORD='${password}';
