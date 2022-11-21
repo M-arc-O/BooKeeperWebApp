@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{9BD54251-BFC9-4CDF-95F8-C1A0F84ACEDC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooKeeperWebApp.Shared", "BooKeeperWebAppShared\BooKeeperWebApp.Shared.csproj", "{1474435C-F50F-4C43-8E37-A7C52958A075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooKeeperWebApp.Shared", "BooKeeperWebApp.Shared\BooKeeperWebApp.Shared.csproj", "{1474435C-F50F-4C43-8E37-A7C52958A075}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooKeeperWebApp.Database.Migration", "BooKeeperWebApp.Database.Migration\BooKeeperWebApp.Database.Migration.csproj", "{526AD643-488D-4DAA-9FB9-4FCAB7AB23E1}"
 EndProject

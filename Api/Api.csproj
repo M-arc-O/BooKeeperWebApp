@@ -14,7 +14,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\BooKeeperWebApp.Business\BooKeeperWebApp.Business.csproj" />
-		<ProjectReference Include="..\BooKeeperWebAppShared\BooKeeperWebApp.Shared.csproj" />
+		<ProjectReference Include="..\BooKeeperWebApp.Shared\BooKeeperWebApp.Shared.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="host.json">

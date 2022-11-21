@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BooKeeperWebApp.Infrastructure\BooKeeperWebApp.Infrastructure.csproj" />
-		<ProjectReference Include="..\BooKeeperWebAppShared\BooKeeperWebApp.Shared.csproj" />
+		<ProjectReference Include="..\BooKeeperWebApp.Shared\BooKeeperWebApp.Shared.csproj" />
 	</ItemGroup>
 
 </Project>
