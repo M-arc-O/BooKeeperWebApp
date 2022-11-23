@@ -14,7 +14,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         dbSet = context.Set<TEntity>();
     }
 
-    public virtual IEnumerable<TEntity> Get(
+    public virtual Task<List<TEntity>> Get(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = "")
@@ -34,22 +34,22 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
 
         if (orderBy != null)
         {
-            return orderBy(query).ToList();
+            return orderBy(query).ToListAsync();
         }
         else
         {
-            return query.ToList();
+            return query.ToListAsync();
         }
     }
 
-    public virtual TEntity GetByID(object id) => dbSet.Find(id);
+    public virtual Task<TEntity?> GetByID(object id) => dbSet.FindAsync(id).AsTask();
 
-    public virtual void Insert(TEntity entity) => dbSet.Add(entity);
+    public virtual Task Insert(TEntity entity) => dbSet.AddAsync(entity).AsTask();
 
     public virtual void Delete(object id)
     {
-        TEntity entityToDelete = dbSet.Find(id);
-        Delete(entityToDelete);
+        TEntity entityToDelete = dbSet.Find(id)!;
+        Delete(entityToDelete!);
     }
 
     public virtual void Delete(TEntity entityToDelete)

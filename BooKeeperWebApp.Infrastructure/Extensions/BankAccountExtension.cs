@@ -5,6 +5,6 @@ public static class BankAccountExtension
 {
     public static Shared.BankAccount ToSharedBankAccount(this BankAccount from)
     {
-        return new Shared.BankAccount(from.Id, from.Name);
+        return new Shared.BankAccount(from.Id, from.Name!);
     }
 }

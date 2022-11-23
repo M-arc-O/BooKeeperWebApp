@@ -4,5 +4,5 @@ namespace BooKeeperWebApp.Business;
 public interface IBankAccountBusiness
 {
     Task AddBankAccount(BankAccount bankAccount);
-    IEnumerable<BankAccount> GetBankAccounts();
+    Task<IEnumerable<BankAccount>> GetBankAccounts();
 }

@@ -2,7 +2,7 @@
 public class BankAccount
 {
     public Guid Id { get; internal set; }
-    public string Name { get; internal set; }
+    public string? Name { get; internal set; }
 
     private BankAccount() { }
 

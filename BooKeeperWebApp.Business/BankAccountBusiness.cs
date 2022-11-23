@@ -15,18 +15,21 @@ public class BankAccountBusiness : IBankAccountBusiness
         _unitOfWork = unitOfWork;
     }
 
-    public IEnumerable<BankAccount> GetBankAccounts()
+    public async Task<IEnumerable<BankAccount>> GetBankAccounts()
     {
-        return _bankAccountRepository.Get().Select(x => x.ToSharedBankAccount());
+        var accounts = await _bankAccountRepository.Get();
+        return accounts.Select(x => x.ToSharedBankAccount());
     }
 
     public async Task AddBankAccount(BankAccount bankAccount)
     {
+
+
         var bankAccountEntity = new Infrastructure.Entities.BankAccount(
             Guid.NewGuid(),
-            bankAccount.Name
+            bankAccount.Name!
         );
-        _bankAccountRepository.Insert(bankAccountEntity);
+        await _bankAccountRepository.Insert(bankAccountEntity);
 
         await _unitOfWork.CommitAsync();
     }
