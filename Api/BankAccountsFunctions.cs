@@ -27,7 +27,7 @@ namespace Api
 
             try
             {
-                var bankAccounts = _bankAccountBusiness.GetBankAccounts();
+                var bankAccounts = await _bankAccountBusiness.GetBankAccounts();
                 await response.WriteAsJsonAsync(bankAccounts);
             }
             catch (Exception ex) 

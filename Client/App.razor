@@ -1,4 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject ThemeService ThemeService
+@inject NavigationManager NavigationManager
+
+<link href="@Href" rel="stylesheet" />
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
@@ -25,3 +29,12 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    string Href => $"_content/Radzen.Blazor/css/{ThemeService.CurrentTheme}-base.css";
+
+    protected override void OnInitialized()
+    {
+        ThemeService.Initialize(NavigationManager);
+    }
+}

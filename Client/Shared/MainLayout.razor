@@ -1,27 +1,108 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Radzen.Blazor
 
 @inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@inject NavigationManager UriHelper
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    Hello, @context?.User?.Identity?.Name!
-                    <a href="/.auth/logout?post_logout_redirect_uri=/">Log out</a>
-                </Authorized>
-                <NotAuthorized>
-                    <a href="/login-providers">Log in</a>
-                </NotAuthorized>
-            </AuthorizeView>
+<RadzenLayout>
+    <RadzenHeader>
+        <ChildContent>
+            <div class="row justify-content-start align-items-center">
+                <div class="col-5 d-flex align-items-center">
+                    <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
+                    </RadzenSidebarToggle>
+                    <RadzenLabel Text="BooKeeper" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                    </RadzenLabel>
+                </div>
+                <div class="col-7 d-flex align-items-center justify-content-end">
+                    <RadzenDropDown class="mx-0 mx-lg-3" id="themes" style="width: 220px;" TValue="string" TextProperty="Text" ValueProperty="Value" Data="@ThemeService.Themes" Value="@ThemeService.CurrentTheme" Change="@ChangeTheme">
+                        <ValueTemplate>
+                            @context.Text Theme
+                        </ValueTemplate>
+                    </RadzenDropDown>
+                </div>
+            </div>
+        </ChildContent>
+    </RadzenHeader>
+    <RadzenBody @ref="@body0" @bind-Expanded="@bodyExpanded">
+        <ChildContent>
+            <RadzenContentContainer Name="main">
+                @Body
+            </RadzenContentContainer>
+        </ChildContent>
+    </RadzenBody>
+    <RadzenSidebar @ref="@sidebar0" @bind-Expanded="@sidebarExpanded" class="demos-sidebar" style="display: flex; flex-direction: column">
+        <div style="padding: 1rem">
+            <RadzenTextBox Placeholder="Find component ..." type="search" @oninput="@FilterPanelMenu" style="width: 100%" />
         </div>
+        <div style="flex: 1; overflow: auto">
+            <RadzenPanelMenu Match="NavLinkMatch.Prefix">
+                @*@foreach (var category in examples)
+                {
+                    <NavigationItem @bind-Expanded=@category.Expanded Example=@category>
+                        @if (category.Children != null)
+                        {
+                            @foreach (var example in category.Children)
+                            {
+                                if (example.Children != null)
+                                {
+                                    <NavigationItem @bind-Expanded=@example.Expanded Example=@example>
+                                        @foreach (var child in example.Children)
+                                        {
+                                            <NavigationItem @bind-Expanded=@child.Expanded Example=@child />
+                                        }
+                                    </NavigationItem>
+                                }
+                                else
+                                {
+                                    <NavigationItem @bind-Expanded=@example.Expanded Example=@example />
+                                }
+                            }
+                        }
+                    </NavigationItem>
+                }*@
+            </RadzenPanelMenu>
+        </div>
+    </RadzenSidebar>
+</RadzenLayout>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+@if (!rendered)
+{
+    <div class="rz-app-loading">
+        <div class="logo-loading"></div>
+    </div>
+}
+
+@code {
+    RadzenSidebar? sidebar0;
+    RadzenBody? body0;
+    bool sidebarExpanded = true;
+    bool bodyExpanded = false;
+    bool rendered = true;
+
+    protected override void OnInitialized()
+    {
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            rendered = false;
+        }
+    }
+
+    void FilterPanelMenu(ChangeEventArgs args)
+    {
+        //var term = args.Value.ToString();
+
+        //examples = string.IsNullOrEmpty(term) ? ExampleService.Examples : ExampleService.Filter(term);
+    }
+
+    void ChangeTheme(object value)
+    {
+        ThemeService.Change(UriHelper, value.ToString());
+    }
+}
