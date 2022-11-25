@@ -18,10 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\Images\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Update="wwwroot\Images\UnderConstruction.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
