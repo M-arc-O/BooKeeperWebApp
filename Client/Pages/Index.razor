@@ -1,51 +1,170 @@
 ﻿@page "/"
 @using System.Security.Claims
+@using BooKeeperWebApp.Shared.Models;
+@using Client.Authentication;
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inject AuthenticationStateProvider _authenticationStateProvider;
+@inject HttpClient Http;
 
 <PageTitle>BooKeeper</PageTitle>
-
-
-<RadzenImage Path="Images/UnderConstruction.png" Style="width: 60%; margin: 3rem;" />
-
-@if (claims.Count() > 0)
-{
-    <dl>
-        <dt>Auth Provider</dt>
-        <dd>@authProvider</dd>
-
-        <dt>Claims</dt>
-        <dd>
-            <ul>
+<AuthorizeView>
+    <Authorized>
+        <p>
+            <div class="row">
+                <div class="col">
+                    Fronted authorization info:
+                </div>
+            </div>
+            @if (claims.Count() > 0)
+            {
+                <div class="row">
+                    <div class="col-2">
+                        Name:
+                    </div>
+                    <div class="col">
+                        @authName
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        Id:
+                    </div>
+                    <div class="col">
+                        @authId
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        Auth Provider:
+                    </div>
+                    <div class="col">
+                        @authProvider
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Claims:
+                    </div>
+                </div>
                 @foreach (var claim in claims)
                 {
-                    <li>@claim.Type: @claim.Value</li>
+                    <div class="row">
+                        <div class="col-6">
+                            @claim.Type:
+                        </div>
+                        <div class="col">
+                            @claim.Value
+                        </div>
+                    </div>
                 }
-            </ul>
-        </dd>
-    </dl>
-}
+            }
+        </p>
+
+        <p>
+            <div class="row">
+                <div class="col">
+                    Backend authorization info:
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(backendClientPrincipal.UserId))
+            {
+                <div class="row">
+                    <div class="col-2">
+                        Name:
+                    </div>
+                    <div class="col">
+                        @backendClientPrincipal.UserDetails
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        Id:
+                    </div>
+                    <div class="col">
+                        @backendClientPrincipal.UserId
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        Auth Provider:
+                    </div>
+                    <div class="col">
+                        @backendClientPrincipal.IdentityProvider
+                    </div>
+                </div>
+                @if (backendClientPrincipal.UserRoles != null)
+                {
+                    <div class="row">
+                        <div class="col">
+                            Roles:
+                        </div>
+                    </div>
+                    @foreach (var role in backendClientPrincipal.UserRoles)
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                @role
+                            </div>
+                        </div>
+                    }
+                }
+            }
+
+            @if (backendClientPrincipal.Claims != null)
+            {
+                <div class="row">
+                    <div class="col">
+                        Claims:
+                    </div>
+                </div>
+                @foreach (var claim in backendClientPrincipal.Claims!)
+                {
+                    <div class="row">
+                        <div class="col-6">
+                            @claim
+                        </div>
+                    </div>
+                }
+            }
+            }
+        </p>
+
+    </Authorized>
+    <NotAuthorized>
+        <RadzenImage Path="Images/UnderConstruction.png" Style="width: 50%; margin: 3rem;" />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-    private string? authMessage;
+    private string? authName;
+    private string? authId;
     private string? authProvider;
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    private ClientPrincipal backendClientPrincipal = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        authProvider = (_authenticationStateProvider as ClientAuthenticationStateProvider)!.IdentityProvider;
         var user = authState.User;
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            authMessage = $"{user.Identity.Name} is authenticated.";
+            authName = user.Identity.Name;
             claims = user.Claims;
         }
         else
         {
-            authMessage = "The user is NOT authentifcated.";
+            authName = "The user is NOT authentifcated.";
         }
+
+        await LoadBackendClientPrincipals();
+    }
+
+    private async Task LoadBackendClientPrincipals()
+    {
+        backendClientPrincipal = await Http.GetFromJsonAsync<ClientPrincipal>("/api/Me") ?? new ClientPrincipal();
     }
 }

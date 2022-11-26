@@ -1,9 +1,14 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using Client.Components
+@using Client.Pages
+@using Microsoft.AspNetCore.Components.Authorization
 @using Radzen.Blazor
 
 @inherits LayoutComponentBase
 @inject ThemeService ThemeService
 @inject NavigationManager UriHelper
+@inject DialogService DialogService
+
+<RadzenDialog />
 
 <RadzenLayout>
     <RadzenHeader>
@@ -12,9 +17,10 @@
                 <div class="col-5 d-flex align-items-center">
                     <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
                     </RadzenSidebarToggle>
-                    <RadzenImage Path="Images/icon.png" Style="width: 50px; height: 50px;" />
-                    <RadzenLabel Text="BooKeeper" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                    </RadzenLabel>
+                    <RadzenButton Variant="Variant.Text" Shade="Shade.Darker" Click="@(args => UriHelper.NavigateTo(""))">
+                        <RadzenImage Path="Images/icon.png" Style="width: 50px; height: 50px;" />
+                        <RadzenLabel Text="BooKeeper" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" />
+                    </RadzenButton>
                 </div>
                 <div class="col-7 d-flex align-items-center justify-content-end">
                     <RadzenDropDown class="mx-0 mx-lg-3" id="themes" style="width: 220px;" TValue="string" TextProperty="Text" ValueProperty="Value" Data="@ThemeService.Themes" Value="@ThemeService.CurrentTheme" Change="@ChangeTheme">
@@ -22,6 +28,7 @@
                             @context.Text Theme
                         </ValueTemplate>
                     </RadzenDropDown>
+                    <RadzenButton Variant="Variant.Outlined" Click=@ShowLoginDialog Text="Sign in" Style="margin-right: 15px;" />
                 </div>
             </div>
         </ChildContent>
@@ -34,39 +41,12 @@
         </ChildContent>
     </RadzenBody>
     <RadzenSidebar @ref="@sidebar0" @bind-Expanded="@sidebarExpanded" class="demos-sidebar" style="display: flex; flex-direction: column">
-        <div style="padding: 1rem">
-            <RadzenTextBox Placeholder="Find component ..." type="search" @oninput="@FilterPanelMenu" style="width: 100%" />
-        </div>
         <div style="flex: 1; overflow: auto">
-            <RadzenPanelMenu Match="NavLinkMatch.Prefix">
-                @*@foreach (var category in examples)
-                {
-                    <NavigationItem @bind-Expanded=@category.Expanded Example=@category>
-                        @if (category.Children != null)
-                        {
-                            @foreach (var example in category.Children)
-                            {
-                                if (example.Children != null)
-                                {
-                                    <NavigationItem @bind-Expanded=@example.Expanded Example=@example>
-                                        @foreach (var child in example.Children)
-                                        {
-                                            <NavigationItem @bind-Expanded=@child.Expanded Example=@child />
-                                        }
-                                    </NavigationItem>
-                                }
-                                else
-                                {
-                                    <NavigationItem @bind-Expanded=@example.Expanded Example=@example />
-                                }
-                            }
-                        }
-                    </NavigationItem>
-                }*@
-            </RadzenPanelMenu>
+            <NavMenu></NavMenu>
         </div>
     </RadzenSidebar>
 </RadzenLayout>
+
 
 @if (!rendered)
 {
@@ -82,11 +62,6 @@
     bool bodyExpanded = false;
     bool rendered = true;
 
-    protected override void OnInitialized()
-    {
-        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-    }
-
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
@@ -95,15 +70,17 @@
         }
     }
 
-    void FilterPanelMenu(ChangeEventArgs args)
+    async Task ShowLoginDialog()
     {
-        //var term = args.Value.ToString();
-
-        //examples = string.IsNullOrEmpty(term) ? ExampleService.Examples : ExampleService.Filter(term);
+        await DialogService.OpenAsync("Sign in", ds =>
+            @<div>
+                <LoginProviders></LoginProviders>
+            </div>
+            ,new DialogOptions() { CloseDialogOnOverlayClick = true });
     }
 
     void ChangeTheme(object value)
     {
-        ThemeService.Change(UriHelper, value.ToString());
+        ThemeService.Change(UriHelper, value?.ToString() ?? throw new ArgumentNullException("Theme value may not be null."));
     }
 }

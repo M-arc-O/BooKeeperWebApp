@@ -9,6 +9,8 @@ public class ClientAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly HttpClient _httpClient;
 
+    public string IdentityProvider { get; private set; } = string.Empty;
+
     public ClientAuthenticationStateProvider(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -24,6 +26,7 @@ public class ClientAuthenticationStateProvider : AuthenticationStateProvider
         {
             if (response.ClientPrincipal is not null)
             {
+                IdentityProvider = response.ClientPrincipal.IdentityProvider;
                 claimsIdentity = response.ClientPrincipal.ToClaimsIdentity();
             }
         }

@@ -7,18 +7,19 @@ namespace Client.Services
     {
         public class Theme
         {
-            public string Text { get; set; }
-            public string Value { get; set; }
-            public string Primary { get; set; }
-            public string Secondary { get; set; }
-            public string Base { get; set; }
-            public string Header { get; set; }
-            public string Sidebar { get; set; }
-            public string Content { get; set; }
-            public string TitleText { get; set; }
-            public string ContentText { get; set; }
+            public string? Text { get; set; }
+            public string? Value { get; set; }
+            public string? Primary { get; set; }
+            public string? Secondary { get; set; }
+            public string? Base { get; set; }
+            public string? Header { get; set; }
+            public string? Sidebar { get; set; }
+            public string? Content { get; set; }
+            public string? TitleText { get; set; }
+            public string? ContentText { get; set; }
             public bool Premium { get; set; }
         }
+
         public static readonly Theme[] Themes = new[]
         {
             new Theme {
@@ -108,11 +109,11 @@ namespace Client.Services
 
             if (Themes.Any(theme => theme.Value == value))
             {
-                CurrentTheme = value;
+                CurrentTheme = value!;
             }
         }
 
-        public void Change(NavigationManager navigationManager, string theme)
+        public static void Change(NavigationManager navigationManager, string theme)
         {
             var url = navigationManager.GetUriWithQueryParameter(QueryParameter, theme);
 

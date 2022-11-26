@@ -1,13 +1,8 @@
-using System.IO;
 using System.Net;
-using System.Reflection;
 using BooKeeperWebApp.Business;
 using BooKeeperWebApp.Shared;
-using BooKeeperWebApp.Shared.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.CodeAnalysis;
-using Microsoft.Extensions.Configuration;
 
 namespace Api
 {

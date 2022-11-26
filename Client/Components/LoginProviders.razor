@@ -1,0 +1,27 @@
+﻿@{
+    var providers = new Dictionary<string, string>
+    {
+        { "aad", "Azure Active Directory" }
+    };
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            Sign in with:
+        </div>
+    </div>
+
+    @foreach (var provider in providers)
+    {
+        var path = $"/.auth/login/{provider.Key}";
+        var imagePath = $"Images/{provider.Key}Icon.png";
+        <div class="row">
+            <div class="col">
+                <RadzenImage Path="@imagePath" Style="height: 50px;" />
+                <RadzenLink Path="@path" Text="@provider.Value">
+                </RadzenLink>
+            </div>
+        </div>
+    }
+</div>
