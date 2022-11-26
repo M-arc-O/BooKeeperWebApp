@@ -6,14 +6,16 @@ namespace BooKeeperWebApp.Infrastructure.Contexts;
 public class BooKeeperWebAppDbContext : DbContext
 {
 	public DbSet<BankAccount>? BankAccounts { get; set; }
+    public DbSet<User>? Users { get; set; }
 
-	public BooKeeperWebAppDbContext(DbContextOptions<BooKeeperWebAppDbContext> options) : base(options)
+    public BooKeeperWebAppDbContext(DbContextOptions<BooKeeperWebAppDbContext> options) : base(options)
     {
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfiguration(new BankAccountConfiguration());
+		modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 
     public static void ConfigureDbContextOptions(DbContextOptionsBuilder optionsBuilder, string connectionString)

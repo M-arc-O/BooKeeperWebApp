@@ -144,13 +144,13 @@
         {
             authName = user.Identity.Name;
             claims = user.Claims;
+
+            await LoadBackendClientPrincipals();
         }
         else
         {
             authName = "The user is NOT authentifcated.";
         }
-
-        await LoadBackendClientPrincipals();
     }
 
     private async Task LoadBackendClientPrincipals()

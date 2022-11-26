@@ -1,6 +1,7 @@
 ﻿@page "/bankaccounts"
 
 @using BooKeeperWebApp.Shared
+@using BooKeeperWebApp.Shared.Dtos;
 @using BooKeeperWebApp.Shared.Models;
 @using Microsoft.AspNetCore.Authorization
 
@@ -47,7 +48,7 @@ else
 
 @code {
     private string newbankAccountName = "";
-    private BankAccount[]? bankAccounts;
+    private BankAccountDto[]? bankAccounts;
 
 
     protected override async Task OnInitializedAsync()
@@ -58,19 +59,19 @@ else
         }
         catch (Exception ex)
         {
-            bankAccounts = new[] { new BankAccount(Guid.NewGuid(), $"Frontend error: {ex.Message}") };
+            bankAccounts = new[] { new BankAccountDto(Guid.NewGuid(), $"Frontend error: {ex.Message}") };
         }        
     }
 
     protected async Task AddBankAccount()
     {
-        var bankAccount = new BankAccount(Guid.Empty, newbankAccountName);
-        await Http.PostAsJsonAsync<BankAccount>("/api/AddBankAccount", bankAccount);
+        var bankAccount = new AddBankAccoutModel(newbankAccountName);
+        await Http.PostAsJsonAsync<AddBankAccoutModel>("/api/AddBankAccount", bankAccount);
         await LoadBankAccounts();
     }
 
     private async Task LoadBankAccounts()
     {
-        bankAccounts = await Http.GetFromJsonAsync<BankAccount[]>("/api/GetBankAccounts") ?? new BankAccount[] { };
+        bankAccounts = await Http.GetFromJsonAsync<BankAccountDto[]>("/api/GetBankAccounts") ?? new BankAccountDto[] { };
     }
 }

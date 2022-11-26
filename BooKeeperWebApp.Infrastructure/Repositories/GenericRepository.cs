@@ -14,7 +14,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         dbSet = context.Set<TEntity>();
     }
 
-    public virtual Task<List<TEntity>> Get(
+    public virtual Task<List<TEntity>> GetAsync(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = "")
@@ -42,9 +42,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         }
     }
 
-    public virtual Task<TEntity?> GetByID(object id) => dbSet.FindAsync(id).AsTask();
+    public virtual Task<TEntity?> GetByIdAsync(object id) => dbSet.FindAsync(id).AsTask();
 
-    public virtual Task Insert(TEntity entity) => dbSet.AddAsync(entity).AsTask();
+    public virtual Task InsertAsync(TEntity entity) => dbSet.AddAsync(entity).AsTask();
 
     public virtual void Delete(object id)
     {

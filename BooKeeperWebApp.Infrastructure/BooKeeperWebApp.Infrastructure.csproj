@@ -14,4 +14,8 @@
 	  <ProjectReference Include="..\BooKeeperWebApp.Shared\BooKeeperWebApp.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Extensions\" />
+	</ItemGroup>
+
 </Project>

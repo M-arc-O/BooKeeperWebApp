@@ -1,4 +1,5 @@
 using Api.Configuration;
+using Api.Middleware;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
@@ -6,7 +7,10 @@ using System.Reflection;
 var configuration = BuildConfiguration();
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureFunctionsWorkerDefaults(builder =>
+    {
+        builder.UseMiddleware<UserMiddleware>();
+    })
     .ConfigureServices(services => services.InitializeServices(configuration))
     .Build();
 
