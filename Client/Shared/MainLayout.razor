@@ -17,7 +17,7 @@
                 <div class="col-5 d-flex align-items-center">
                     <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
                     </RadzenSidebarToggle>
-                    <RadzenButton Variant="Variant.Text" Shade="Shade.Darker" Click="@(args => UriHelper.NavigateTo(""))">
+                    <RadzenButton Variant="Variant.Text" Shade="Shade.Darker" Click="@(_ => UriHelper.NavigateTo(""))">
                         <RadzenImage Path="Images/icon.png" Style="width: 50px; height: 50px;" />
                         <RadzenLabel Text="BooKeeper" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" />
                     </RadzenButton>
@@ -28,7 +28,15 @@
                             @context.Text Theme
                         </ValueTemplate>
                     </RadzenDropDown>
-                    <RadzenButton Variant="Variant.Outlined" Click=@ShowLoginDialog Text="Sign in" Style="margin-right: 15px;" />
+
+                    <AuthorizeView>
+                        <Authorized>
+                            <RadzenLink Path="/.auth/logout" Text="Sign out" Style="margin-right: 15px" />
+                        </Authorized>
+                        <NotAuthorized>
+                            <RadzenButton Variant="Variant.Outlined" Click=@ShowLoginDialog Text="Sign in" Style="margin-right: 15px;" />
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </div>
             </div>
         </ChildContent>
@@ -73,10 +81,10 @@
     async Task ShowLoginDialog()
     {
         await DialogService.OpenAsync("Sign in", ds =>
-            @<div>
-                <LoginProviders></LoginProviders>
-            </div>
-            ,new DialogOptions() { CloseDialogOnOverlayClick = true });
+    @<div>
+        <LoginProviders></LoginProviders>
+        </div>
+    , new DialogOptions() { CloseDialogOnOverlayClick = true });
     }
 
     void ChangeTheme(object value)

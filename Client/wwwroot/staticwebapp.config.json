@@ -1,9 +1,12 @@
-﻿{
-  "trailingSlash": "auto",
+{
   "routes": [
     {
       "route": "/api/*",
       "allowedRoles": [ "authenticated" ]
+    },
+    {
+      "route": "/logout",
+      "redirect": "/.auth/logout?post_logout_redirect_uri="
     }
   ],
   "navigationFallback": {
@@ -15,14 +18,14 @@
       "rewrite": "/invalid-invitation-error.html"
     },
     "401": {
-      "redirect": "/login",
+      "rewrite": "",
       "statusCode": 302
     },
     "403": {
       "rewrite": "/custom-forbidden-page.html"
     },
     "404": {
-      "rewrite": "/404.html"
+      "rewrite": "/notfound.html"
     }
   },
   "globalHeaders": {
