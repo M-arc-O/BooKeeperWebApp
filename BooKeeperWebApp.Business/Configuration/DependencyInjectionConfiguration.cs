@@ -3,7 +3,6 @@ using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Business.Queries;
 using BooKeeperWebApp.Business.Services;
-using BooKeeperWebApp.Infrastructure.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BooKeeperWebApp.Business.Configuration;

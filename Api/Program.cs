@@ -1,5 +1,6 @@
 using Api.Configuration;
 using Api.Middleware;
+using BooKeeperWebApp.Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
@@ -11,7 +12,10 @@ var host = new HostBuilder()
     {
         builder.UseMiddleware<UserMiddleware>();
     })
-    .ConfigureServices(services => services.InitializeServices(configuration))
+    .ConfigureServices(services =>
+    {
+        services.InitializeServices(configuration);
+    })
     .Build();
 
 await host.RunAsync();

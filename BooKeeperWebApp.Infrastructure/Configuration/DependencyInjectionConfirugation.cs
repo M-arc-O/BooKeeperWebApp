@@ -1,7 +1,5 @@
-﻿using BooKeeperWebApp.Infrastructure.Contexts;
-using BooKeeperWebApp.Infrastructure.Entities;
+﻿using BooKeeperWebApp.Infrastructure.Entities;
 using BooKeeperWebApp.Infrastructure.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BooKeeperWebApp.Infrastructure.Configuration;

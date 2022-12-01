@@ -7,7 +7,8 @@
 
 @inject HttpClient Http
 
-@attribute [Authorize()]
+
+
 
 <PageTitle>Bank Accounts</PageTitle>
 
@@ -50,7 +51,6 @@ else
     private string newbankAccountName = "";
     private BankAccountDto[]? bankAccounts;
 
-
     protected override async Task OnInitializedAsync()
     {
         try
@@ -60,18 +60,18 @@ else
         catch (Exception ex)
         {
             bankAccounts = new[] { new BankAccountDto(Guid.NewGuid(), $"Frontend error: {ex.Message}") };
-        }        
+        }
     }
 
     protected async Task AddBankAccount()
     {
         var bankAccount = new AddBankAccoutModel(newbankAccountName);
-        await Http.PostAsJsonAsync<AddBankAccoutModel>("/api/AddBankAccount", bankAccount);
+        await Http.PostAsJsonAsync<AddBankAccoutModel>("/api/bankaccount/create", bankAccount);
         await LoadBankAccounts();
     }
 
     private async Task LoadBankAccounts()
     {
-        bankAccounts = await Http.GetFromJsonAsync<BankAccountDto[]>("/api/GetBankAccounts") ?? new BankAccountDto[] { };
+        bankAccounts = await Http.GetFromJsonAsync<BankAccountDto[]>("/api/bankaccount/getall") ?? new BankAccountDto[] { };
     }
 }

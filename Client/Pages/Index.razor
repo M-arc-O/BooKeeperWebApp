@@ -145,7 +145,7 @@
             authName = user.Identity.Name;
             claims = user.Claims;
 
-            await LoadBackendClientPrincipals();
+            await MakeSureUserExsists();
         }
         else
         {
@@ -153,8 +153,8 @@
         }
     }
 
-    private async Task LoadBackendClientPrincipals()
+    private async Task MakeSureUserExsists()
     {
-        backendClientPrincipal = await Http.GetFromJsonAsync<ClientPrincipal>("/api/Me") ?? new ClientPrincipal();
+        backendClientPrincipal = await Http.GetFromJsonAsync<ClientPrincipal>("/api/user/get") ?? new ClientPrincipal();
     }
 }

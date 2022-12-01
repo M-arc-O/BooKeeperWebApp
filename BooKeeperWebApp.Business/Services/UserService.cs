@@ -29,7 +29,7 @@ public class UserService : IUserService
     {
         var user = await GetUser(userModel.ProviderId);
 
-        if (user == null)
+        if (user != null)
         {
             var newUser = _mapper.Map<User>(userModel);
             newUser.Id = Guid.NewGuid();

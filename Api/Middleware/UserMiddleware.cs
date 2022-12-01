@@ -21,9 +21,12 @@ public class UserMiddleware : IFunctionsWorkerMiddleware
     public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
     {
         var req = await context.GetHttpRequestDataAsync() ?? throw new NotFoundException("Could not get request");
-        var user = _mapper.Map<UserModel>(ClientPrincipalRetreiver.GetClientPrincipal(req));
 
-        await _userService.MakeSureUserExists(user);
+        if (req != null)
+        {
+            var user = _mapper.Map<UserModel>(ClientPrincipalRetreiver.GetClientPrincipal(req));
+            await _userService.MakeSureUserExists(user);
+        }
 
         await next(context);
     }

@@ -6,20 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Api
 {
-    public class Me
+    public class UserFunctions
     {
         private readonly ILogger _logger;
 
-        public Me(ILoggerFactory loggerFactory)
+        public UserFunctions(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<Me>();
+            _logger = loggerFactory.CreateLogger<UserFunctions>();
         }
 
-        [Function("Me")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+        [Function("GetUser")]
+        public HttpResponseData GetUser([HttpTrigger(AuthorizationLevel.Function, "get", Route = "user/get")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-
             var myClientPrincipal = ClientPrincipalRetreiver.GetClientPrincipal(req);
 
             var response = req.CreateResponse(HttpStatusCode.InternalServerError);

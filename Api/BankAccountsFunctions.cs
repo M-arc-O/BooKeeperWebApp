@@ -1,5 +1,4 @@
 using System.Net;
-using Api.Authentication;
 using AutoMapper;
 using BooKeeperWebApp.Business.Commands;
 using BooKeeperWebApp.Business.CQRS;
@@ -26,7 +25,8 @@ namespace Api
         }
 
         [Function("GetBankAccounts")]
-        public async Task<HttpResponseData> GetBankAccounts([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+        public async Task<HttpResponseData> GetBankAccounts(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "bankaccount/getall")] HttpRequestData req)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
 
@@ -46,8 +46,8 @@ namespace Api
             return response;
         }
 
-        [Function("AddBankAccount")]
-        public async Task<HttpResponseData> AddBankAccount([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+        [Function("CreateBankAccount")]
+        public async Task<HttpResponseData> CreateBankAccount([HttpTrigger(AuthorizationLevel.Function, "post", Route = "bankaccount/create")] HttpRequestData req)
         {
             var bankAccount = await req.ReadFromJsonAsync<AddBankAccoutModel>() ?? throw new Exception();
 
