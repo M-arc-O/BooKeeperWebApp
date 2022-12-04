@@ -8,18 +8,26 @@
 
 @inject HttpClient Http
 
-<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Class="mt-2 mb-4" Text="Add New Account" Click="@InsertRow" Disabled=@(inserting || updating || loading) />
+<PageTitle>Accounts</PageTitle>
+
+<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Class="mt-2 mb-4" Text="Add New Account" Click="@InsertRow" Disabled=@(inserting || updating || busy) />
+
+@if (bankAccounts == null)
+{
+    <RadzenLabel>Loading bank accounts:</RadzenLabel>
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
 
 <RadzenDataGrid @ref="accountsGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="15" AllowSorting="true" EditMode="DataGridEditMode.Single"
                 Data="@bankAccounts" TItem="BankAccountDto" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset">
     <Columns>
-        <RadzenDataGridColumn TItem="BankAccountDto" Property="Name" Title="Name" Width="300px">
+        <RadzenDataGridColumn TItem="BankAccountDto" Property="Name" Title="Name" Width="225px">
             <EditTemplate Context="account">
                 <RadzenTextBox @bind-Value="account.Name" Style="width:100%; display: block" Name="Name" />
                 <RadzenRequiredValidator Text="Name is required" Component="Name" Popup="true" />
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="BankAccountDto" Property="Number" Title="Number" Width="250px">
+        <RadzenDataGridColumn TItem="BankAccountDto" Property="Number" Title="Number" Width="150px">
             <EditTemplate Context="account">
                 <RadzenTextBox @bind-Value="account.Number" Style="width:100%; display: block" Name="Number" />
                 <RadzenRequiredValidator Text="Number is required" Component="Number" Popup="true" />
@@ -34,23 +42,23 @@
                 </RadzenDropDown>
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="BankAccountDto" Property="StartAmount" Title="Start amount" Width="75px">
+        <RadzenDataGridColumn TItem="BankAccountDto" Property="StartAmount" Title="Start amount" Width="150px">
             <EditTemplate Context="account">
                 <RadzenNumeric @bind-Value="account.StartAmount" Style="width:100%" />
             </EditTemplate>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="BankAccountDto" Property="CurrentAmount" Title="Current Amount" Width="75px" />
+        <RadzenDataGridColumn TItem="BankAccountDto" Property="CurrentAmount" Title="Current Amount" Width="150px" />
         <RadzenDataGridColumn TItem="BankAccountDto" Context="account" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
             <Template Context="account">
-                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(account))" @onclick:stopPropagation="true" />
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@(args => DeleteRow(account))" @onclick:stopPropagation="true" />
+                <RadzenButton IsBusy=@busy Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(account))" @onclick:stopPropagation="true" />
+                <RadzenButton IsBusy=@busy ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@(args => DeleteRow(account))" @onclick:stopPropagation="true" />
             </Template>
             <EditTemplate Context="account">
-                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(account))">
+                <RadzenButton IsBusy=@busy Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(account))">
                 </RadzenButton>
-                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@((args) => CancelEdit(account))">
+                <RadzenButton IsBusy=@busy Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@((args) => CancelEdit(account))">
                 </RadzenButton>
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@(args => DeleteRow(account))">
+                <RadzenButton IsBusy=@busy ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@(args => DeleteRow(account))">
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
@@ -58,7 +66,7 @@
 </RadzenDataGrid>
 
 @code {
-    private bool loading = false;
+    private bool busy = false;
     private bool inserting = false;
     private bool updating = false;
 
@@ -88,12 +96,14 @@
     {
         try
         {
+            busy = true;
             var bankAccount = new AddBankAccountModel(account.Name, account.Number, account.Type, account.StartAmount, 0);
             await Http.PostAsJsonAsync<AddBankAccountModel>("/api/bankaccount/create", bankAccount);
             await LoadBankAccounts();
         }
         finally
         {
+            busy = false;
             inserting = false;
         }
     }
@@ -122,12 +132,14 @@
         {
             if (account.Id != Guid.Empty)
             {
+                busy = true;
                 await Http.DeleteAsync($"/api/bankaccount/{account.Id}/delete");
                 await LoadBankAccounts();
             }
         }
         finally
         {
+            busy = false;
             inserting = false;
             updating = false;
         }
@@ -137,12 +149,14 @@
     {
         try
         {
+            busy = true;
             var bankAccount = new AddBankAccountModel(account.Name, account.Number, account.Type, account.StartAmount, 0);
             await Http.PutAsJsonAsync<AddBankAccountModel>($"/api/bankaccount/{account.Id}/update", bankAccount);
             await LoadBankAccounts();
         }
         finally
         {
+            busy = false;
             inserting = false;
             updating = false;
         }
@@ -150,14 +164,7 @@
 
     private async Task LoadBankAccounts()
     {
-        try
-        {
-            loading = true;
-            bankAccounts = await Http.GetFromJsonAsync<List<BankAccountDto>>("/api/bankaccount/getall") ?? new List<BankAccountDto>() { };
-        }
-        finally
-        {
-            loading = false;
-        }
+        bankAccounts = null;
+        bankAccounts = await Http.GetFromJsonAsync<List<BankAccountDto>>("/api/bankaccount/getall") ?? new List<BankAccountDto>() { };
     }
 }
