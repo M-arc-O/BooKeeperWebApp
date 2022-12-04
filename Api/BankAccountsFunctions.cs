@@ -1,6 +1,6 @@
 using System.Net;
 using AutoMapper;
-using BooKeeperWebApp.Business.Commands;
+using BooKeeperWebApp.Business.Commands.BankAccount;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Business.Queries;
@@ -30,18 +30,10 @@ namespace Api
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
 
-            try
-            {
-                var user = await GetUser(req);
-                var query = new GetAllAccountsQuery(user.Id);
-                var bankAccounts = await _excecutor.Execute<GetAllAccountsQuery, IEnumerable<BankAccountModel>>(query);
-                await response.WriteAsJsonAsync(bankAccounts.Select(x => _mapper.Map<BankAccountDto>(x)));
-            }
-            catch (Exception ex) 
-            {
-                var bankAccounts = new[] { new BankAccountDto(Guid.NewGuid(), ex.Message) };
-                await response.WriteAsJsonAsync(bankAccounts);
-            }
+            var user = await GetUser(req);
+            var query = new GetAllAccountsQuery(user.Id);
+            var bankAccounts = await _excecutor.Execute<GetAllAccountsQuery, IEnumerable<BankAccountModel>>(query);
+            await response.WriteAsJsonAsync(bankAccounts.Select(x => _mapper.Map<BankAccountDto>(x)));
 
             return response;
         }
@@ -49,12 +41,40 @@ namespace Api
         [Function("CreateBankAccount")]
         public async Task<HttpResponseData> CreateBankAccount([HttpTrigger(AuthorizationLevel.Function, "post", Route = "bankaccount/create")] HttpRequestData req)
         {
-            var bankAccount = await req.ReadFromJsonAsync<AddBankAccoutModel>() ?? throw new Exception();
+            var bankAccount = await req.ReadFromJsonAsync<AddBankAccountModel>() ?? throw new Exception();
 
             var user = await GetUser(req);
 
-            var command = new AddBankAccountCommand(user.Id, bankAccount.Name);
+            var command = new AddBankAccountCommand(user.Id, bankAccount.Name, bankAccount.Number, bankAccount.Type, bankAccount.StartAmount);
             await _excecutor.Execute<AddBankAccountCommand, BankAccountModel>(command);
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            return response;
+        }
+
+        [Function("UpdateBankAccount")]
+        public async Task<HttpResponseData> UpdateBankAccount([HttpTrigger(AuthorizationLevel.Function, "put", Route = "bankaccount/{id}/update")] HttpRequestData req, Guid id)
+        {
+            var bankAccount = await req.ReadFromJsonAsync<AddBankAccountModel>() ?? throw new Exception();
+
+            var user = await GetUser(req);
+
+            var command = new UpdateBankAccountCommand(user.Id, id, bankAccount.Name, bankAccount.Number, bankAccount.Type, bankAccount.StartAmount);
+            await _excecutor.Execute<UpdateBankAccountCommand, BankAccountModel>(command);
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            return response;
+        }
+
+        [Function("DeleteBankAccount")]
+        public async Task<HttpResponseData> DeleteBankAccount([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "bankaccount/{id}/delete")] HttpRequestData req, Guid id)
+        {
+            var user = await GetUser(req);
+
+            var command = new DeleteBankAccountCommand(user.Id, id);
+            await _excecutor.Execute<DeleteBankAccountCommand, Guid>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
 

@@ -1,4 +1,4 @@
-﻿using BooKeeperWebApp.Business.Commands;
+﻿using BooKeeperWebApp.Business.Commands.BankAccount;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Business.Queries;
@@ -16,5 +16,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<GetAllAccountsQuery, IEnumerable<BankAccountModel>>, GetAllAccountsQueryHandler>();
 
         services.AddScoped<IHandler<AddBankAccountCommand, BankAccountModel>, AddBankAccountCommandHandler>();
+        services.AddScoped<IHandler<UpdateBankAccountCommand, BankAccountModel>, UpdateBankAccountCommandHandler>();
+        services.AddScoped<IHandler<DeleteBankAccountCommand, Guid>, DeleteBankAccountCommandHandler>();
     }
 }
