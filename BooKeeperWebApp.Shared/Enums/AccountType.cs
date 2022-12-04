@@ -1,4 +1,7 @@
 ﻿namespace BooKeeperWebApp.Shared.Enums;
-public enum AccountType {
+public enum AccountType
+{
     ING,
+    RegioBank,
+    Robeco
 }
