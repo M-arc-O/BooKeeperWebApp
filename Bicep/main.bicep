@@ -39,11 +39,11 @@ param adminLoginName string
 @secure()
 param adminLoginPassword string
 
-@description('Database admin login name')
+@description('Database user login name')
 @secure()
 param dbUserLoginName string
 
-@description('Database admin login password')
+@description('Database user login password')
 @secure()
 param dbUserLoginPassword string
 

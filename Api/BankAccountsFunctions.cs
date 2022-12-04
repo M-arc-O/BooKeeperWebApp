@@ -35,7 +35,7 @@ namespace Api
                 var user = await GetUser(req);
                 var query = new GetAllAccountsQuery(user.Id);
                 var bankAccounts = await _excecutor.Execute<GetAllAccountsQuery, IEnumerable<BankAccountModel>>(query);
-                await response.WriteAsJsonAsync(bankAccounts);
+                await response.WriteAsJsonAsync(bankAccounts.Select(x => _mapper.Map<BankAccountDto>(x)));
             }
             catch (Exception ex) 
             {
