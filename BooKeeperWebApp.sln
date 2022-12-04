@@ -9,8 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml = .github\workflows\azure-static-web-apps-wonderful-mushroom-04118a203.yml
-		main.bicep = main.bicep
-		main.parameters.json = main.parameters.json
+		Bicep\main.bicep = Bicep\main.bicep
+		Bicep\main.parameters.json = Bicep\main.parameters.json
 		package.json = package.json
 	EndProjectSection
 EndProject
