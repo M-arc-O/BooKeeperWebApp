@@ -46,7 +46,8 @@
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="BankAccountDto" Property="StartAmount" Title="Start amount" Width="150px">
             <EditTemplate Context="account">
-                <RadzenNumeric @bind-Value="account.StartAmount" Style="width:100%" />
+                <RadzenNumeric @bind-Value="account.StartAmount" Style="width:100%" Name="StartAmount" />
+                <RadzenRequiredValidator Text="Start amount is required" Component="StartAmount" Popup="true" />
             </EditTemplate>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="BankAccountDto" Property="CurrentAmount" Title="Current Amount" Width="150px" />

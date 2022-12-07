@@ -1,6 +1,5 @@
 ﻿using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public abstract class BankAccountCommandBase
@@ -26,7 +25,7 @@ public abstract class BankAccountCommandBase
 
     protected virtual async Task<bool> NumberTakenAsync(string number)
     {
-        var accounts = await _bankAccountRepository.GetAsync(x => x.Number!.Equals(number));
+        var accounts = await _bankAccountRepository.GetAsync(x => x.Number!.ToLower().Equals(number.ToLower()));
         return accounts.Any();
     }
 }
