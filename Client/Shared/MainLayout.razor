@@ -9,6 +9,7 @@
 @inject DialogService DialogService
 
 <RadzenDialog />
+<RadzenNotification />
 
 <RadzenLayout>
     <RadzenHeader>
@@ -83,7 +84,7 @@
         await DialogService.OpenAsync("Sign in", ds =>
     @<div>
         <LoginProviders></LoginProviders>
-        </div>
+    </div>
     , new DialogOptions() { CloseDialogOnOverlayClick = true });
     }
 

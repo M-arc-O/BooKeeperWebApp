@@ -19,26 +19,13 @@ public class UserService : IUserService
         _mapper = mapper;
 	}
 
-    public async Task<UserModel> GetUserByProviderId(string providerId)
+    public async Task<UserModel> GetUserByProviderIdAsync(string providerId)
     {
-        var user = await GetUser(providerId) ?? throw new NotFoundException($"User with provider id '{providerId}' not found.");
+        var user = await GetUserAsync(providerId) ?? throw new NotFoundException($"User with provider id '{providerId}' not found.");
         return _mapper.Map<UserModel>(user);
     }
 
-    public async Task MakeSureUserExists(UserModel userModel)
-    {
-        var user = await GetUser(userModel.ProviderId);
-
-        if (user == null)
-        {
-            var newUser = _mapper.Map<User>(userModel);
-            newUser.Id = Guid.NewGuid();
-            await _userRepository.InsertAsync(newUser);
-            await _dbContext.SaveChangesAsync();
-        }
-    }
-
-    private async Task<User?> GetUser(string providerId)
+    private async Task<User?> GetUserAsync(string providerId)
     {
         var users = await _userRepository.GetAsync(x => x.ProviderId == providerId);
         return users?.FirstOrDefault();

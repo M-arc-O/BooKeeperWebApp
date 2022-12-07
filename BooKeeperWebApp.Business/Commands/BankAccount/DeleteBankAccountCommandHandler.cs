@@ -14,7 +14,7 @@ public class DeleteBankAccountCommandHandler : BankAccountCommandBase, IHandler<
 
     public async Task<Guid> ExecuteAsync(DeleteBankAccountCommand command)
     {
-        var bankAccount = await GetBankAccount(command.UserId, command.AccountId);
+        var bankAccount = await GetBankAccountAsync(command.UserId, command.AccountId);
         _bankAccountRepository.Delete(bankAccount);
 
         return command.AccountId;

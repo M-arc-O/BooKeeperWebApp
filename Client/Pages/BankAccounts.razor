@@ -4,22 +4,24 @@
 @using BooKeeperWebApp.Shared.Dtos;
 @using BooKeeperWebApp.Shared.Enums;
 @using BooKeeperWebApp.Shared.Models;
-@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Authorization;
 
-@inject HttpClient Http
+@inject BankAccountService BankAccountService;
+@inject NotificationService NotificationService;
+@inject DialogService DialogService;
 
 <PageTitle>Accounts</PageTitle>
 
 <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Class="mt-2 mb-4" Text="Add New Account" Click="@InsertRow" Disabled=@(inserting || updating || busy) />
 
-@if (bankAccounts == null)
+@if (BankAccountService.Loading)
 {
     <RadzenLabel>Loading bank accounts:</RadzenLabel>
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
 }
 
 <RadzenDataGrid @ref="accountsGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="15" AllowSorting="true" EditMode="DataGridEditMode.Single"
-                Data="@bankAccounts" TItem="BankAccountDto" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset">
+                Data="@BankAccountService.Accounts" TItem="BankAccountDto" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset">
     <Columns>
         <RadzenDataGridColumn TItem="BankAccountDto" Property="Name" Title="Name" Width="225px">
             <EditTemplate Context="account">
@@ -71,13 +73,12 @@
     private bool updating = false;
 
     RadzenDataGrid<BankAccountDto>? accountsGrid;
-    private IList<BankAccountDto>? bankAccounts;
     IEnumerable<AccountType> AccountTypes = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await LoadBankAccounts();
+        await BankAccountService.GetBankAccountsAsync();
     }
 
     void Reset()
@@ -89,7 +90,24 @@
     async Task InsertRow()
     {
         inserting = true;
-        await accountsGrid.InsertRow(new BankAccountDto());
+        await accountsGrid!.InsertRow(new BankAccountDto());
+    }
+
+    async Task EditRow(BankAccountDto account)
+    {
+        await accountsGrid!.EditRow(account);
+    }
+
+    void CancelEdit(BankAccountDto account)
+    {
+        inserting = false;
+        updating = false;
+        accountsGrid!.CancelEditRow(account);
+    }
+
+    async Task SaveRow(BankAccountDto account)
+    {
+        await accountsGrid!.UpdateRow(account);
     }
 
     async Task OnCreateRow(BankAccountDto account)
@@ -97,9 +115,10 @@
         try
         {
             busy = true;
-            var bankAccount = new AddBankAccountModel(account.Name, account.Number, account.Type, account.StartAmount, 0);
-            await Http.PostAsJsonAsync<AddBankAccountModel>("/api/bankaccount/create", bankAccount);
-            await LoadBankAccounts();
+            var message = await BankAccountService.CreateBankAccountAsync(account);
+            HandleError(message);
+
+            await BankAccountService.GetBankAccountsAsync();
         }
         finally
         {
@@ -108,22 +127,22 @@
         }
     }
 
-    async Task EditRow(BankAccountDto account)
+    async Task OnUpdateRow(BankAccountDto account)
     {
-        await accountsGrid.EditRow(account);
-    }
+        try
+        {
+            busy = true;
+            var message = await BankAccountService.UpdateBankAccountAsync(account);
+            HandleError(message);
 
-    void CancelEdit(BankAccountDto account)
-    {
-        inserting = false;
-        updating = false;
-        accountsGrid.CancelEditRow(account);
-    }
-
-    async Task SaveRow(BankAccountDto account)
-    {
-        await accountsGrid.UpdateRow(account);
-
+            await BankAccountService.GetBankAccountsAsync();
+        }
+        finally
+        {
+            busy = false;
+            inserting = false;
+            updating = false;
+        }
     }
 
     async Task DeleteRow(BankAccountDto account)
@@ -132,9 +151,19 @@
         {
             if (account.Id != Guid.Empty)
             {
-                busy = true;
-                await Http.DeleteAsync($"/api/bankaccount/{account.Id}/delete");
-                await LoadBankAccounts();
+                var confirmResult = await DialogService.Confirm(
+                    $"Are you sure you want to delete '{account.Name}', this cannot be undone.", 
+                    "Warning!",
+                    new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
+
+                if (confirmResult.HasValue && confirmResult.Value)
+                {
+                    busy = true;
+                    var message = await BankAccountService.DeleteBankAccountAsync(account.Id);
+                    HandleError(message);
+
+                    await BankAccountService.GetBankAccountsAsync();
+                }
             }
         }
         finally
@@ -145,26 +174,17 @@
         }
     }
 
-    async Task OnUpdateRow(BankAccountDto account)
+    private void HandleError(string message)
     {
-        try
+        if (!string.IsNullOrEmpty(message))
         {
-            busy = true;
-            var bankAccount = new AddBankAccountModel(account.Name, account.Number, account.Type, account.StartAmount, 0);
-            await Http.PutAsJsonAsync<AddBankAccountModel>($"/api/bankaccount/{account.Id}/update", bankAccount);
-            await LoadBankAccounts();
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error: ",
+                    Detail = message,
+                    Duration = 4000
+                });
         }
-        finally
-        {
-            busy = false;
-            inserting = false;
-            updating = false;
-        }
-    }
-
-    private async Task LoadBankAccounts()
-    {
-        bankAccounts = null;
-        bankAccounts = await Http.GetFromJsonAsync<List<BankAccountDto>>("/api/bankaccount/getall") ?? new List<BankAccountDto>() { };
     }
 }

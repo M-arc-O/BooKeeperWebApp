@@ -16,7 +16,7 @@ namespace Api
         }
 
         [Function("GetUser")]
-        public HttpResponseData GetUser([HttpTrigger(AuthorizationLevel.Function, "get", Route = "user/get")] HttpRequestData req)
+        public async Task<HttpResponseData> GetUserAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "user/get")] HttpRequestData req)
         {
             var myClientPrincipal = ClientPrincipalRetreiver.GetClientPrincipal(req);
 
@@ -25,7 +25,7 @@ namespace Api
             if (myClientPrincipal?.UserId is not null)
             {
                 response = req.CreateResponse(HttpStatusCode.OK);
-                response.WriteAsJsonAsync(myClientPrincipal);
+                await response.WriteAsJsonAsync(myClientPrincipal);
             }
 
             return response;

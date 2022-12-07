@@ -1,10 +1,49 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using BooKeeperWebApp.Shared.Dtos;
+@using Microsoft.AspNetCore.Components.Authorization
 @using BooKeeperWebApp.Shared
+
+@inject BankAccountService BankAccountService
+@inject AuthenticationStateProvider _authenticationStateProvider;
 
 <RadzenPanelMenu Match="NavLinkMatch.Prefix">
     <AuthorizeView Roles=@Roles.ApplicationUsers>
         <Authorized>
-            <RadzenPanelMenuItem Text="Accounts" Icon="credit_card" Path="BankAccounts" />
+            <RadzenPanelMenuItem Expanded=true Text="Accounts" Icon="credit_card" Path="BankAccounts">
+                @foreach (var account in BankAccountService.Accounts)
+                {
+                    <RadzenPanelMenuItem Text="@account.Name" Path=@GetAccountPath(account) />
+                }
+            </RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Books" Icon="book" Path="Books" />
+            <RadzenPanelMenuItem Text="Rules" Icon="list" Path="Rules" />
+            <RadzenPanelMenuItem Text="Events" Icon="event" Path="Events" />
         </Authorized>
     </AuthorizeView>
 </RadzenPanelMenu>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        BankAccountService.RefreshRequested += RefreshMe;
+
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            await BankAccountService.GetBankAccountsAsync();
+        }
+    }
+
+    private string GetAccountPath(BankAccountDto account)
+    {
+        return $"bankaccountdetails/{account.Id}";
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

@@ -1,20 +1,20 @@
 ﻿using Api.Authentication;
 using AutoMapper;
 using BooKeeperWebApp.Business.Models;
-using BooKeeperWebApp.Business.Services;
+using BooKeeperWebApp.Infrastructure.Contexts;
+using BooKeeperWebApp.Infrastructure.Entities;
 using BooKeeperWebApp.Shared.Exceptions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Middleware;
 public class UserMiddleware : IFunctionsWorkerMiddleware
 {
-    private readonly IUserService _userService;
     private readonly IMapper _mapper;
 
-    public UserMiddleware(IUserService userService, IMapper mapper)
+    public UserMiddleware(IMapper mapper)
     {
-        _userService = userService;
         _mapper = mapper;
     }
 
@@ -25,7 +25,15 @@ public class UserMiddleware : IFunctionsWorkerMiddleware
         if (req != null)
         {
             var user = _mapper.Map<UserModel>(ClientPrincipalRetreiver.GetClientPrincipal(req));
-            await _userService.MakeSureUserExists(user);
+            var userEntitie = _mapper.Map<User>(user);
+            var dbContext = context.InstanceServices.GetService<BooKeeperWebAppDbContext>();
+
+            if (dbContext != null && !dbContext.Users!.Any(u => u.ProviderId == userEntitie.ProviderId))
+            {
+                user.Id = Guid.NewGuid();
+                await dbContext.Users!.AddAsync(userEntitie);
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         await next(context);

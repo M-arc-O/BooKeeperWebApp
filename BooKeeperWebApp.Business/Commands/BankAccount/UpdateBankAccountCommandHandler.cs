@@ -3,6 +3,7 @@ using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Infrastructure.Enums;
 using BooKeeperWebApp.Infrastructure.Repositories;
+using BooKeeperWebApp.Shared.Exceptions;
 
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public class UpdateBankAccountCommandHandler : BankAccountCommandBase, IHandler<UpdateBankAccountCommand, BankAccountModel>
@@ -19,7 +20,12 @@ public class UpdateBankAccountCommandHandler : BankAccountCommandBase, IHandler<
 
     public async Task<BankAccountModel> ExecuteAsync(UpdateBankAccountCommand command)
     {
-        var bankAccount = await GetBankAccount(command.UserId, command.AccountId);
+        var bankAccount = await GetBankAccountAsync(command.UserId, command.AccountId);
+
+        if (command.Number != bankAccount.Number && await NumberTakenAsync(command.Number))
+        {
+            throw new ValidationException($"Account with number '{command.Number}' already exists");
+        }
 
         bankAccount.Name = command.Name;
         bankAccount.Number = command.Number;

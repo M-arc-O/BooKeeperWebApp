@@ -20,7 +20,7 @@ public class Executor : IExecutor
         _mapper = mapper;
 	}
 
-	public async Task<TResult> Execute<TExecutable, TResult>(TExecutable executable) where TExecutable : IExecutable
+	public async Task<TResult> ExecuteAsync<TExecutable, TResult>(TExecutable executable) where TExecutable : IExecutable
     {
         var handler = _serviceProvider.GetService<IHandler<TExecutable, TResult>>();
         if (handler == null)

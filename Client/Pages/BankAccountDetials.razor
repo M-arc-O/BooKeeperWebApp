@@ -1,0 +1,10 @@
+﻿@page "/bankaccountdetails/{id}"
+
+<PageTitle>Account details</PageTitle>
+
+Account details for account with id '@Id'.
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+}

@@ -1,5 +1,6 @@
 ﻿using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public abstract class BankAccountCommandBase
@@ -11,7 +12,7 @@ public abstract class BankAccountCommandBase
         _bankAccountRepository = bankAccountRepository;
     }
 
-    protected virtual async Task<Infrastructure.Entities.BankAccount> GetBankAccount(Guid userId, Guid accountId)
+    protected virtual async Task<Infrastructure.Entities.BankAccount> GetBankAccountAsync(Guid userId, Guid accountId)
     {
         var bankAccount = await _bankAccountRepository.GetByIdAsync(accountId) ?? throw new NotFoundException($"Bank account with id '{accountId}' not found.");
 
@@ -21,5 +22,11 @@ public abstract class BankAccountCommandBase
         }
 
         return bankAccount;
+    }
+
+    protected virtual async Task<bool> NumberTakenAsync(string number)
+    {
+        var accounts = await _bankAccountRepository.GetAsync(x => x.Number!.Equals(number));
+        return accounts.Any();
     }
 }

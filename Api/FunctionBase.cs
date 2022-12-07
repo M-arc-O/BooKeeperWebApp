@@ -13,9 +13,9 @@ public abstract class FunctionBase
         _userService = userService;
     }
 
-    protected virtual async Task<UserModel> GetUser(HttpRequestData req)
+    protected virtual async Task<UserModel> GetUserAsync(HttpRequestData req)
     {
         var user = ClientPrincipalRetreiver.GetClientPrincipal(req) ?? throw new Exception("Could not find user in request.");
-        return await _userService.GetUserByProviderId(user.UserId);
+        return await _userService.GetUserByProviderIdAsync(user.UserId);
     }
 }
