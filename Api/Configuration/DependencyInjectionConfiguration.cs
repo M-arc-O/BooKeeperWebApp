@@ -21,9 +21,11 @@ public static class DependencyInjectionConfiguration
         var mappingConfig = new MapperConfiguration(mc =>
         {
             mc.AddProfile(new BankAccountProfiles());
+            mc.AddProfile(new BookProfiles());
             mc.AddProfile(new UserProfiles());
 
             mc.AddProfile(new BankAccountModelProfiles());
+            mc.AddProfile(new BookModelProfiles());
             mc.AddProfile(new UserModelProfiles());
         });
 

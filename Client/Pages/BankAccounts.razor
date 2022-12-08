@@ -7,12 +7,16 @@
 @using Microsoft.AspNetCore.Authorization;
 
 @inject BankAccountService BankAccountService;
-@inject NotificationService NotificationService;
 @inject DialogService DialogService;
 
 <PageTitle>Accounts</PageTitle>
 
-<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" Class="mt-2 mb-4" Text="Add New Account" Click="@InsertRow" Disabled=@(inserting || updating || busy) />
+<RadzenButton 
+    ButtonStyle="ButtonStyle.Success" 
+    Icon="add_circle_outline" 
+    Class="mt-2 mb-4" 
+    Text="Add New Account"
+              Click="@InsertRow" Disabled=@(inserting || updating || BankAccountService.Deleting) />
 
 @if (BankAccountService.Loading)
 {
@@ -20,8 +24,21 @@
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
 }
 
-<RadzenDataGrid @ref="accountsGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="15" AllowSorting="true" EditMode="DataGridEditMode.Single"
-                Data="@BankAccountService.Accounts" TItem="BankAccountDto" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset">
+<RadzenDataGrid 
+    @ref="accountsGrid" 
+    AllowAlternatingRows="false" 
+    AllowFiltering="true" 
+    AllowPaging="true" 
+    PageSize="15" 
+    AllowSorting="true" 
+    EditMode="DataGridEditMode.Single"                
+    Data="@BankAccountService.Items" 
+    TItem="BankAccountDto" 
+    RowUpdate="@OnUpdateRow" 
+    RowCreate="@OnCreateRow" 
+    Sort="@Reset" 
+    Page="@Reset" 
+    Filter="@Reset">
     <Columns>
         <RadzenDataGridColumn TItem="BankAccountDto" Property="Name" Title="Name" Width="225px">
             <EditTemplate Context="account">
@@ -53,15 +70,51 @@
         <RadzenDataGridColumn TItem="BankAccountDto" Property="CurrentAmount" Title="Current Amount" Width="150px" />
         <RadzenDataGridColumn TItem="BankAccountDto" Context="account" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
             <Template Context="account">
-                <RadzenButton IsBusy=@busy Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(account))" @onclick:stopPropagation="true" />
-                <RadzenButton IsBusy=@busy ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@(args => DeleteRow(account))" @onclick:stopPropagation="true" />
+                <RadzenButton 
+                    IsBusy=@(BankAccountService.Creating || BankAccountService.Updating || BankAccountService.Deleting) 
+                    Icon="edit" 
+                    ButtonStyle="ButtonStyle.Light" 
+                    Variant="Variant.Flat" 
+                    Size="ButtonSize.Medium" 
+                    Click="@(args => EditRow(account))" 
+                    @onclick:stopPropagation="true" />
+                <RadzenButton 
+                    IsBusy=@(BankAccountService.Creating || BankAccountService.Updating || BankAccountService.Deleting) 
+                    ButtonStyle="ButtonStyle.Danger" 
+                    Icon="delete" 
+                    Variant="Variant.Flat" 
+                    Shade="Shade.Lighter" 
+                    Size="ButtonSize.Medium" 
+                    Class="my-1 ms-1" 
+                    Click="@(args => DeleteRow(account))" @onclick:stopPropagation="true" />
             </Template>
             <EditTemplate Context="account">
-                <RadzenButton IsBusy=@busy Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(account))">
+                <RadzenButton 
+                    IsBusy=@(BankAccountService.Creating || BankAccountService.Updating || BankAccountService.Deleting)
+                    Icon="check" 
+                    ButtonStyle="ButtonStyle.Success" 
+                    Variant="Variant.Flat" 
+                    Size="ButtonSize.Medium" 
+                    Click="@((args) => SaveRow(account))">
                 </RadzenButton>
-                <RadzenButton IsBusy=@busy Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@((args) => CancelEdit(account))">
+                <RadzenButton 
+                    IsBusy=@(BankAccountService.Creating || BankAccountService.Updating || BankAccountService.Deleting) 
+                    Icon="close" 
+                    ButtonStyle="ButtonStyle.Light" 
+                    Variant="Variant.Flat" 
+                    Size="ButtonSize.Medium" 
+                    Class="my-1 ms-1" 
+                    Click="@((args) => CancelEdit(account))">
                 </RadzenButton>
-                <RadzenButton IsBusy=@busy ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Class="my-1 ms-1" Click="@(args => DeleteRow(account))">
+                <RadzenButton 
+                    IsBusy=@(BankAccountService.Creating || BankAccountService.Updating || BankAccountService.Deleting) 
+                    ButtonStyle="ButtonStyle.Danger" 
+                    Icon="delete" 
+                    Variant="Variant.Flat" 
+                    Shade="Shade.Lighter" 
+                    Size="ButtonSize.Medium" 
+                    Class="my-1 ms-1" 
+                    Click="@(args => DeleteRow(account))">
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
@@ -69,7 +122,6 @@
 </RadzenDataGrid>
 
 @code {
-    private bool busy = false;
     private bool inserting = false;
     private bool updating = false;
 
@@ -79,7 +131,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await BankAccountService.GetBankAccountsAsync();
+        await BankAccountService.LoadAsync();
     }
 
     void Reset()
@@ -115,15 +167,13 @@
     {
         try
         {
-            busy = true;
-            var message = await BankAccountService.CreateBankAccountAsync(account);
-            HandleError(message);
-
-            await BankAccountService.GetBankAccountsAsync();
+            if (await BankAccountService.CreateBankAccountAsync(account))
+            {
+                await BankAccountService.LoadAsync();
+            }
         }
         finally
         {
-            busy = false;
             inserting = false;
         }
     }
@@ -132,15 +182,13 @@
     {
         try
         {
-            busy = true;
-            var message = await BankAccountService.UpdateBankAccountAsync(account);
-            HandleError(message);
-
-            await BankAccountService.GetBankAccountsAsync();
+            if (await BankAccountService.UpdateBankAccountAsync(account))
+            {
+                await BankAccountService.LoadAsync();
+            }
         }
         finally
         {
-            busy = false;
             inserting = false;
             updating = false;
         }
@@ -159,33 +207,17 @@
 
                 if (confirmResult.HasValue && confirmResult.Value)
                 {
-                    busy = true;
-                    var message = await BankAccountService.DeleteBankAccountAsync(account.Id);
-                    HandleError(message);
-
-                    await BankAccountService.GetBankAccountsAsync();
+                    if (await BankAccountService.DeleteAsync(account.Id))
+                    {
+                        await BankAccountService.LoadAsync();
+                    }
                 }
             }
         }
         finally
         {
-            busy = false;
             inserting = false;
             updating = false;
-        }
-    }
-
-    private void HandleError(string message)
-    {
-        if (!string.IsNullOrEmpty(message))
-        {
-            NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = "Error: ",
-                    Detail = message,
-                    Duration = 4000
-                });
         }
     }
 }

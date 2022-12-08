@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
-using BooKeeperWebApp.Infrastructure.Entities;
 using BooKeeperWebApp.Infrastructure.Repositories;
 
-namespace BooKeeperWebApp.Business.Queries;
+namespace BooKeeperWebApp.Business.Queries.BankAccount;
 public class GetAllAccountsQueryHandler : IHandler<GetAllAccountsQuery, IEnumerable<BankAccountModel>>
 {
-    private readonly IGenericRepository<BankAccount> _bankAccountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.BankAccount> _bankAccountRepository;
     private readonly IMapper _mapper;
 
-    public GetAllAccountsQueryHandler(IGenericRepository<BankAccount> bankAccountRepository, IMapper mapper)
+    public GetAllAccountsQueryHandler(IGenericRepository<Infrastructure.Entities.BankAccount> bankAccountRepository, IMapper mapper)
     {
         _bankAccountRepository = bankAccountRepository;
         _mapper = mapper;

@@ -13,5 +13,6 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<DialogService>();
         services.AddScoped<NotificationService>();
         services.AddScoped<BankAccountService>();
+        services.AddScoped<BookService>();
     }
 }

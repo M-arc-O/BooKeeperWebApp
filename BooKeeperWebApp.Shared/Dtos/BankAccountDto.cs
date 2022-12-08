@@ -1,7 +1,7 @@
 ﻿using BooKeeperWebApp.Shared.Enums;
 
 namespace BooKeeperWebApp.Shared.Dtos;
-public class BankAccountDto
+public class BankAccountDto : IBaseDto
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }

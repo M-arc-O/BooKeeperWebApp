@@ -11,6 +11,13 @@
 		<None Remove="Scripts\0001-Create-bank-account-table.sql" />
 		<None Remove="Scripts\0002-Create-user-table.sql" />
 		<None Remove="Scripts\0003-Alter-bank-account-table.sql" />
+		<None Remove="Scripts\0004-Add-book-and-event-tables.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Scripts\0004-Add-book-and-event-tables.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>

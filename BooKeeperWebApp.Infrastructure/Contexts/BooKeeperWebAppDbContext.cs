@@ -7,6 +7,8 @@ public class BooKeeperWebAppDbContext : DbContext
 {
 	public DbSet<BankAccount>? BankAccounts { get; set; }
     public DbSet<User>? Users { get; set; }
+    public DbSet<Book>? Books { get; set; }
+    public DbSet<Event>? Events { get; set; }
 
     public BooKeeperWebAppDbContext(DbContextOptions<BooKeeperWebAppDbContext> options) : base(options)
     {
@@ -15,7 +17,8 @@ public class BooKeeperWebAppDbContext : DbContext
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfiguration(new BankAccountConfiguration());
-		modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new BookConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 
     public static void ConfigureDbContextOptions(DbContextOptionsBuilder optionsBuilder, string connectionString)

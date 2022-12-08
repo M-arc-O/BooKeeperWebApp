@@ -1,5 +1,95 @@
 ﻿@page "/books"
+@using BooKeeperWebApp.Shared.Dtos;
+
+@inject BookService BookService;
+@inject NotificationService NotificationService;
 
 <PageTitle>Books</PageTitle>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            <RadzenCard>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <RadzenTextBox Placeholder="Name" @bind-Value=@selectedBook.Name Class="w-100" />
+                        </div>
+                        <div class="col-12 col-sm-auto">
+                            <RadzenButton Variant="Variant.Outlined"
+                                          IsBusy=@BookService.Busy
+                                          Click=@OnSaveClick
+                                          Text=@GetSaveButtonText()
+                                          ButtonStyle="ButtonStyle.Primary" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <RadzenListBox AllowFiltering="true"
+                                           FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                           Data=@BookService.Items
+                                           TValue="BookDto"
+                                           TextProperty="Name"
+                                           ValueProperty="Id"
+                                           Change=@(args => OnChange(args)) Style="height:200px" Class="w-100" />
+                        </div>
+                    </div>
+                </div>
+            </RadzenCard>
+        </div>
+    </div>
+</div>
 
-Books will be here.
+@code {
+    private BookDto selectedBook = new BookDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await BookService.LoadAsync();
+
+        BookService.RefreshRequested += RefreshMe;
+    }
+
+    string GetSaveButtonText()
+    {
+        return selectedBook?.Id == Guid.Empty ? "Save" : "Edit";
+    }
+
+    async Task OnSaveClick()
+    {
+        var result = false;
+
+        if (selectedBook.Id == Guid.Empty)
+        {
+            result = await BookService.CreateBookAsync(selectedBook);
+        }
+        else
+        {
+            result = await BookService.UpdateBookAsync(selectedBook);
+        }
+    }
+
+    void OnChange(object id)
+    {
+        selectedBook = BookService.Items.First(x => x.Id == (Guid)id);
+    }
+
+    private void HandleError(string message)
+    {
+        if (!string.IsNullOrEmpty(message))
+        {
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error: ",
+                    Detail = message,
+                    Duration = 4000
+                });
+        }
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

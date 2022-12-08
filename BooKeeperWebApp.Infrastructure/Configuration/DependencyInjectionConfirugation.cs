@@ -9,6 +9,7 @@ public static class DependencyInjectionConfirugation
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IGenericRepository<BankAccount>, GenericRepository<BankAccount>>();
+        services.AddScoped<IGenericRepository<Book>, GenericRepository<Book>>();
         services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
     }
 }
