@@ -1,5 +1,6 @@
 ﻿@page "/books"
 @using BooKeeperWebApp.Shared.Dtos;
+@using Client.Components
 
 @inject BookService BookService;
 @inject DialogService DialogService;
@@ -51,6 +52,10 @@
         </div>
         <div class="col-8">
             <RadzenCard class="h-100">
+                @if (selectedBook != null && selectedBook.Id != Guid.Empty)
+                {
+                    <BookDetails Id=@selectedBook.Id />
+                }
             </RadzenCard>
         </div>
     </div>

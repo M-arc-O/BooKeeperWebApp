@@ -1,5 +1,6 @@
 ﻿@page "/events"
 @using BooKeeperWebApp.Shared.Dtos;
+@using Client.Components
 
 @inject EventService EventService;
 @inject DialogService DialogService;
@@ -51,6 +52,10 @@
         </div>
         <div class="col-8">
             <RadzenCard class="h-100">
+                @if (selectedEvent != null && selectedEvent.Id != Guid.Empty)
+                {
+                    <EventDetails Id=@selectedEvent.Id />
+                }
             </RadzenCard>
         </div>
     </div>
