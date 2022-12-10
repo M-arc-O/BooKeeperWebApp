@@ -8,12 +8,24 @@
 <RadzenPanelMenu Match="NavLinkMatch.Prefix">
     <AuthorizeView Roles=@Roles.ApplicationUsers>
         <Authorized>
-            <RadzenPanelMenuItem Expanded=true Text="Accounts" Icon="credit_card" Path="BankAccounts">
-                @foreach (var account in BankAccountService.Items)
-                {
-                    <RadzenPanelMenuItem Text="@account.Name" Path=@GetAccountPath(account) />
-                }
-            </RadzenPanelMenuItem>
+            @if (BankAccountService.Loading)
+            {
+                <RadzenPanelMenuItem Icon="credit_card" id="Loader">
+                    <Template>
+                        <RadzenLabel Text="Accounts" />
+                        <RadzenButton Variant="Variant.Text" IsBusy=true ButtonStyle="ButtonStyle.Light" />
+                    </Template>
+                </RadzenPanelMenuItem>
+            }
+            else
+            {
+                <RadzenPanelMenuItem Expanded=true Text="Accounts" Icon="credit_card" Path="BankAccounts">
+                    @foreach (var account in BankAccountService.Items)
+                    {
+                        <RadzenPanelMenuItem Text="@account.Name" Path=@GetAccountPath(account) />
+                    }
+                </RadzenPanelMenuItem>
+            }
             <RadzenPanelMenuItem Text="Books" Icon="book" Path="Books" />
             <RadzenPanelMenuItem Text="Rules" Icon="list" Path="Rules" />
             <RadzenPanelMenuItem Text="Events" Icon="event" Path="Events" />
@@ -27,14 +39,7 @@
         await base.OnInitializedAsync();
 
         BankAccountService.RefreshRequested += RefreshMe;
-
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity is not null && user.Identity.IsAuthenticated)
-        {
-            await BankAccountService.LoadAsync();
-        }
+        await BankAccountService.LoadAsync();
     }
 
     private string GetAccountPath(BankAccountDto account)

@@ -24,8 +24,6 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
     public IList<DtoType> Items = new List<DtoType>();
     public event Action? RefreshRequested;
 
-    public bool Busy => Loading || Creating || Updating || Deleting;
-
     protected HttpServiceBase(HttpClient httpClient, NotificationService notificationService, string baseUrl)
     {
         _httpClient = httpClient;
@@ -94,6 +92,9 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
                 Updating = false;
                 break;
             case ActionType.Delete:
+                var deleteResult = await response.Content.ReadFromJsonAsync<Guid>();
+                item = Items.First(x => x.Id == deleteResult);
+                Items.Remove(item);
                 Deleting = false;
                 break;
             default:

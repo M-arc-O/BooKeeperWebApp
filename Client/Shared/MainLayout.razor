@@ -1,4 +1,5 @@
-﻿@using Client.Components
+﻿@using BooKeeperWebApp.Shared;
+@using Client.Components
 @using Client.Pages
 @using Microsoft.AspNetCore.Components.Authorization
 @using Radzen.Blazor
@@ -16,8 +17,12 @@
         <ChildContent>
             <div class="row justify-content-start align-items-center">
                 <div class="col-5 d-flex align-items-center">
-                    <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
-                    </RadzenSidebarToggle>
+                    <AuthorizeView Roles=@Roles.ApplicationUsers>
+                        <Authorized>
+                            <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })" />
+                        </Authorized>
+                    </AuthorizeView>
+
                     <RadzenButton Variant="Variant.Text" Shade="Shade.Darker" Click="@(_ => UriHelper.NavigateTo(""))">
                         <RadzenImage Path="Images/icon.png" Style="width: 50px; height: 50px;" />
                         <RadzenLabel Text="BooKeeper" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" />
@@ -49,11 +54,16 @@
             </RadzenContentContainer>
         </ChildContent>
     </RadzenBody>
-    <RadzenSidebar @ref="@sidebar0" @bind-Expanded="@sidebarExpanded" class="demos-sidebar" style="display: flex; flex-direction: column">
-        <div style="flex: 1; overflow: auto">
-            <NavMenu></NavMenu>
-        </div>
-    </RadzenSidebar>
+
+    <AuthorizeView Roles=@Roles.ApplicationUsers>
+        <Authorized>
+            <RadzenSidebar @ref="@sidebar0" @bind-Expanded="@sidebarExpanded" class="demos-sidebar" style="display: flex; flex-direction: column">
+                <div style="flex: 1; overflow: auto">
+                    <NavMenu></NavMenu>
+                </div>
+            </RadzenSidebar>
+        </Authorized>
+    </AuthorizeView>
 </RadzenLayout>
 
 

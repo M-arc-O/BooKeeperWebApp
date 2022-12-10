@@ -2,45 +2,64 @@
 @using BooKeeperWebApp.Shared.Dtos;
 
 @inject BookService BookService;
-@inject NotificationService NotificationService;
+@inject DialogService DialogService;
 
 <PageTitle>Books</PageTitle>
-<div class="container-fluid">
-    <div class="row">
+<div class="container-fluid h-100">
+    <div class="row h-100">
         <div class="col-4">
-            <RadzenCard>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col">
-                            <RadzenTextBox Placeholder="Name" @bind-Value=@selectedBook.Name Class="w-100" />
+            <RadzenCard class="h-100">
+                <div class="container-fluid h-100">
+                    <div class="row justify-content-end">
+                        <div class="col-8">
+                            <RadzenTextBox @bind-Value=@bookName
+                                           Placeholder="Name"
+                                           Class="w-100"
+                                           Change="OnNameTextBoxChange" />
                         </div>
-                        <div class="col-12 col-sm-auto">
+                        <div class="col-2">
                             <RadzenButton Variant="Variant.Outlined"
-                                          IsBusy=@BookService.Busy
+                                          IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
                                           Click=@OnSaveClick
-                                          Text=@GetSaveButtonText()
+                                          Icon="save"
                                           ButtonStyle="ButtonStyle.Primary" />
                         </div>
+                        <div class="col-2">
+                            <RadzenButton Variant="Variant.Outlined"
+                                          IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
+                                          Click=@OnDeleteClick
+                                          Icon="deleted"
+                                          ButtonStyle="ButtonStyle.Danger" />
+                        </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="min-height: 95%; max-height: 95%;">
                         <div class="col">
-                            <RadzenListBox AllowFiltering="true"
+                            <RadzenListBox @ref="bookListBox"
+                                           AllowFiltering="true"
                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                            Data=@BookService.Items
                                            TValue="BookDto"
                                            TextProperty="Name"
                                            ValueProperty="Id"
-                                           Change=@(args => OnChange(args)) Style="height:200px" Class="w-100" />
+                                           Change=@(args => OnListBoxChange(args))
+                                           Style="min-height: 90%; max-height: 90%;"
+                                           Class="w-100" />
                         </div>
                     </div>
                 </div>
+            </RadzenCard>
+        </div>
+        <div class="col-8">
+            <RadzenCard class="h-100">
             </RadzenCard>
         </div>
     </div>
 </div>
 
 @code {
+    private RadzenListBox<BookDto>? bookListBox;
     private BookDto selectedBook = new BookDto();
+    private string? bookName;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,6 +69,14 @@
         BookService.RefreshRequested += RefreshMe;
     }
 
+    void OnNameTextBoxChange()
+    {
+        if (string.IsNullOrEmpty(bookName))
+        {
+            ResetSelectedItem();
+        }
+    }
+
     string GetSaveButtonText()
     {
         return selectedBook?.Id == Guid.Empty ? "Save" : "Edit";
@@ -57,35 +84,43 @@
 
     async Task OnSaveClick()
     {
-        var result = false;
-
+        selectedBook.Name = bookName;
         if (selectedBook.Id == Guid.Empty)
         {
-            result = await BookService.CreateBookAsync(selectedBook);
+            await BookService.CreateBookAsync(selectedBook);
         }
         else
         {
-            result = await BookService.UpdateBookAsync(selectedBook);
+            await BookService.UpdateBookAsync(selectedBook);
         }
     }
 
-    void OnChange(object id)
+    async Task OnDeleteClick()
+    {
+        var confirmResult = await DialogService.Confirm(
+                    $"Are you sure you want to delete '{selectedBook.Name}', this cannot be undone.",
+                    "Warning!",
+                    new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
+
+        if (confirmResult.HasValue && confirmResult.Value)
+        {
+            if (await BookService.DeleteAsync(selectedBook.Id))
+            {
+                ResetSelectedItem();
+            }
+        }
+    }
+
+    void OnListBoxChange(object id)
     {
         selectedBook = BookService.Items.First(x => x.Id == (Guid)id);
+        bookName = selectedBook.Name!;
     }
 
-    private void HandleError(string message)
+    private void ResetSelectedItem()
     {
-        if (!string.IsNullOrEmpty(message))
-        {
-            NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = "Error: ",
-                    Detail = message,
-                    Duration = 4000
-                });
-        }
+        selectedBook = new BookDto();
+        bookListBox!.Reset();
     }
 
     private void RefreshMe()

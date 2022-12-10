@@ -74,7 +74,7 @@ namespace Api
             var user = await GetUserAsync(req);
 
             var command = new DeleteBankAccountCommand(user.Id, id);
-            await _excecutor.ExecuteAsync<DeleteBankAccountCommand, Guid>(command);
+            var result = await _excecutor.ExecuteAsync<DeleteBankAccountCommand, Guid>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
 

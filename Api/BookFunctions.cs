@@ -76,9 +76,10 @@ namespace Api
             var user = await GetUserAsync(req);
 
             var command = new DeleteBookCommand(user.Id, id);
-            await _excecutor.ExecuteAsync<DeleteBookCommand, Guid>(command);
+            var result = await _excecutor.ExecuteAsync<DeleteBookCommand, Guid>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(result);
 
             return response;
         }
