@@ -46,9 +46,10 @@ namespace Api
             var user = await GetUserAsync(req);
 
             var command = new AddBankAccountCommand(user.Id, bankAccount.Name, bankAccount.Number, bankAccount.Type, bankAccount.StartAmount);
-            await _excecutor.ExecuteAsync<AddBankAccountCommand, BankAccountModel>(command);
+            var result = await _excecutor.ExecuteAsync<AddBankAccountCommand, BankAccountModel>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(_mapper.Map<BankAccountDto>(result));
 
             return response;
         }
@@ -61,9 +62,10 @@ namespace Api
             var user = await GetUserAsync(req);
 
             var command = new UpdateBankAccountCommand(user.Id, id, bankAccount.Name, bankAccount.Number, bankAccount.Type, bankAccount.StartAmount);
-            await _excecutor.ExecuteAsync<UpdateBankAccountCommand, BankAccountModel>(command);
+            var result = await _excecutor.ExecuteAsync<UpdateBankAccountCommand, BankAccountModel>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(_mapper.Map<BankAccountDto>(result));
 
             return response;
         }
@@ -77,6 +79,7 @@ namespace Api
             var result = await _excecutor.ExecuteAsync<DeleteBankAccountCommand, Guid>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(result);
 
             return response;
         }

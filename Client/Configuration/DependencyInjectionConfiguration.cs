@@ -14,5 +14,6 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<NotificationService>();
         services.AddScoped<BankAccountService>();
         services.AddScoped<BookService>();
+        services.AddScoped<EventService>();
     }
 }

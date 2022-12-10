@@ -14,9 +14,9 @@ public class DeleteBookCommandHandler : BookCommandBase, IHandler<DeleteBookComm
 
     public async Task<Guid> ExecuteAsync(DeleteBookCommand command)
     {
-        var book = await GetBookAsync(command.UserId, command.AccountId);
+        var book = await GetBookAsync(command.UserId, command.BookId);
         _bookRepository.Delete(book);
 
-        return command.AccountId;
+        return command.BookId;
     }
 }

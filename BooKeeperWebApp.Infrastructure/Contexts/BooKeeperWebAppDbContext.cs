@@ -18,6 +18,7 @@ public class BooKeeperWebAppDbContext : DbContext
 	{
 		modelBuilder.ApplyConfiguration(new BankAccountConfiguration());
         modelBuilder.ApplyConfiguration(new BookConfiguration());
+        modelBuilder.ApplyConfiguration(new EventConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 

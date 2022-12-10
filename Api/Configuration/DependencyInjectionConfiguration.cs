@@ -22,10 +22,12 @@ public static class DependencyInjectionConfiguration
         {
             mc.AddProfile(new BankAccountProfiles());
             mc.AddProfile(new BookProfiles());
+            mc.AddProfile(new EventProfiles());
             mc.AddProfile(new UserProfiles());
 
             mc.AddProfile(new BankAccountModelProfiles());
             mc.AddProfile(new BookModelProfiles());
+            mc.AddProfile(new EventModelProfiles());
             mc.AddProfile(new UserModelProfiles());
         });
 

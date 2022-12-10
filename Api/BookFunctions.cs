@@ -49,7 +49,7 @@ namespace Api
             var result = await _excecutor.ExecuteAsync<AddBookCommand, BookModel>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(result);
+            await response.WriteAsJsonAsync(_mapper.Map<BookDto>(result));
 
             return response;
         }
@@ -65,7 +65,7 @@ namespace Api
             var result = await _excecutor.ExecuteAsync<UpdateBookCommand, BookModel>(command);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteAsJsonAsync(result);
+            await response.WriteAsJsonAsync(_mapper.Map<BookDto>(result));
 
             return response;
         }

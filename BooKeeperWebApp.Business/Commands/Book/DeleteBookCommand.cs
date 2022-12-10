@@ -4,11 +4,11 @@ namespace BooKeeperWebApp.Business.Commands.Book;
 public class DeleteBookCommand : ICommand
 {
     public Guid UserId { get; }
-    public Guid AccountId { get; }
+    public Guid BookId { get; }
 
-    public DeleteBookCommand(Guid userId, Guid accountId)
+    public DeleteBookCommand(Guid userId, Guid bookId)
     {
         UserId = userId;
-        AccountId = accountId;
+        BookId = bookId;
     }
 }
