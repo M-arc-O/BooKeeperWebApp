@@ -9,6 +9,7 @@ public class BooKeeperWebAppDbContext : DbContext
     public DbSet<User>? Users { get; set; }
     public DbSet<Book>? Books { get; set; }
     public DbSet<Event>? Events { get; set; }
+    public DbSet<Mutation>? Mutations { get; set; }
 
     public BooKeeperWebAppDbContext(DbContextOptions<BooKeeperWebAppDbContext> options) : base(options)
     {
@@ -19,6 +20,7 @@ public class BooKeeperWebAppDbContext : DbContext
 		modelBuilder.ApplyConfiguration(new BankAccountConfiguration());
         modelBuilder.ApplyConfiguration(new BookConfiguration());
         modelBuilder.ApplyConfiguration(new EventConfiguration());
+        modelBuilder.ApplyConfiguration(new MutationConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 

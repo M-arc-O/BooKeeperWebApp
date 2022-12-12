@@ -6,9 +6,9 @@ public class DeleteEventCommand : ICommand
     public Guid UserId { get; }
     public Guid EventId { get; }
 
-    public DeleteEventCommand(Guid userId, Guid accountId)
+    public DeleteEventCommand(Guid userId, Guid eventId)
     {
         UserId = userId;
-        EventId = accountId;
+        EventId = eventId;
     }
 }

@@ -9,5 +9,9 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         builder.ToTable("Book");
         builder.HasKey(x => x.Id);
+
+        builder.HasMany(x => x.Mutations)
+            .WithOne()
+            .HasForeignKey("FK_Mutation_BookId");
     }
 }

@@ -1,11 +1,13 @@
 ﻿using BooKeeperWebApp.Business.Commands.BankAccount;
 using BooKeeperWebApp.Business.Commands.Book;
 using BooKeeperWebApp.Business.Commands.Event;
+using BooKeeperWebApp.Business.Commands.Mutation;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Business.Queries.BankAccount;
 using BooKeeperWebApp.Business.Queries.Book;
 using BooKeeperWebApp.Business.Queries.Event;
+using BooKeeperWebApp.Business.Queries.Mutation;
 using BooKeeperWebApp.Business.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,5 +33,12 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<AddEventCommand, EventModel>, AddEventCommandHandler>();
         services.AddScoped<IHandler<UpdateEventCommand, EventModel>, UpdateEventCommandHandler>();
         services.AddScoped<IHandler<DeleteEventCommand, Guid>, DeleteEventCommandHandler>();
+
+        services.AddScoped<IHandler<GetAllMutationsByAccountIdQuery, IEnumerable<MutationModel>>, GetAllMutationsByAccountIdQueryHandler>();
+        services.AddScoped<IHandler<GetAllMutationsByBookIdQuery, IEnumerable<MutationModel>>, GetAllMutationsByBookIdQueryHandler>();
+        services.AddScoped<IHandler<GetAllMutationsByEventIdQuery, IEnumerable<MutationModel>>, GetAllMutationsByEventIdQueryHandler>();
+        services.AddScoped<IHandler<AddMutationCommand, MutationModel>, AddMutationCommandHandler>();
+        services.AddScoped<IHandler<UpdateMutationCommand, MutationModel>, UpdateMutationCommandHandler>();
+        services.AddScoped<IHandler<DeleteMutationCommand, Guid>, DeleteMutationCommandHandler>();
     }
 }

@@ -2,6 +2,7 @@
 public enum AccountType
 {
     ING,
+    INGSavings,
     RegioBank,
     Robeco
 }

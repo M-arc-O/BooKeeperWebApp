@@ -1,0 +1,31 @@
+﻿CREATE TABLE [dbo].[Mutation](
+	[Id] [UNIQUEIDENTIFIER] NOT NULL,
+	[AccountId] [UNIQUEIDENTIFIER] NOT NULL,
+	[BookId] [UNIQUEIDENTIFIER] NOT NULL,	
+	[EventId] [UNIQUEIDENTIFIER] NULL,
+	[Date] [DATE] NOT NULL,
+	[AccountNumber] [NVARCHAR](40) NOT NULL,
+	[OtherAccountNumber] [NVARCHAR](40) NOT NULL,
+	[Description] [NVARCHAR](500) NOT NULL,
+	[Comment] [NVARCHAR](1000) NULL,
+	[Tag] [NVARCHAR](500) NULL,
+	[Amount] [FLOAT] NOT NULL,
+	[AmountAfterMutation] [FLOAT] NOT NULL
+ CONSTRAINT [PK_Mutation] PRIMARY KEY CLUSTERED
+ (
+	[Id] ASC
+ )
+ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Mutation] ADD CONSTRAINT FK_Mutation_AccountId FOREIGN KEY (AccountId) REFERENCES [dbo].[BankAccount](Id);
+GO
+
+ALTER TABLE [dbo].[Mutation] ADD CONSTRAINT FK_Mutation_BookId FOREIGN KEY (BookId) REFERENCES [dbo].[Book](Id);
+GO
+
+ALTER TABLE [dbo].[Mutation] ADD CONSTRAINT FK_Mutation_EventId FOREIGN KEY (EventId) REFERENCES [dbo].[Event](Id);
+GO
+
+

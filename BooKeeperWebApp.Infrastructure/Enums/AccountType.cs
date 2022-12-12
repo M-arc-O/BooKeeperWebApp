@@ -2,6 +2,7 @@
 public enum AccountType : short
 {
     ING,
+    INGSavings,
     RegioBank,
     Robeco
 }

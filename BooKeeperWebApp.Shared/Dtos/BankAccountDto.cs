@@ -9,4 +9,5 @@ public class BankAccountDto : IBaseDto
     public AccountType Type { get; set; }
     public double StartAmount { get; set; }
     public double CurrentAmount { get; set; }
+    public ICollection<MutationDto>? Mutations { get; set; }
 }

@@ -9,5 +9,9 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
     {
         builder.ToTable("BankAccount");
         builder.HasKey(x => x.Id);
+
+        builder.HasMany(x => x.Mutations)
+            .WithOne()
+            .HasForeignKey("FK_Mutation_AccountId");
     }
 }

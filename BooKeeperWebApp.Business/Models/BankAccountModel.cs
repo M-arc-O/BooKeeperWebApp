@@ -10,4 +10,5 @@ public class BankAccountModel
     public AccountType Type { get; set; }
     public double StartAmount { get; set; }
     public double CurrentAmount { get; set; }
+    public ICollection<MutationModel>? Mutations { get; set; }
 }
