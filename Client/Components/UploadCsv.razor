@@ -1,0 +1,138 @@
+﻿@using System
+@using System.IO
+@using System.Text;
+@using AutoMapper;
+@using BooKeeperWebApp.Shared.Dtos;
+@using BooKeeperWebApp.Shared.Enums;
+@using BooKeeperWebApp.Shared.Models;
+@using BooKeeperWebApp.Shared.Services.Csv;
+@using BooKeeperWebApp.Shared.Services.Csv.CsvModels;
+@using Client.Models;
+
+@inject BookService _bookServive;
+@inject EventService _eventService;
+@inject ICsvService _csvService;
+@inject IMapper _mapper;
+@inject NotificationService _notifactionService;
+
+<div class="container-fluid h-100">
+    <div class="row jusitify-content-left">
+        <div class="col-2">
+            <RadzenDropDown Placeholder="Select..."
+                            Data=@accountTypes
+                            TextProperty="EnumString"
+                            ValueProperty="Enum"
+                            @bind-Value="selectedType" />
+        </div>
+        <div class="col">
+            <RadzenFileInput ChooseText="Select CSV" Accept="text/csv" TValue="string" Change=@(args => OnChange(args)) />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <RadzenDataGrid AllowAlternatingRows="false"
+                            AllowFiltering="false"
+                            AllowPaging="false"
+                            AllowSorting="false"
+                            EditMode="DataGridEditMode.Single"
+                            Data="@mutations"
+                            TItem="AddMutationModel">
+                <Columns>
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="Date" Title="Date" FormatString="{0,8:dd/MM/yyyy}" Width="75px" />
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="AccountNumber" Title="Account" Width="75px" />
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="OtherAccountNumber" Title="Other account" Width="125px" />
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="Description" Title="Description" Width="100px" />
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="Amount" FormatString="{0:N2}" Title="Amount" TextAlign="TextAlign.Right" Width="60px" />
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="Comment" Title="Comment" Width="250px">
+                        <Template>
+                            <p style="white-space:pre-wrap">@context.Comment</p>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="AddMutationModel" Property="Tag" Title="Tag" Width="100px" />
+                    <RadzenDataGridColumn TItem="AddMutationModel" Title="Book" Width="150px">
+                        <Template>
+                            <RadzenDropDown Placeholder="Select book..."
+                                            Data="@_bookServive.Items"
+                                            TextProperty="Name"
+                                            ValueProperty="Id"
+                                            @bind-Value="context.BookId"
+                                            Style="width: 150px;"/>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="AddMutationModel" Title="Event" Width="150px">
+                        <Template>
+                            <RadzenDropDown Placeholder="Select book..."
+                                            Data="@_eventService.Items"
+                                            TextProperty="Name"
+                                            ValueProperty="Id"
+                                            @bind-Value="context.EventId"
+                                            Style="width: 150px;" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <RadzenButton ButtonStyle="ButtonStyle.Success"
+                          Icon="add_circle_outline"
+                          Text="Save" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<EnumSelectModel<AccountType>> accountTypes = new();
+    private AccountType selectedType;
+
+    private List<AddMutationModel> mutations = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await _bookServive.LoadAsync();
+        await _eventService.LoadAsync();
+
+        var types = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
+        foreach (var type in types)
+        {
+            accountTypes.Add(new EnumSelectModel<AccountType> { Enum = type, EnumString = type.ToString() });
+        }
+    }
+
+    void OnChange(string value)
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                byte[] data = Convert.FromBase64String(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                var fileContent = Encoding.UTF8.GetString(data);
+                var fileLines = fileContent.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+                mutations = selectedType switch
+                {
+                    AccountType.ING => _csvService.ParseCsv<IngPaymentCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+                    AccountType.INGSavings => _csvService.ParseCsv<IngSavingCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+                    AccountType.RegioBank => _csvService.ParseCsv<RegiobankCsvModel>(',', fileLines).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+                    _ => throw new Exception("Cannot parse this type.")
+                };
+            }
+            else
+            {
+                mutations = new();
+            }
+        }
+        catch (Exception ex)
+        {
+            _notifactionService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error: ",
+                    Detail = ex?.Message ?? "Something went wrong, not sure what.",
+                    Duration = 4000
+                });
+        }
+    }
+}

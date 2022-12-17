@@ -2,7 +2,6 @@
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Infrastructure.Repositories;
-using BooKeeperWebApp.Shared.Exceptions;
 
 namespace BooKeeperWebApp.Business.Commands.Mutation;
 public class UpdateMutationCommandHandler : MutationCommandBase, IHandler<UpdateMutationCommand, MutationModel>

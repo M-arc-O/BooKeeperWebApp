@@ -1,4 +1,7 @@
-﻿using Client.Authentication;
+﻿using AutoMapper;
+using BooKeeperWebApp.Shared.Services.Csv;
+using BooKeeperWebApp.Shared.Services.Csv.CsvModels;
+using Client.Authentication;
 using Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
@@ -15,5 +18,14 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<BankAccountService>();
         services.AddScoped<BookService>();
         services.AddScoped<EventService>();
+        services.AddTransient<ICsvService, CsvService>();
+
+        var mappingConfig = new MapperConfiguration(mc =>
+        {
+            mc.AddProfile(new IngPaymentCsvModelMappingProfile());
+        });
+
+        IMapper mapper = mappingConfig.CreateMapper();
+        services.AddSingleton(mapper);
     }
 }

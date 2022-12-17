@@ -8,29 +8,33 @@
 <PageTitle>Books</PageTitle>
 <div class="container-fluid h-100">
     <div class="row h-100">
-        <div class="col-4">
+        <div class="col-3">
             <RadzenCard class="h-100">
                 <div class="container-fluid h-100">
                     <div class="row justify-content-end">
-                        <div class="col-8">
-                            <RadzenTextBox @bind-Value=@bookName
-                                           Placeholder="Name"
-                                           Class="w-100"
-                                           Change="OnNameTextBoxChange" />
-                        </div>
-                        <div class="col-2">
-                            <RadzenButton Variant="Variant.Outlined"
-                                          IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
-                                          Click=@OnSaveClick
-                                          Icon="save"
-                                          ButtonStyle="ButtonStyle.Primary" />
-                        </div>
-                        <div class="col-2">
-                            <RadzenButton Variant="Variant.Outlined"
-                                          IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
-                                          Click=@OnDeleteClick
-                                          Icon="deleted"
-                                          ButtonStyle="ButtonStyle.Danger" />
+                        <div class="col">
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <RadzenTextBox @bind-Value=@bookName
+                                                   Placeholder="Name"
+                                                   Change="OnNameTextBoxChange" />
+                                </div>
+                                <div class="col-md-auto">
+                                    <RadzenButton IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
+                                                  Click=@OnSaveClick
+                                                  Variant="Variant.Outlined"
+                                                  ButtonStyle="ButtonStyle.Secondary"
+                                                  Size="ButtonSize.Medium"
+                                                  Icon="save"/>
+                                    <RadzenButton IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
+                                                  Click=@OnDeleteClick
+                                                  Variant="Variant.Outlined"
+                                                  ButtonStyle="ButtonStyle.Danger"
+                                                  Shade="Shade.Lighter"
+                                                  Size="ButtonSize.Medium"
+                                                  Icon="delete"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row" style="min-height: 95%; max-height: 95%;">
