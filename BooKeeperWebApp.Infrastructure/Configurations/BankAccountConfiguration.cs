@@ -12,6 +12,6 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
 
         builder.HasMany(x => x.Mutations)
             .WithOne()
-            .HasForeignKey("FK_Mutation_AccountId");
+            .HasForeignKey("AccountId");
     }
 }

@@ -4,11 +4,11 @@ using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Infrastructure.Repositories;
 
 namespace BooKeeperWebApp.Business.Commands.Mutation;
-public class UpdateMutationCommandHandler : MutationCommandBase, IHandler<UpdateMutationCommand, MutationModel>
+public class AddMultipleMutationsCommandHandler : MutationCommandBase, IHandler<AddMultipleMutationsCommand, MutationModel[]>
 {
     private readonly IMapper _mapper;
 
-    public UpdateMutationCommandHandler(
+    public AddMultipleMutationsCommandHandler(
         IGenericRepository<Infrastructure.Entities.BankAccount> accountRepository,
         IGenericRepository<Infrastructure.Entities.Book> bookRepository,
         IGenericRepository<Infrastructure.Entities.Event> eventRepository,
@@ -19,18 +19,16 @@ public class UpdateMutationCommandHandler : MutationCommandBase, IHandler<Update
         _mapper = mapper;
     }
 
-    public async Task<MutationModel> ExecuteAsync(UpdateMutationCommand command)
+    public async Task<MutationModel[]> ExecuteAsync(AddMultipleMutationsCommand command)
     {
-        var entitie = await GetMutationAsync(command.UserId, command.MutationId);
+        var retVal = new List<MutationModel>();
 
-        entitie.Book = await GetBookAsync(command.UserId, command.BookId);
-
-        if (command.EventId.HasValue)
+        foreach (var mutation in command.mutations)
         {
-            entitie.Event = await GetEventAsync(command.UserId, command.EventId.Value);
+            var newMutation = await CreateMutation(mutation);
+            retVal.Add(_mapper.Map<MutationModel>(newMutation));
         }
-        _mutationRepository.Update(entitie);
 
-        return _mapper.Map<MutationModel>(entitie);
+        return retVal.ToArray();
     }
 }

@@ -11,6 +11,7 @@
 
 @inject BookService _bookServive;
 @inject EventService _eventService;
+@inject MutationService _mutationService;
 @inject ICsvService _csvService;
 @inject IMapper _mapper;
 @inject NotificationService _notifactionService;
@@ -30,6 +31,10 @@
     </div>
     <div class="row">
         <div class="col">
+            @if (parsingCsv)
+            {
+                <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+            }
             <RadzenDataGrid AllowAlternatingRows="false"
                             AllowFiltering="false"
                             AllowPaging="false"
@@ -56,7 +61,7 @@
                                             TextProperty="Name"
                                             ValueProperty="Id"
                                             @bind-Value="context.BookId"
-                                            Style="width: 150px;"/>
+                                            Style="width: 150px;" />
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="AddMutationModel" Title="Event" Width="150px">
@@ -74,15 +79,22 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-2">
+            <RadzenButton IsBusy="(_bookServive.Loading || _eventService.Loading || _mutationService.Creating)"
+                          ButtonStyle="ButtonStyle.Success"
+                          Text="Save"
+                          Icon="save"
+                          Click="SaveMutations" />
+        </div>
         <div class="col">
-            <RadzenButton ButtonStyle="ButtonStyle.Success"
-                          Icon="add_circle_outline"
-                          Text="Save" />
+            <RadzenLabel Text="@errorMessage" Style="color: darkred;" />
         </div>
     </div>
 </div>
 
 @code {
+    private bool parsingCsv = false;
+    private string errorMessage = string.Empty;
     private List<EnumSelectModel<AccountType>> accountTypes = new();
     private AccountType selectedType;
 
@@ -101,23 +113,14 @@
         }
     }
 
-    void OnChange(string value)
+    async Task OnChange(string value)
     {
         try
         {
             if (!string.IsNullOrEmpty(value))
             {
-                byte[] data = Convert.FromBase64String(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
-                var fileContent = Encoding.UTF8.GetString(data);
-                var fileLines = fileContent.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
-                mutations = selectedType switch
-                {
-                    AccountType.ING => _csvService.ParseCsv<IngPaymentCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
-                    AccountType.INGSavings => _csvService.ParseCsv<IngSavingCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
-                    AccountType.RegioBank => _csvService.ParseCsv<RegiobankCsvModel>(',', fileLines).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
-                    _ => throw new Exception("Cannot parse this type.")
-                };
+                parsingCsv = true;
+                await ParseFile(value);
             }
             else
             {
@@ -134,5 +137,43 @@
                     Duration = 4000
                 });
         }
+        finally
+        {
+            parsingCsv = false;
+        }
+    }
+
+    private Task<bool> ParseFile(string value)
+    {
+        byte[] data = Convert.FromBase64String(value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1]);
+        var fileContent = Encoding.UTF8.GetString(data);
+        var fileLines = fileContent.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+        mutations = selectedType switch
+        {
+            AccountType.ING => _csvService.ParseCsv<IngPaymentCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+            AccountType.INGSavings => _csvService.ParseCsv<IngSavingCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+            AccountType.RegioBank => _csvService.ParseCsv<RegiobankCsvModel>(',', fileLines).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+            _ => throw new Exception("Cannot parse this type.")
+        };
+
+        return Task.FromResult<bool>(true);
+    }
+
+    async Task SaveMutations()
+    {
+        if (ValidateMutations())
+        {
+            await _mutationService.CreateMultipleMutationsAsync(mutations.ToArray());
+        }
+        else
+        {
+            errorMessage = "All mutations should have a book assigned.";
+        }
+    }
+
+    private bool ValidateMutations()
+    {
+        return !mutations.Any(x => x.BookId == Guid.Empty);
     }
 }

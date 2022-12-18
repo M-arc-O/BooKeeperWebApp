@@ -94,6 +94,39 @@ namespace Api
             return response;
         }
 
+        [Function("CreateMultipleMutation")]
+        public async Task<HttpResponseData> CreateMultipleMutation([HttpTrigger(AuthorizationLevel.Function, "post", Route = "mutation/createmultiple")] HttpRequestData req)
+        {
+            var mutations = await req.ReadFromJsonAsync<AddMutationModel[]>() ?? throw new Exception();
+
+            var user = await GetUserAsync(req);
+
+            var mutationsToAdd = new List<AddMutationCommand>();
+
+            foreach (var mutation in mutations)
+            {
+                mutationsToAdd.Add(new AddMutationCommand(user.Id,
+                mutation.Date,
+                mutation.AccountNumber,
+                mutation.OtherAccountNumber,
+                mutation.Description,
+                mutation.Comment,
+                mutation.Tag,
+                mutation.Amount,
+                mutation.AmountAfterMutation,
+                mutation.AccountId,
+                mutation.BookId,
+                mutation.EventId));
+            }
+
+            var command = new AddMultipleMutationsCommand(mutationsToAdd.ToArray());
+            await _excecutor.ExecuteAsync<AddMultipleMutationsCommand, MutationModel[]>(command);
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            return response;
+        }
+
         [Function("UpdateMutation")]
         public async Task<HttpResponseData> UpdateMutationAsync([HttpTrigger(AuthorizationLevel.Function, "put", Route = "mutation/{id}/update")] HttpRequestData req, Guid id)
         {

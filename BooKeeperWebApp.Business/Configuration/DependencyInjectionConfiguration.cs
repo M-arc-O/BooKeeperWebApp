@@ -38,6 +38,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<GetAllMutationsByBookIdQuery, IEnumerable<MutationModel>>, GetAllMutationsByBookIdQueryHandler>();
         services.AddScoped<IHandler<GetAllMutationsByEventIdQuery, IEnumerable<MutationModel>>, GetAllMutationsByEventIdQueryHandler>();
         services.AddScoped<IHandler<AddMutationCommand, MutationModel>, AddMutationCommandHandler>();
+        services.AddScoped<IHandler<AddMultipleMutationsCommand, MutationModel[]>, AddMultipleMutationsCommandHandler>();
         services.AddScoped<IHandler<UpdateMutationCommand, MutationModel>, UpdateMutationCommandHandler>();
         services.AddScoped<IHandler<DeleteMutationCommand, Guid>, DeleteMutationCommandHandler>();
     }

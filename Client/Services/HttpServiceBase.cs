@@ -6,6 +6,7 @@ namespace Client.Services;
 
 public enum ActionType
 {
+    Get,
     Create,
     Update,
     Delete
@@ -13,9 +14,9 @@ public enum ActionType
 
 public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseDto
 {
-    private readonly HttpClient _httpClient;
-    private readonly NotificationService _notifactionService;
-    private readonly string _baseUrl;
+    protected readonly HttpClient _httpClient;
+    protected readonly NotificationService _notifactionService;
+    protected readonly string _baseUrl;
 
     public bool Loading;
     public bool Creating;
@@ -60,7 +61,7 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
         return await HandleResult(result, ActionType.Delete);
     }
 
-    private async Task<bool> HandleResult(HttpResponseMessage response, ActionType type)
+    protected async Task<bool> HandleResult(HttpResponseMessage response, ActionType type)
     {
         if (!response.IsSuccessStatusCode)
         {
@@ -96,6 +97,9 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
                 item = Items.First(x => x.Id == deleteResult);
                 Items.Remove(item);
                 Deleting = false;
+                break;
+            case ActionType.Get:
+                Creating = Updating = Deleting = false;
                 break;
             default:
                 break;

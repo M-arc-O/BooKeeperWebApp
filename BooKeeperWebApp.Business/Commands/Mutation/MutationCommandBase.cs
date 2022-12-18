@@ -21,16 +21,17 @@ public abstract class MutationCommandBase
         _mutationRepository = mutationRepository;
     }
 
-    protected virtual async Task<Infrastructure.Entities.BankAccount> GetAccountAsync(Guid userId, Guid accountId)
+    protected virtual async Task<Infrastructure.Entities.BankAccount> GetAccountAsync(Guid userId, string accountNumber)
     {
-        var bankAccount = await _accountRepository.GetByIdAsync(accountId) ?? throw new NotFoundException($"Bank account with id '{accountId}' not found.");
+        var accounts = await _accountRepository.GetAsync(x => x.Number!.ToLower().Equals(accountNumber.ToLower()));
+        var account = accounts.FirstOrDefault() ?? throw new NotFoundException($"Bank account with number '{accountNumber}' not found.");
 
-        if (bankAccount.UserId != userId)
+        if (account.UserId != userId)
         {
-            throw new UnauthorizedAccessException($"User with id '{userId}' does not have access to bank account with id '{accountId}'.");
+            throw new UnauthorizedAccessException($"User with id '{userId}' does not have access to bank account with id '{account.Id}'.");
         }
 
-        return bankAccount;
+        return account;
     }
 
     protected virtual async Task<Infrastructure.Entities.Book> GetBookAsync(Guid userId, Guid bookId)
@@ -74,7 +75,46 @@ public abstract class MutationCommandBase
 
     protected virtual async Task<bool> MutionExistsAsync(Infrastructure.Entities.Mutation mutation)
     {
-        var events = await _mutationRepository.GetAsync(x => x.Equals(mutation));
+        var events = await _mutationRepository.GetAsync(x => x.Date == mutation!.Date &&
+            x.AccountNumber.Equals(mutation!.AccountNumber) &&
+            x.OtherAccountNumber.Equals(mutation!.OtherAccountNumber) &&
+            x.Description.Equals(mutation!.Description) &&
+            x.Comment != null && x.Comment.Equals(mutation.Comment) &&
+            x.Tag != null && x.Tag.Equals(mutation.Tag) &&
+            x.Amount == mutation!.Amount &&
+            x.AmountAfterMutation == mutation!.AmountAfterMutation);
         return events.Any();
+    }
+
+    protected async Task<Infrastructure.Entities.Mutation> CreateMutation(AddMutationCommand command)
+    {
+        var entitie = new Infrastructure.Entities.Mutation
+        {
+            Id = Guid.NewGuid(),
+            Date = command.Date,
+            AccountNumber = command.AccountNumber,
+            OtherAccountNumber = command.OtherAccountNumber,
+            Description = command.Description,
+            Comment = command.Comment,
+            Tag = command.Tag,
+            Amount = command.Amount,
+            AmountAfterMutation = command.AmountAfterMutation,
+            Account = await GetAccountAsync(command.UserId, command.AccountNumber),
+            Book = await GetBookAsync(command.UserId, command.BookId),
+        };
+
+        if (command.EventId.HasValue)
+        {
+            entitie.Event = await GetEventAsync(command.UserId, command.EventId.Value);
+        }
+
+        if (await MutionExistsAsync(entitie))
+        {
+            throw new ValidationException($"A mutation with these values already exists");
+        }
+
+        await _mutationRepository.InsertAsync(entitie);
+
+        return entitie;
     }
 }

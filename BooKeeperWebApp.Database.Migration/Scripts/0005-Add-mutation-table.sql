@@ -27,5 +27,3 @@ GO
 
 ALTER TABLE [dbo].[Mutation] ADD CONSTRAINT FK_Mutation_EventId FOREIGN KEY (EventId) REFERENCES [dbo].[Event](Id);
 GO
-
-

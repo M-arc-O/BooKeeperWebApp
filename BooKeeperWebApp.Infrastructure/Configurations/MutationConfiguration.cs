@@ -12,17 +12,19 @@ public class MutationConfiguration : IEntityTypeConfiguration<Mutation>
 
         builder.Navigation(x => x.Account).AutoInclude();
         builder.HasOne(x => x.Account)
-            .WithMany()
-            .HasForeignKey("FK_Mutation_AccountId");
+            .WithMany(x => x.Mutations)
+            .HasForeignKey("AccountId")
+            .IsRequired();
 
         builder.Navigation(x => x.Book).AutoInclude();
         builder.HasOne(x => x.Book)
-            .WithMany()
-            .HasForeignKey("FK_Mutation_BookId");
+            .WithMany(x => x.Mutations)
+            .HasForeignKey("BookId")
+            .IsRequired();
 
         builder.Navigation(x => x.Event).AutoInclude();
         builder.HasOne(x => x.Event)
-            .WithMany()
-            .HasForeignKey("FK_Mutation_EventId");
+            .WithMany(x => x.Mutations)
+            .HasForeignKey("EventId");
     }
 }

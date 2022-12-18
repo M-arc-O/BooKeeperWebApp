@@ -12,6 +12,6 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
 
         builder.HasMany(x => x.Mutations)
             .WithOne()
-            .HasForeignKey("FK_Mutation_BookId");
+            .HasForeignKey("BookId");
     }
 }

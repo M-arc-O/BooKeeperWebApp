@@ -12,6 +12,6 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
 
         builder.HasMany(x => x.Mutations)
             .WithOne()
-            .HasForeignKey("FK_Mutation_EventId");
+            .HasForeignKey("EventId");
     }
 }
