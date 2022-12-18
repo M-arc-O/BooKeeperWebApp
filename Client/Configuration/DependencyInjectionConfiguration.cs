@@ -24,6 +24,8 @@ public static class DependencyInjectionConfiguration
         var mappingConfig = new MapperConfiguration(mc =>
         {
             mc.AddProfile(new IngPaymentCsvModelMappingProfile());
+            mc.AddProfile(new IngSavingCsvModelMappingProfile());
+            mc.AddProfile(new RegioBankCsvModelMappingProfile());
         });
 
         IMapper mapper = mappingConfig.CreateMapper();

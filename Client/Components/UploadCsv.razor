@@ -15,19 +15,25 @@
 @inject ICsvService _csvService;
 @inject IMapper _mapper;
 @inject NotificationService _notifactionService;
+@inject DialogService _dialogService;
 
 <div class="container-fluid h-100">
     <div class="row jusitify-content-left">
-        <div class="col-2">
-            <RadzenDropDown Placeholder="Select..."
+        <div class="col">
+            <RadzenDropDown Placeholder="Select bank..."
                             Data=@accountTypes
                             TextProperty="EnumString"
                             ValueProperty="Enum"
                             @bind-Value="selectedType" />
         </div>
-        <div class="col">
-            <RadzenFileInput ChooseText="Select CSV" Accept="text/csv" TValue="string" Change=@(args => OnChange(args)) />
-        </div>
+        @if (selectedType != null)
+        {
+            <div class="row jusitify-content-left">
+                <div class="col">
+                    <RadzenFileInput ChooseText="Select CSV" Accept="text/csv" TValue="string" Change=@(args => OnChange(args)) />
+                </div>
+            </div>
+        }
     </div>
     <div class="row">
         <div class="col">
@@ -57,6 +63,8 @@
                     <RadzenDataGridColumn TItem="AddMutationModel" Title="Book" Width="150px">
                         <Template>
                             <RadzenDropDown Placeholder="Select book..."
+                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                                            AllowFiltering="true"
                                             Data="@_bookServive.Items"
                                             TextProperty="Name"
                                             ValueProperty="Id"
@@ -67,6 +75,9 @@
                     <RadzenDataGridColumn TItem="AddMutationModel" Title="Event" Width="150px">
                         <Template>
                             <RadzenDropDown Placeholder="Select book..."
+                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                                            AllowFiltering="true"
+                                            AllowClear="true"
                                             Data="@_eventService.Items"
                                             TextProperty="Name"
                                             ValueProperty="Id"
@@ -96,7 +107,7 @@
     private bool parsingCsv = false;
     private string errorMessage = string.Empty;
     private List<EnumSelectModel<AccountType>> accountTypes = new();
-    private AccountType selectedType;
+    private AccountType? selectedType;
 
     private List<AddMutationModel> mutations = new();
 
@@ -165,6 +176,14 @@
         if (ValidateMutations())
         {
             await _mutationService.CreateMultipleMutationsAsync(mutations.ToArray());
+            _notifactionService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Done",
+                    Detail = "Mutations successfully processed",
+                    Duration = 4000
+                });
+            _dialogService.Close();
         }
         else
         {
