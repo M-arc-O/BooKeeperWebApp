@@ -103,6 +103,8 @@ public abstract class MutationCommandBase
             Book = await GetBookAsync(command.UserId, command.BookId),
         };
 
+        entitie.Account.CurrentAmount += entitie.Amount;
+
         if (command.EventId.HasValue)
         {
             entitie.Event = await GetEventAsync(command.UserId, command.EventId.Value);
