@@ -54,6 +54,6 @@ public class MutationService : HttpServiceBase<MutationDto, AddMutationModel>
     {
         Creating = true;
         var result = await _httpClient.PostAsJsonAsync($"{_baseUrl}createmultiple", models);
-        return await HandleResult(result, ActionType.Get);
+        return await HandleResult(result, (ActionType)(-1));
     }
 }

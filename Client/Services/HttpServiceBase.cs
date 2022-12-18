@@ -23,6 +23,7 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
     public bool Updating;
     public bool Deleting;
     public IList<DtoType> Items = new List<DtoType>();
+    public DtoType? Item;
     public event Action? RefreshRequested;
 
     protected HttpServiceBase(HttpClient httpClient, NotificationService notificationService, string baseUrl)
@@ -30,6 +31,7 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
         _httpClient = httpClient;
         _notifactionService = notificationService;
         _baseUrl = baseUrl;
+        Item = (DtoType?)Activator.CreateInstance(typeof(DtoType));
     }
 
     public virtual async Task LoadAsync()
@@ -38,6 +40,13 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
         Items = await _httpClient.GetFromJsonAsync<List<DtoType>>($"{_baseUrl}getall") ?? new List<DtoType>();
         Loading = false;
         RefreshRequested?.Invoke();
+    }
+
+    public virtual async Task<bool> GetById(Guid id)
+    {
+        Loading = true;
+        var result = await _httpClient.GetAsync($"{_baseUrl}getbyid/{id}");
+        return await HandleResult(result, ActionType.Get);
     }
 
     public virtual async Task<bool> CreateAsync(ModelType item)
@@ -99,9 +108,11 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
                 Deleting = false;
                 break;
             case ActionType.Get:
-                Creating = Updating = Deleting = false;
+                Item = await response.Content.ReadFromJsonAsync<DtoType>();
+                Loading = false;
                 break;
             default:
+                Creating = Updating = Deleting = false;
                 break;
         }
 

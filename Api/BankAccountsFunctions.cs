@@ -38,6 +38,20 @@ namespace Api
             return response;
         }
 
+        [Function("GetBankAccountById")]
+        public async Task<HttpResponseData> GetBankAccountById(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "bankaccount/getbyid/{id}")] HttpRequestData req, Guid id)
+        {
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            var user = await GetUserAsync(req);
+            var query = new GetAccountByIdQuery(user.Id, id);
+            var account = await _excecutor.ExecuteAsync<GetAccountByIdQuery, BankAccountModel>(query);
+            await response.WriteAsJsonAsync(_mapper.Map<BankAccountDto>(account));
+
+            return response;
+        }
+
         [Function("CreateBankAccount")]
         public async Task<HttpResponseData> CreateBankAccountAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "bankaccount/create")] HttpRequestData req)
         {
