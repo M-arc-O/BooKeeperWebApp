@@ -1,8 +1,52 @@
-﻿<h3>EventDetails</h3>
+﻿@using BooKeeperWebApp.Shared.Dtos;
 
-@Id.ToString();
+@inject EventService _eventService
+
+<PageTitle>Event details @_eventService.Item?.Name</PageTitle>
+
+<h2>@_eventService.Item?.Name</h2>
+
+<div class="container-fluid h-100">
+    <div class="row jusitify-content-left">
+        <div class="col">
+            @if (_eventService.Loading)
+            {
+                <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+            }
+            <RadzenDataGrid AllowAlternatingRows="false"
+                            AllowFiltering="false"
+                            AllowPaging="false"
+                            AllowSorting="false"
+                            EditMode="DataGridEditMode.Single"
+                            Data="@_eventService.Item?.Mutations"
+                            TItem="MutationDto">
+                <Columns>
+                    <RadzenDataGridColumn TItem="MutationDto" Property="Date" Title="Date" FormatString="{0,8:dd/MM/yyyy}" Width="75px" />
+                    <RadzenDataGridColumn TItem="MutationDto" Property="AccountNumber" Title="Account" Width="75px" />
+                    <RadzenDataGridColumn TItem="MutationDto" Property="Amount" FormatString="{0:N2}" Title="Amount" TextAlign="TextAlign.Right" Width="60px" />
+                    <RadzenDataGridColumn TItem="MutationDto" Property="Comment" Title="Comment" Width="250px">
+                        <Template>
+                            <p style="white-space:pre-wrap">@context.Comment</p>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="MutationDto" Property="Tag" Title="Tag" Width="100px" />
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]
-    public Guid Id { get; set; }
+    public string? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await _eventService.GetById(Guid.Parse(Id!));
+    }
 }

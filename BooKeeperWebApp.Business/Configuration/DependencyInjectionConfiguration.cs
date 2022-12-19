@@ -26,11 +26,13 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<DeleteBankAccountCommand, Guid>, DeleteBankAccountCommandHandler>();
 
         services.AddScoped<IHandler<GetAllBooksQuery, IEnumerable<BookModel>>, GetAllBooksQueryHandler>();
+        services.AddScoped<IHandler<GetBookByIdQuery, BookModel>, GetBookByIdQueryHandler>();
         services.AddScoped<IHandler<AddBookCommand, BookModel>, AddBookCommandHandler>();
         services.AddScoped<IHandler<UpdateBookCommand, BookModel>, UpdateBookCommandHandler>();
         services.AddScoped<IHandler<DeleteBookCommand, Guid>, DeleteBookCommandHandler>();
 
         services.AddScoped<IHandler<GetAllEventsQuery, IEnumerable<EventModel>>, GetAllEventsQueryHandler>();
+        services.AddScoped<IHandler<GetEventByIdQuery, EventModel>, GetEventByIdQueryHandler>();
         services.AddScoped<IHandler<AddEventCommand, EventModel>, AddEventCommandHandler>();
         services.AddScoped<IHandler<UpdateEventCommand, EventModel>, UpdateEventCommandHandler>();
         services.AddScoped<IHandler<DeleteEventCommand, Guid>, DeleteEventCommandHandler>();

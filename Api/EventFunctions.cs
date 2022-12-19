@@ -38,6 +38,20 @@ namespace Api
             return response;
         }
 
+        [Function("GetEventsById")]
+        public async Task<HttpResponseData> GetEventsById(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "event/getbyid/{id}")] HttpRequestData req, Guid id)
+        {
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            var user = await GetUserAsync(req);
+            var query = new GetEventByIdQuery(user.Id, id);
+            var account = await _excecutor.ExecuteAsync<GetEventByIdQuery, EventModel>(query);
+            await response.WriteAsJsonAsync(_mapper.Map<EventDto>(account));
+
+            return response;
+        }
+
         [Function("CreateEvent")]
         public async Task<HttpResponseData> CreateEventAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = "event/create")] HttpRequestData req)
         {

@@ -4,6 +4,7 @@ using BooKeeperWebApp.Business.Commands.BankAccount;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
 using BooKeeperWebApp.Business.Queries.BankAccount;
+using BooKeeperWebApp.Business.Queries.Book;
 using BooKeeperWebApp.Business.Services;
 using BooKeeperWebApp.Shared.Dtos;
 using BooKeeperWebApp.Shared.Models;

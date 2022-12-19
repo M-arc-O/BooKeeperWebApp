@@ -3,7 +3,9 @@ using AutoMapper;
 using BooKeeperWebApp.Business.Commands.Book;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
+using BooKeeperWebApp.Business.Queries.BankAccount;
 using BooKeeperWebApp.Business.Queries.Book;
+using BooKeeperWebApp.Business.Queries.Event;
 using BooKeeperWebApp.Business.Services;
 using BooKeeperWebApp.Shared.Dtos;
 using BooKeeperWebApp.Shared.Models;
@@ -34,6 +36,20 @@ namespace Api
             var query = new GetAllBooksQuery(user.Id);
             var books = await _excecutor.ExecuteAsync<GetAllBooksQuery, IEnumerable<BookModel>>(query);
             await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<BookDto>(x)));
+
+            return response;
+        }
+
+        [Function("GetBooksById")]
+        public async Task<HttpResponseData> GetBooksById(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "book/getbyid/{id}")] HttpRequestData req, Guid id)
+        {
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            var user = await GetUserAsync(req);
+            var query = new GetBookByIdQuery(user.Id, id);
+            var account = await _excecutor.ExecuteAsync<GetBookByIdQuery, BookModel>(query);
+            await response.WriteAsJsonAsync(_mapper.Map<BookDto>(account));
 
             return response;
         }

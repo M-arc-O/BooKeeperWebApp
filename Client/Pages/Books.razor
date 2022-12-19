@@ -17,6 +17,7 @@
                                 <div class="col">
                                     <RadzenTextBox @bind-Value=@bookName
                                                    Placeholder="Name"
+                                                   Class="w-100"
                                                    Change="OnNameTextBoxChange" />
                                 </div>
                                 <div class="col-md-auto">
@@ -54,11 +55,11 @@
                 </div>
             </RadzenCard>
         </div>
-        <div class="col-8">
+        <div class="col-9">
             <RadzenCard class="h-100">
                 @if (selectedBook != null && selectedBook.Id != Guid.Empty)
                 {
-                    <BookDetails Id=@selectedBook.Id />
+                    <BookDetails Id=@selectedBook.Id.ToString() />
                 }
             </RadzenCard>
         </div>
