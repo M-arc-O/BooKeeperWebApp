@@ -12,7 +12,7 @@ public class MutationService : HttpServiceBase<MutationDto, AddMutationModel>
     {
     }
 
-    public async Task<bool> CreateMutationAsync(MutationDto dto)
+    public async Task<bool> CreateMutationAsync(MutationDto dto, Guid bookId, Guid? eventId)
     {
         var mutation = new AddMutationModel 
         {
@@ -24,14 +24,13 @@ public class MutationService : HttpServiceBase<MutationDto, AddMutationModel>
             Tag = dto.Tag,
             Amount = dto.Amount,
             AmountAfterMutation = dto.AmountAfterMutation,
-            AccountId = dto.AccountId,
-            BookId = dto.BookId,
-            EventId = dto.EventId
+            BookId = bookId,
+            EventId = eventId
         };
         return await CreateAsync(mutation);
     }
 
-    public async Task<bool> UpdateMutationAsync(MutationDto dto)
+    public async Task<bool> UpdateMutationAsync(MutationDto dto, Guid bookId, Guid? eventId)
     {
         var mutation = new AddMutationModel
         {
@@ -43,9 +42,8 @@ public class MutationService : HttpServiceBase<MutationDto, AddMutationModel>
             Tag = dto.Tag,
             Amount = dto.Amount,
             AmountAfterMutation = dto.AmountAfterMutation,
-            AccountId = dto.AccountId,
-            BookId = dto.BookId,
-            EventId = dto.EventId
+            BookId = bookId,
+            EventId = eventId
         };
         return await UpdateAsync(mutation, dto.Id);
     }

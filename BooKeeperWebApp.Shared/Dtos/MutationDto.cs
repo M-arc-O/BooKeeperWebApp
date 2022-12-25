@@ -11,7 +11,6 @@ public class MutationDto : IBaseDto
     public double Amount { get; set; }
     public double AmountAfterMutation { get; set; }
 
-    public Guid AccountId { get; set; }
-    public Guid BookId { get; set; }
-    public Guid? EventId { get; set; }
+    public string BookName { get; set; }
+    public string? EventName { get; set; }
 }

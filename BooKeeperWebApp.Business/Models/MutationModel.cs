@@ -12,6 +12,6 @@ public class MutationModel
     public double AmountAfterMutation { get; set; }
 
     public Guid AccountId { get; set; }
-    public Guid BookId { get; set; }
-    public Guid? EventId { get; set; }
+    public BookModel Book { get; set; }
+    public BookModel? Event { get; set; }
 }
