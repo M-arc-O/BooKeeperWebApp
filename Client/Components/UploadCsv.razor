@@ -23,7 +23,7 @@
             <RadzenDropDown Placeholder="Select bank..."
                             Data=@accountTypes
                             TextProperty="EnumString"
-                            ValueProperty="Enum"
+                            ValueProperty="EnumValue"
                             @bind-Value="selectedType" />
         </div>
         @if (selectedType != null)
@@ -106,7 +106,7 @@
 @code {
     private bool parsingCsv = false;
     private string errorMessage = string.Empty;
-    private List<EnumSelectModel<AccountType>> accountTypes = new();
+    private List<EnumSelectModel<AccountType>> accountTypes = EnumSelectModel<AccountType>.GetEnumModel();
     private AccountType? selectedType;
 
     private List<AddMutationModel> mutations = new();
@@ -116,12 +116,6 @@
         await base.OnInitializedAsync();
         await _bookServive.LoadAsync();
         await _eventService.LoadAsync();
-
-        var types = Enum.GetValues(typeof(AccountType)).Cast<AccountType>();
-        foreach (var type in types)
-        {
-            accountTypes.Add(new EnumSelectModel<AccountType> { Enum = type, EnumString = type.ToString() });
-        }
     }
 
     async Task OnChange(string value)

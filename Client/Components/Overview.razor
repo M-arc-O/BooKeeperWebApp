@@ -47,7 +47,7 @@
             <RadzenCard>
                 <div class="container-fluid h-100">
                     <div class="row">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Books</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Books (@DateTime.Now.Year)</RadzenText>
                     </div>
                     @if (_overviewService.LoadingBooks)
                     {
@@ -75,7 +75,6 @@
 </div>
 
 @code {
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
