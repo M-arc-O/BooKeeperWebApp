@@ -11,8 +11,11 @@ public class OverviewService
     protected readonly NotificationService _notifactionService;
     protected readonly string _baseUrl;
 
+    public bool LoadingAccounts;
+    public List<OverviewAccountDto> Accounts = new();
+
     public bool LoadingBooks;
-    public List<OverviewBookDto> Books = new(); 
+    public List<OverviewBookDto> Books = new();
 
     public event Action? RefreshRequested;
 
@@ -23,6 +26,14 @@ public class OverviewService
         _baseUrl = "/api/overview/";
     }
 
+    public virtual async Task LoadAccountsAsync()
+    {
+        LoadingAccounts = true;
+        Accounts = await GetItems<OverviewAccountDto>("getaccounts") ?? new();
+        LoadingAccounts = false;
+        RefreshRequested?.Invoke();
+    }
+
     public virtual async Task LoadBooksAsync()
     {
         LoadingBooks = true;
@@ -31,7 +42,7 @@ public class OverviewService
         RefreshRequested?.Invoke();
     }
 
-    public async Task<List<T>?> GetItems<T>(string route)
+    private async Task<List<T>?> GetItems<T>(string route)
     {
         var response = await _httpClient.GetAsync($"{_baseUrl}{route}");
         

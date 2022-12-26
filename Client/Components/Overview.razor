@@ -4,26 +4,75 @@
 
 <PageTitle>BooKeeper</PageTitle>
 
-@if (_overviewService.LoadingBooks)
-{
-    <span>Loading books</span>
-}
-else
-{
-    <div class="container-fluid h-100">
-        @foreach (var book in _overviewService.Books)
-        {
-            <div class="row jusitify-content-left">
-                <div class="col-2">
-                    @book.BookName
+<div class="container-fluid h-100">
+    <div class="row">
+        <div class="col-3">
+            <RadzenCard>
+                <div class="container-fluid h-100">
+                    <div class="row">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Accounts</RadzenText>
+                    </div>
+                    @if (_overviewService.LoadingAccounts)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Loading accounts</RadzenText>
+                        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+                    }
+                    else
+                    {
+                        @foreach (var account in _overviewService.Accounts)
+                        {
+                            <div class="row jusitify-content-left">
+                                <div class="col-9">
+                                    @account.AccountName
+                                </div>
+                                <div class="col-3 text-end">
+                                    @account.Amount.ToString("N2")
+                                </div>
+                            </div>
+                        }
+                        <hr />
+                        <div class="row jusitify-content-left rz-border-radius-4">
+                            <div class="col-9">
+                                Total
+                            </div>
+                            <div class="col-3 text-end">
+                                @_overviewService.Accounts.Sum(x => x.Amount).ToString("N2")
+                            </div>
+                        </div>
+                    }
                 </div>
-                <div class="col-2">
-                    @book.Amount
+            </RadzenCard>
+        </div>
+        <div class="col-3">
+            <RadzenCard>
+                <div class="container-fluid h-100">
+                    <div class="row">
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Books</RadzenText>
+                    </div>
+                    @if (_overviewService.LoadingBooks)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Loading books</RadzenText>
+                        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+                    }
+                    else
+                    {
+                        @foreach (var book in _overviewService.Books)
+                        {
+                            <div class="row jusitify-content-left">
+                                <div class="col-9">
+                                    @book.BookName
+                                </div>
+                                <div class="col-3 text-end">
+                                    @book.Amount.ToString("N2")
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
-            </div>
-        }
+            </RadzenCard>
+        </div>
     </div>
-}
+</div>
 
 @code {
 
@@ -31,6 +80,7 @@ else
     {
         await base.OnInitializedAsync();
         _overviewService.RefreshRequested += RefreshMe;
+        _overviewService.LoadAccountsAsync();
         _overviewService.LoadBooksAsync();
     }
 

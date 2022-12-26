@@ -48,5 +48,6 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<DeleteMutationCommand, Guid>, DeleteMutationCommandHandler>();
 
         services.AddScoped<IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>, GetBooksOverviewQueryHandler>();
+        services.AddScoped<IHandler<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>, GetAccountsOverviewQueryHandler>();
     }
 }

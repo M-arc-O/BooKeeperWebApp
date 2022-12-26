@@ -27,6 +27,7 @@ public static class DependencyInjectionConfiguration
             mc.AddProfile(new MutationProfiles());
             mc.AddProfile(new UserProfiles());
             mc.AddProfile(new OverviewBookProfiles());
+            mc.AddProfile(new OverviewAccountProfiles());
 
             mc.AddProfile(new BankAccountModelProfiles());
             mc.AddProfile(new BookModelProfiles());

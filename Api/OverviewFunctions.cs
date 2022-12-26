@@ -34,5 +34,18 @@ namespace Api
 
             return response;
         }
+
+        [Function("GetAccountsOverview")]
+        public async Task<HttpResponseData> GetAccountsOverview([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getaccounts")] HttpRequestData req)
+        {
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            var user = await GetUserAsync(req);
+            var query = new GetAccountsOverviewQuery(user.Id, DateTime.Now);
+            var books = await _excecutor.ExecuteAsync<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>(query);
+            await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewAccountDto>(x)));
+
+            return response;
+        }
     }
 }
