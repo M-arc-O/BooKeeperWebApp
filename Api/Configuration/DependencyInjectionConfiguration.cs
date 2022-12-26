@@ -1,4 +1,5 @@
 ﻿using Api.MappingProfiles;
+using Api.MappingProfiles.Overview;
 using AutoMapper;
 using BooKeeperWebApp.Business.Configuration;
 using BooKeeperWebApp.Business.MappingProfiles;
@@ -25,6 +26,7 @@ public static class DependencyInjectionConfiguration
             mc.AddProfile(new EventProfiles());
             mc.AddProfile(new MutationProfiles());
             mc.AddProfile(new UserProfiles());
+            mc.AddProfile(new OverviewBookProfiles());
 
             mc.AddProfile(new BankAccountModelProfiles());
             mc.AddProfile(new BookModelProfiles());

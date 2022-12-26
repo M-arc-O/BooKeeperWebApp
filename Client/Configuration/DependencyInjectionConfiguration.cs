@@ -19,6 +19,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<BookService>();
         services.AddScoped<EventService>();
         services.AddScoped<MutationService>();
+        services.AddScoped<OverviewService>();
         services.AddTransient<ICsvService, CsvService>();
 
         var mappingConfig = new MapperConfiguration(mc =>

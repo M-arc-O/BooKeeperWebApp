@@ -4,10 +4,12 @@ using BooKeeperWebApp.Business.Commands.Event;
 using BooKeeperWebApp.Business.Commands.Mutation;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models;
+using BooKeeperWebApp.Business.Models.Overview;
 using BooKeeperWebApp.Business.Queries.BankAccount;
 using BooKeeperWebApp.Business.Queries.Book;
 using BooKeeperWebApp.Business.Queries.Event;
 using BooKeeperWebApp.Business.Queries.Mutation;
+using BooKeeperWebApp.Business.Queries.Overview;
 using BooKeeperWebApp.Business.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,5 +46,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<AddMultipleMutationsCommand, MutationModel[]>, AddMultipleMutationsCommandHandler>();
         services.AddScoped<IHandler<UpdateMutationCommand, MutationModel>, UpdateMutationCommandHandler>();
         services.AddScoped<IHandler<DeleteMutationCommand, Guid>, DeleteMutationCommandHandler>();
+
+        services.AddScoped<IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>, GetBooksOverviewQueryHandler>();
     }
 }

@@ -1,0 +1,41 @@
+﻿@using BooKeeperWebApp.Shared.Dtos;
+
+@inject OverviewService _overviewService
+
+<PageTitle>BooKeeper</PageTitle>
+
+@if (_overviewService.LoadingBooks)
+{
+    <span>Loading books</span>
+}
+else
+{
+    <div class="container-fluid h-100">
+        @foreach (var book in _overviewService.Books)
+        {
+            <div class="row jusitify-content-left">
+                <div class="col-2">
+                    @book.BookName
+                </div>
+                <div class="col-2">
+                    @book.Amount
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _overviewService.RefreshRequested += RefreshMe;
+        _overviewService.LoadBooksAsync();
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

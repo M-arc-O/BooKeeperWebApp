@@ -2,17 +2,13 @@ using System.Net;
 using Api.Authentication;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Api
 {
     public class UserFunctions
     {
-        private readonly ILogger _logger;
-
-        public UserFunctions(ILoggerFactory loggerFactory)
+        public UserFunctions()
         {
-            _logger = loggerFactory.CreateLogger<UserFunctions>();
         }
 
         [Function("GetUser")]

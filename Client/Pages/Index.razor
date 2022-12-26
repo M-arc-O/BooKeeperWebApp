@@ -2,6 +2,7 @@
 @using System.Security.Claims
 @using BooKeeperWebApp.Shared.Models;
 @using Client.Authentication;
+@using Client.Components
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inject AuthenticationStateProvider _authenticationStateProvider;
@@ -10,117 +11,7 @@
 <PageTitle>BooKeeper</PageTitle>
 <AuthorizeView>
     <Authorized>
-        <p>
-            <div class="row">
-                <div class="col">
-                    Fronted authorization info:
-                </div>
-            </div>
-            @if (claims.Count() > 0)
-            {
-                <div class="row">
-                    <div class="col-2">
-                        Name:
-                    </div>
-                    <div class="col">
-                        @authName
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        Auth Provider:
-                    </div>
-                    <div class="col">
-                        @authProvider
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        Claims:
-                    </div>
-                </div>
-                @foreach (var claim in claims)
-                {
-                    <div class="row">
-                        <div class="col-6">
-                            @claim.Type:
-                        </div>
-                        <div class="col">
-                            @claim.Value
-                        </div>
-                    </div>
-                }
-            }
-        </p>
-
-        <p>
-            <div class="row">
-                <div class="col">
-                    Backend authorization info:
-                </div>
-            </div>
-            @if (!string.IsNullOrEmpty(backendClientPrincipal.UserId))
-            {
-                <div class="row">
-                    <div class="col-2">
-                        Name:
-                    </div>
-                    <div class="col">
-                        @backendClientPrincipal.UserDetails
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        Id:
-                    </div>
-                    <div class="col">
-                        @backendClientPrincipal.UserId
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        Auth Provider:
-                    </div>
-                    <div class="col">
-                        @backendClientPrincipal.IdentityProvider
-                    </div>
-                </div>
-                @if (backendClientPrincipal.UserRoles != null)
-                {
-                    <div class="row">
-                        <div class="col">
-                            Roles:
-                        </div>
-                    </div>
-                    @foreach (var role in backendClientPrincipal.UserRoles)
-                    {
-                        <div class="row">
-                            <div class="col-6">
-                                @role
-                            </div>
-                        </div>
-                    }
-                }
-            }
-
-            @if (backendClientPrincipal.Claims != null)
-            {
-                <div class="row">
-                    <div class="col">
-                        Claims:
-                    </div>
-                </div>
-                @foreach (var claim in backendClientPrincipal.Claims!)
-                {
-                    <div class="row">
-                        <div class="col-6">
-                            @claim
-                        </div>
-                    </div>
-                }
-            }
-        </p>
-
+        <Overview />
     </Authorized>
     <NotAuthorized>
         <div class="text-center">
