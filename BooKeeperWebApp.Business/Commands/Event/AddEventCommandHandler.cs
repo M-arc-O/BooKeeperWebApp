@@ -19,7 +19,7 @@ public class AddEventCommandHandler : EventCommandBase, IHandler<AddEventCommand
 
     public async Task<EventModel> ExecuteAsync(AddEventCommand command)
     {
-        var entitie = new Infrastructure.Entities.Event
+        var entitie = new Infrastructure.Entities.Bank.Event
         {
             Id = Guid.NewGuid(),
             UserId = command.UserId,

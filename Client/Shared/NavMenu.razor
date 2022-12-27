@@ -19,7 +19,7 @@
             }
             else
             {
-                <RadzenPanelMenuItem Expanded=true Text="Accounts" Icon="credit_card" Path="BankAccounts">
+                <RadzenPanelMenuItem Expanded=true Text="Bank accounts" Icon="credit_card" Path="BankAccounts">
                     @foreach (var account in BankAccountService.Items)
                     {
                         <RadzenPanelMenuItem Text="@account.Name" Path=@GetAccountPath(account) />

@@ -10,6 +10,7 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.ToTable("Book");
         builder.HasKey(x => x.Id);
 
+        builder.Navigation(x => x.Mutations).AutoInclude();
         builder.HasMany(x => x.Mutations)
             .WithOne()
             .HasForeignKey("BookId");

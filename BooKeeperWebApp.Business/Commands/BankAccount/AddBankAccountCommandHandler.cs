@@ -20,7 +20,7 @@ public class AddBankAccountCommandHandler : BankAccountCommandBase, IHandler<Add
 
     public async Task<BankAccountModel> ExecuteAsync(AddBankAccountCommand command)
     {
-        var bankAccount = new Infrastructure.Entities.BankAccount
+        var bankAccount = new Infrastructure.Entities.Bank.BankAccount
         {
             Id = Guid.NewGuid(),
             UserId = command.UserId,

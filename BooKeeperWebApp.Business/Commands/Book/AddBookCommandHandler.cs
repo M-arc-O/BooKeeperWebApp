@@ -19,7 +19,7 @@ public class AddBookCommandHandler : BookCommandBase, IHandler<AddBookCommand, B
 
     public async Task<BookModel> ExecuteAsync(AddBookCommand command)
     {
-        var book = new Infrastructure.Entities.Book
+        var book = new Infrastructure.Entities.Bank.Book
         {
             Id = Guid.NewGuid(),
             UserId = command.UserId,

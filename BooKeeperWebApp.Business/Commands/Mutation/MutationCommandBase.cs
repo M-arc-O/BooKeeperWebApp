@@ -88,7 +88,7 @@ public abstract class MutationCommandBase
 
     protected async Task<Infrastructure.Entities.Bank.Mutation> CreateMutation(AddMutationCommand command)
     {
-        var entitie = new Infrastructure.Entities.Mutation
+        var entitie = new Infrastructure.Entities.Bank.Mutation
         {
             Id = Guid.NewGuid(),
             Date = command.Date,
