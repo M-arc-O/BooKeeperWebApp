@@ -12,7 +12,6 @@ public class InvestmentConfiguration : IEntityTypeConfiguration<Investment>
 
         builder.HasMany(x => x.Values)
             .WithOne()
-            .HasForeignKey("InvestmentId")
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .HasForeignKey("InvestmentId");
     }
 }

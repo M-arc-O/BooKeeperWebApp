@@ -12,7 +12,6 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
 
         builder.HasMany(x => x.Mutations)
             .WithOne()
-            .HasForeignKey("AccountId")
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .HasForeignKey("AccountId");
     }
 }
