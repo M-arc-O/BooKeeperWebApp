@@ -4,6 +4,7 @@ using BooKeeperWebApp.Shared.Services.Csv.CsvModels;
 using Client.Authentication;
 using Client.Services;
 using Client.Services.Bank;
+using Client.Services.Investment;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 
@@ -17,6 +18,7 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<DialogService>();
         services.AddScoped<NotificationService>();
         services.AddScoped<BankAccountService>();
+        services.AddScoped<InvestmentAccountService>();
         services.AddScoped<BookService>();
         services.AddScoped<EventService>();
         services.AddScoped<MutationService>();

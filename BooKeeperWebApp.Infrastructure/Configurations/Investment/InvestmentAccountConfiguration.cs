@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BooKeeperWebApp.Infrastructure.Configurations;
+namespace BooKeeperWebApp.Infrastructure.Configurations.Investment;
 public class InvestmentAccountConfiguration : IEntityTypeConfiguration<InvestmentAccount>
 {
     public void Configure(EntityTypeBuilder<InvestmentAccount> builder)

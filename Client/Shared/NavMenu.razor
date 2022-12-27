@@ -1,19 +1,22 @@
 ﻿@using BooKeeperWebApp.Shared.Dtos.Bank;
-@using Microsoft.AspNetCore.Components.Authorization
+@using BooKeeperWebApp.Shared.Dtos.Investment;
+@using Client.Services.Investment;
+@using Microsoft.AspNetCore.Components.Authorization;
 @using BooKeeperWebApp.Shared;
 @using Client.Services.Bank;
 
-@inject BankAccountService BankAccountService
+@inject BankAccountService _bankAccountService;
+@inject InvestmentAccountService _investmentAccountService;
 @inject AuthenticationStateProvider _authenticationStateProvider;
 
 <RadzenPanelMenu Match="NavLinkMatch.Prefix">
     <AuthorizeView Roles=@Roles.ApplicationUsers>
         <Authorized>
-            @if (BankAccountService.Loading)
+            @if (_bankAccountService.Loading)
             {
                 <RadzenPanelMenuItem Icon="credit_card" id="Loader">
                     <Template>
-                        <RadzenLabel Text="Accounts" />
+                        <RadzenLabel Text="Bank Accounts" />
                         <RadzenButton Variant="Variant.Text" IsBusy=true ButtonStyle="ButtonStyle.Light" />
                     </Template>
                 </RadzenPanelMenuItem>
@@ -21,9 +24,27 @@
             else
             {
                 <RadzenPanelMenuItem Expanded=true Text="Bank accounts" Icon="credit_card" Path="BankAccounts">
-                    @foreach (var account in BankAccountService.Items)
+                    @foreach (var account in _bankAccountService.Items)
                     {
-                        <RadzenPanelMenuItem Text="@account.Name" Path=@GetAccountPath(account) />
+                        <RadzenPanelMenuItem Text="@account.Name" Path=@GetBankAccountPath(account) />
+                    }
+                </RadzenPanelMenuItem>
+            }            
+            @if (_investmentAccountService.Loading)
+            {
+                <RadzenPanelMenuItem Icon="credit_card" id="Loader">
+                    <Template>
+                        <RadzenLabel Text="Investment Accounts" />
+                        <RadzenButton Variant="Variant.Text" IsBusy=true ButtonStyle="ButtonStyle.Light" />
+                    </Template>
+                </RadzenPanelMenuItem>
+            }
+            else
+            {
+                <RadzenPanelMenuItem Expanded=true Text="Investment accounts" Icon="card_travel" Path="InvestmentAccounts">
+                    @foreach (var account in _investmentAccountService.Items)
+                    {
+                        <RadzenPanelMenuItem Text="@account.Name" Path=@GetInvestmentAccountPath(account) />
                     }
                 </RadzenPanelMenuItem>
             }
@@ -39,13 +60,20 @@
     {
         await base.OnInitializedAsync();
 
-        BankAccountService.RefreshRequested += RefreshMe;
-        await BankAccountService.LoadAsync();
+        _bankAccountService.RefreshRequested += RefreshMe;
+        _investmentAccountService.RefreshRequested += RefreshMe;
+        _bankAccountService.LoadAsync();
+        _investmentAccountService.LoadAsync();
     }
 
-    private string GetAccountPath(BankAccountDto account)
+    private string GetBankAccountPath(BankAccountDto account)
     {
         return $"bankaccountdetails/{account.Id}";
+    }
+
+    private string GetInvestmentAccountPath(InvestmentAccountDto account)
+    {
+        return $"investmentaccountdetails/{account.Id}";
     }
 
     private void RefreshMe()

@@ -1,0 +1,212 @@
+﻿@page "/investmentaccounts"
+
+@using BooKeeperWebApp.Shared;
+@using BooKeeperWebApp.Shared.Dtos.Investment;
+@using BooKeeperWebApp.Shared.Enums;
+@using BooKeeperWebApp.Shared.Models;
+@using Client.Models;
+@using Microsoft.AspNetCore.Authorization;
+@using Client.Services.Investment;
+
+@inject InvestmentAccountService InvestmentAccountService;
+@inject DialogService DialogService;
+
+<PageTitle>Accounts</PageTitle>
+
+<RadzenButton ButtonStyle="ButtonStyle.Success"
+              Icon="add_circle_outline"
+              Class="mt-2 mb-4"
+              Text="Add New Account"
+              Click="@InsertRow"
+              Disabled=@(inserting || updating || InvestmentAccountService.Deleting) />
+
+@if (InvestmentAccountService.Loading)
+{
+    <RadzenLabel>Loading investment accounts:</RadzenLabel>
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
+
+<RadzenDataGrid @ref="accountsGrid"
+                AllowAlternatingRows="false"
+                AllowFiltering="true"
+                AllowPaging="true"
+                PageSize="15"
+                AllowSorting="true"
+                EditMode="DataGridEditMode.Single"
+                Data="@InvestmentAccountService.Items"
+                TItem="InvestmentAccountDto"
+                RowUpdate="@OnUpdateRow"
+                RowCreate="@OnCreateRow"
+                Sort="@Reset"
+                Page="@Reset"
+                Filter="@Reset">
+    <Columns>
+        <RadzenDataGridColumn TItem="InvestmentAccountDto" Property="Name" Title="Name" Width="225px">
+            <EditTemplate Context="account">
+                <RadzenTextBox @bind-Value="account.Name" Style="width:100%; display: block" Name="Name" />
+                <RadzenRequiredValidator Text="Name is required" Component="Name" Popup="true" />
+            </EditTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="InvestmentAccountDto" Property="Type" Title="Investment broker" Width="100px">
+            <Template Context="account">
+                @account.Type.ToString()
+            </Template>
+            <EditTemplate Context="account">
+                <RadzenDropDown @bind-Value="account.Type"
+                                Data="@accountTypes"
+                                TextProperty="EnumString"
+                                ValueProperty="EnumValue"
+                                Style="width:100%; display: block;">
+                </RadzenDropDown>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="InvestmentAccountDto" Property="CurrentAmount" Title="Current Amount" Width="150px" />
+        <RadzenDataGridColumn TItem="InvestmentAccountDto" Context="account" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
+            <Template Context="account">
+                <RadzenButton IsBusy=@(InvestmentAccountService.Creating || InvestmentAccountService.Updating || InvestmentAccountService.Deleting)
+                              Icon="edit"
+                              ButtonStyle="ButtonStyle.Light"
+                              Variant="Variant.Flat"
+                              Size="ButtonSize.Medium"
+                              Click="@(args => EditRow(account))"
+                              @onclick:stopPropagation="true" />
+                <RadzenButton IsBusy=@(InvestmentAccountService.Creating || InvestmentAccountService.Updating || InvestmentAccountService.Deleting)
+                              ButtonStyle="ButtonStyle.Danger"
+                              Icon="delete"
+                              Variant="Variant.Flat"
+                              Shade="Shade.Lighter"
+                              Size="ButtonSize.Medium"
+                              Class="my-1 ms-1"
+                              Click="@(args => DeleteRow(account))" @onclick:stopPropagation="true" />
+            </Template>
+            <EditTemplate Context="account">
+                <RadzenButton IsBusy=@(InvestmentAccountService.Creating || InvestmentAccountService.Updating || InvestmentAccountService.Deleting)
+                              Icon="check"
+                              ButtonStyle="ButtonStyle.Success"
+                              Variant="Variant.Flat"
+                              Size="ButtonSize.Medium"
+                              Click="@((args) => SaveRow(account))">
+                </RadzenButton>
+                <RadzenButton IsBusy=@(InvestmentAccountService.Creating || InvestmentAccountService.Updating || InvestmentAccountService.Deleting)
+                              Icon="close"
+                              ButtonStyle="ButtonStyle.Light"
+                              Variant="Variant.Flat"
+                              Size="ButtonSize.Medium"
+                              Class="my-1 ms-1"
+                              Click="@((args) => CancelEdit(account))">
+                </RadzenButton>
+                <RadzenButton IsBusy=@(InvestmentAccountService.Creating || InvestmentAccountService.Updating || InvestmentAccountService.Deleting)
+                              ButtonStyle="ButtonStyle.Danger"
+                              Icon="delete"
+                              Variant="Variant.Flat"
+                              Shade="Shade.Lighter"
+                              Size="ButtonSize.Medium"
+                              Class="my-1 ms-1"
+                              Click="@(args => DeleteRow(account))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private bool inserting = false;
+    private bool updating = false;
+
+    RadzenDataGrid<InvestmentAccountDto>? accountsGrid;
+
+    private List<EnumSelectModel<InvestmentAccountType>> accountTypes = EnumSelectModel<InvestmentAccountType>.GetEnumModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await InvestmentAccountService.LoadAsync();
+    }
+
+    void Reset()
+    {
+        inserting = false;
+        updating = false;
+    }
+
+    async Task InsertRow()
+    {
+        inserting = true;
+        await accountsGrid!.InsertRow(new InvestmentAccountDto());
+    }
+
+    async Task EditRow(InvestmentAccountDto account)
+    {
+        await accountsGrid!.EditRow(account);
+    }
+
+    void CancelEdit(InvestmentAccountDto account)
+    {
+        inserting = false;
+        updating = false;
+        accountsGrid!.CancelEditRow(account);
+    }
+
+    async Task SaveRow(InvestmentAccountDto account)
+    {
+        await accountsGrid!.UpdateRow(account);
+    }
+
+    async Task OnCreateRow(InvestmentAccountDto account)
+    {
+        try
+        {
+            if (await InvestmentAccountService.CreateInvestmentAccountAsync(account))
+            {
+                await InvestmentAccountService.LoadAsync();
+            }
+        }
+        finally
+        {
+            inserting = false;
+        }
+    }
+
+    async Task OnUpdateRow(InvestmentAccountDto account)
+    {
+        try
+        {
+            if (await InvestmentAccountService.UpdateInvestmentAccountAsync(account))
+            {
+                await InvestmentAccountService.LoadAsync();
+            }
+        }
+        finally
+        {
+            inserting = false;
+            updating = false;
+        }
+    }
+
+    async Task DeleteRow(InvestmentAccountDto account)
+    {
+        try
+        {
+            if (account.Id != Guid.Empty)
+            {
+                var confirmResult = await DialogService.Confirm(
+                    $"Are you sure you want to delete '{account.Name}', this cannot be undone.",
+                    "Warning!",
+                    new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
+
+                if (confirmResult.HasValue && confirmResult.Value)
+                {
+                    if (await InvestmentAccountService.DeleteAsync(account.Id))
+                    {
+                        await InvestmentAccountService.LoadAsync();
+                    }
+                }
+            }
+        }
+        finally
+        {
+            inserting = false;
+            updating = false;
+        }
+    }
+}

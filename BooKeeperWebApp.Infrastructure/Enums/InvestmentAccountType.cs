@@ -1,5 +1,5 @@
 ﻿namespace BooKeeperWebApp.Infrastructure.Enums;
-public enum InvestmentAccountType
+public enum InvestmentAccountType : short
 {
     Robeco
 }

@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BooKeeperWebApp.Infrastructure.Configurations;
-public class InvestmentConfiguration : IEntityTypeConfiguration<Investment>
+namespace BooKeeperWebApp.Infrastructure.Configurations.Investment;
+public class InvestmentConfiguration : IEntityTypeConfiguration<Entities.Investment.Investment>
 {
-    public void Configure(EntityTypeBuilder<Investment> builder)
+    public void Configure(EntityTypeBuilder<Entities.Investment.Investment> builder)
     {
         builder.ToTable("Investment");
         builder.HasKey(x => x.Id);

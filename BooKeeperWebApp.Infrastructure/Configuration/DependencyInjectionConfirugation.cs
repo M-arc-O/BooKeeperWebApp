@@ -1,5 +1,6 @@
 ﻿using BooKeeperWebApp.Infrastructure.Entities;
 using BooKeeperWebApp.Infrastructure.Entities.Bank;
+using BooKeeperWebApp.Infrastructure.Entities.Investment;
 using BooKeeperWebApp.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,11 @@ public static class DependencyInjectionConfirugation
         services.AddScoped<IGenericRepository<Book>, GenericRepository<Book>>();
         services.AddScoped<IGenericRepository<Event>, GenericRepository<Event>>();
         services.AddScoped<IGenericRepository<Mutation>, GenericRepository<Mutation>>();
+
+        services.AddScoped<IGenericRepository<InvestmentAccount>, GenericRepository<InvestmentAccount>>();
+        services.AddScoped<IGenericRepository<Investment>, GenericRepository<Investment>>();
+        services.AddScoped<IGenericRepository<InvestmentValue>, GenericRepository<InvestmentValue>>();
+
         services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
     }
 }

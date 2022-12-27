@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BooKeeperWebApp.Infrastructure.Configurations;
+namespace BooKeeperWebApp.Infrastructure.Configurations.Bank;
 public class MutationConfiguration : IEntityTypeConfiguration<Mutation>
 {
     public void Configure(EntityTypeBuilder<Mutation> builder)

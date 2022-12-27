@@ -1,4 +1,6 @@
 ﻿using BooKeeperWebApp.Infrastructure.Configurations;
+using BooKeeperWebApp.Infrastructure.Configurations.Bank;
+using BooKeeperWebApp.Infrastructure.Configurations.Investment;
 using BooKeeperWebApp.Infrastructure.Entities;
 using BooKeeperWebApp.Infrastructure.Entities.Bank;
 using BooKeeperWebApp.Infrastructure.Entities.Investment;
@@ -25,9 +27,11 @@ public class BooKeeperWebAppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BookConfiguration());
         modelBuilder.ApplyConfiguration(new EventConfiguration());
         modelBuilder.ApplyConfiguration(new MutationConfiguration());
+
         modelBuilder.ApplyConfiguration(new InvestmentAccountConfiguration());
         modelBuilder.ApplyConfiguration(new InvestmentConfiguration());
         modelBuilder.ApplyConfiguration(new InvestmentValueConfiguration());
+
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 

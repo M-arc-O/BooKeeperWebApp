@@ -22,7 +22,10 @@ public class DeleteInvestmentAccountCommandHandler : InvestmentAccountCommandBas
 
     public async Task<Guid> ExecuteAsync(DeleteInvestmentAccountCommand command)
     {
-        var investmentAccounts = await _investmentAccountRepository.GetAsync(x => x.Id == command.AccountId && x.UserId == command.UserId, null, "Investments, Investments.Values");
+        var investmentAccounts = await _investmentAccountRepository.GetAsync(
+            x => x.Id == command.AccountId && x.UserId == command.UserId, 
+            null,
+            "Investments,Investments.Values");
         var investmentAccount = investmentAccounts.FirstOrDefault() ?? throw new NotFoundException($"Investment account with id '{command.AccountId}' not found.");
 
         Parallel.ForEach(investmentAccount.Investments!, (investment) =>
