@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BooKeeperWebApp.Shared.Models;
+using BooKeeperWebApp.Shared.Models.Bank;
 
 namespace BooKeeperWebApp.Shared.Services.Csv.CsvModels;
 public class IngSavingCsvModelMappingProfile : Profile

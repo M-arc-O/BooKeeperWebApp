@@ -1,13 +1,16 @@
 ﻿using BooKeeperWebApp.Business.Commands.BankAccount;
 using BooKeeperWebApp.Business.Commands.Book;
 using BooKeeperWebApp.Business.Commands.Event;
+using BooKeeperWebApp.Business.Commands.InvestmentAccount;
 using BooKeeperWebApp.Business.Commands.Mutation;
 using BooKeeperWebApp.Business.CQRS;
-using BooKeeperWebApp.Business.Models;
+using BooKeeperWebApp.Business.Models.Bank;
+using BooKeeperWebApp.Business.Models.Investment;
 using BooKeeperWebApp.Business.Models.Overview;
 using BooKeeperWebApp.Business.Queries.BankAccount;
 using BooKeeperWebApp.Business.Queries.Book;
 using BooKeeperWebApp.Business.Queries.Event;
+using BooKeeperWebApp.Business.Queries.InvestmentAccount;
 using BooKeeperWebApp.Business.Queries.Mutation;
 using BooKeeperWebApp.Business.Queries.Overview;
 using BooKeeperWebApp.Business.Services;
@@ -46,6 +49,12 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<AddMultipleMutationsCommand, MutationModel[]>, AddMultipleMutationsCommandHandler>();
         services.AddScoped<IHandler<UpdateMutationCommand, MutationModel>, UpdateMutationCommandHandler>();
         services.AddScoped<IHandler<DeleteMutationCommand, Guid>, DeleteMutationCommandHandler>();
+
+        services.AddScoped<IHandler<GetAllInvestmentAccountsQuery, IEnumerable<InvestmentAccountModel>>, GetAllInvestmentAccountsQueryHandler>();
+        services.AddScoped<IHandler<GetInvestmentAccountByIdQuery, InvestmentAccountModel>, GetInvestmentAccountByIdQueryHandler>();
+        services.AddScoped<IHandler<AddInvestmentAccountCommand, InvestmentAccountModel>, AddInvestmentAccountCommandHandler>();
+        services.AddScoped<IHandler<UpdateInvestmentAccountCommand, InvestmentAccountModel>, UpdateInvestmentAccountCommandHandler>();
+        services.AddScoped<IHandler<DeleteInvestmentAccountCommand, Guid>, DeleteInvestmentAccountCommandHandler>();
 
         services.AddScoped<IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>, GetBooksOverviewQueryHandler>();
         services.AddScoped<IHandler<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>, GetAccountsOverviewQueryHandler>();

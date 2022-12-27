@@ -1,5 +1,5 @@
-﻿using BooKeeperWebApp.Shared.Dtos;
-using BooKeeperWebApp.Shared.Models;
+﻿using BooKeeperWebApp.Shared.Dtos.Bank;
+using BooKeeperWebApp.Shared.Models.Bank;
 using Radzen;
 
 namespace Client.Services;

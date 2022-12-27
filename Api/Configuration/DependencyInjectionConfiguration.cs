@@ -1,8 +1,12 @@
 ﻿using Api.MappingProfiles;
+using Api.MappingProfiles.Bank;
+using Api.MappingProfiles.Investment;
 using Api.MappingProfiles.Overview;
 using AutoMapper;
 using BooKeeperWebApp.Business.Configuration;
 using BooKeeperWebApp.Business.MappingProfiles;
+using BooKeeperWebApp.Business.MappingProfiles.Bank;
+using BooKeeperWebApp.Business.MappingProfiles.Investment;
 using BooKeeperWebApp.Infrastructure.Configuration;
 using BooKeeperWebApp.Infrastructure.Contexts;
 using Microsoft.Extensions.Configuration;
@@ -25,14 +29,20 @@ public static class DependencyInjectionConfiguration
             mc.AddProfile(new BookProfiles());
             mc.AddProfile(new EventProfiles());
             mc.AddProfile(new MutationProfiles());
-            mc.AddProfile(new UserProfiles());
+            mc.AddProfile(new InvestmentAccountProfiles());
+            mc.AddProfile(new InvestmentProfiles());
+            mc.AddProfile(new InvestmentValueProfiles());
             mc.AddProfile(new OverviewBookProfiles());
             mc.AddProfile(new OverviewAccountProfiles());
+            mc.AddProfile(new UserProfiles());
 
             mc.AddProfile(new BankAccountModelProfiles());
             mc.AddProfile(new BookModelProfiles());
             mc.AddProfile(new EventModelProfiles());
             mc.AddProfile(new MutationModelProfiles());
+            mc.AddProfile(new InvestmentAccountModelProfiles());
+            mc.AddProfile(new InvestmentModelProfiles());
+            mc.AddProfile(new InvestmentValueModelProfiles());
             mc.AddProfile(new UserModelProfiles());
         });
 

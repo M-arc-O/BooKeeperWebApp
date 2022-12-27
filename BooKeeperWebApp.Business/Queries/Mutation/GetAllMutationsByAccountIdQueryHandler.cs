@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BooKeeperWebApp.Business.CQRS;
-using BooKeeperWebApp.Business.Models;
+using BooKeeperWebApp.Business.Models.Bank;
 using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
 
