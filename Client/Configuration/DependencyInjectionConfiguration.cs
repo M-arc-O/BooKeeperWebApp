@@ -3,6 +3,7 @@ using BooKeeperWebApp.Shared.Services.Csv;
 using BooKeeperWebApp.Shared.Services.Csv.CsvModels;
 using Client.Authentication;
 using Client.Services;
+using Client.Services.Bank;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 

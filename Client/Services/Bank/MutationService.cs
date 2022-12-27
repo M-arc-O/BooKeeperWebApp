@@ -3,18 +3,18 @@ using BooKeeperWebApp.Shared.Models.Bank;
 using Radzen;
 using System.Net.Http.Json;
 
-namespace Client.Services;
+namespace Client.Services.Bank;
 
 public class MutationService : HttpServiceBase<MutationDto, AddMutationModel>
 {
-    public MutationService(HttpClient httpClient, NotificationService notificationService) 
+    public MutationService(HttpClient httpClient, NotificationService notificationService)
         : base(httpClient, notificationService, "/api/mutation/")
     {
     }
 
     public async Task<bool> CreateMutationAsync(MutationDto dto, Guid bookId, Guid? eventId)
     {
-        var mutation = new AddMutationModel 
+        var mutation = new AddMutationModel
         {
             Date = dto.Date,
             AccountNumber = dto.AccountNumber,

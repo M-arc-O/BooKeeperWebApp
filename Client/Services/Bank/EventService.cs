@@ -2,11 +2,11 @@
 using BooKeeperWebApp.Shared.Models.Bank;
 using Radzen;
 
-namespace Client.Services;
+namespace Client.Services.Bank;
 
 public class EventService : HttpServiceBase<EventDto, AddEventModel>
 {
-    public EventService(HttpClient httpClient, NotificationService notificationService) 
+    public EventService(HttpClient httpClient, NotificationService notificationService)
         : base(httpClient, notificationService, "/api/event/")
     {
     }

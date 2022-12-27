@@ -2,11 +2,11 @@
 using BooKeeperWebApp.Shared.Models.Bank;
 using Radzen;
 
-namespace Client.Services;
+namespace Client.Services.Bank;
 
 public class BookService : HttpServiceBase<BookDto, AddBookModel>
 {
-    public BookService(HttpClient httpClient, NotificationService notificationService) 
+    public BookService(HttpClient httpClient, NotificationService notificationService)
         : base(httpClient, notificationService, "/api/book/")
     {
     }

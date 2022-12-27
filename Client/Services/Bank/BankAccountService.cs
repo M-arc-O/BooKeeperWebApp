@@ -2,11 +2,11 @@
 using BooKeeperWebApp.Shared.Models.Bank;
 using Radzen;
 
-namespace Client.Services;
+namespace Client.Services.Bank;
 
 public class BankAccountService : HttpServiceBase<BankAccountDto, AddBankAccountModel>
 {
-    public BankAccountService(HttpClient httpClient, NotificationService notificationService) 
+    public BankAccountService(HttpClient httpClient, NotificationService notificationService)
         : base(httpClient, notificationService, "/api/bankaccount/")
     {
 
