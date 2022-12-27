@@ -1,4 +1,5 @@
 ﻿using BooKeeperWebApp.Infrastructure.Entities;
+using BooKeeperWebApp.Infrastructure.Entities.Bank;
 using BooKeeperWebApp.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 

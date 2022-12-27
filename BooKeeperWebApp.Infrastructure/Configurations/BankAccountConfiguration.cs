@@ -1,4 +1,4 @@
-﻿using BooKeeperWebApp.Infrastructure.Entities;
+﻿using BooKeeperWebApp.Infrastructure.Entities.Bank;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

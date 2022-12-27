@@ -6,10 +6,10 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Queries.Book;
 public class GetAllBooksQueryHandler : IHandler<GetAllBooksQuery, IEnumerable<BookModel>>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
     private readonly IMapper _mapper;
 
-    public GetAllBooksQueryHandler(IGenericRepository<Infrastructure.Entities.Book> bookRepository, IMapper mapper)
+    public GetAllBooksQueryHandler(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository, IMapper mapper)
     {
         _bookRepository = bookRepository;
         _mapper = mapper;

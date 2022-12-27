@@ -21,8 +21,8 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IExecutor, Executor>();
         services.AddScoped<IUserService, UserService>();
 
-        services.AddScoped<IHandler<GetAllAccountsQuery, IEnumerable<BankAccountModel>>, GetAllAccountsQueryHandler>();
-        services.AddScoped<IHandler<GetAccountByIdQuery, BankAccountModel>, GetAccountByIdQueryHandler>();
+        services.AddScoped<IHandler<GetAllBankAccountsQuery, IEnumerable<BankAccountModel>>, GetAllBankAccountsQueryHandler>();
+        services.AddScoped<IHandler<GetBankAccountByIdQuery, BankAccountModel>, GetBankAccountByIdQueryHandler>();
         services.AddScoped<IHandler<AddBankAccountCommand, BankAccountModel>, AddBankAccountCommandHandler>();
         services.AddScoped<IHandler<UpdateBankAccountCommand, BankAccountModel>, UpdateBankAccountCommandHandler>();
         services.AddScoped<IHandler<DeleteBankAccountCommand, Guid>, DeleteBankAccountCommandHandler>();

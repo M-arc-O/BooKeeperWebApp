@@ -1,8 +1,7 @@
 ﻿namespace BooKeeperWebApp.Infrastructure.Enums;
-public enum AccountType : short
+public enum BankAccountType : short
 {
     ING,
     INGSavings,
-    RegioBank,
-    Robeco
+    RegioBank
 }

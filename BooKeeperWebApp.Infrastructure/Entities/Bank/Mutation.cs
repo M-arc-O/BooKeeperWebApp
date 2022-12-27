@@ -1,5 +1,4 @@
-﻿
-namespace BooKeeperWebApp.Infrastructure.Entities;
+﻿namespace BooKeeperWebApp.Infrastructure.Entities.Bank;
 public class Mutation
 {
     public Guid Id { get; set; }
@@ -22,10 +21,10 @@ public class Mutation
         {
             return base.Equals(obj);
         }
-        
+
         var other = obj as Mutation;
 
-        return 
+        return
             Date == other!.Date &&
             AccountNumber.Equals(other!.AccountNumber) &&
             OtherAccountNumber.Equals(other!.OtherAccountNumber) &&

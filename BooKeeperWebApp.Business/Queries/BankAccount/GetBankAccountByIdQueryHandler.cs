@@ -5,18 +5,18 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
 
 namespace BooKeeperWebApp.Business.Queries.BankAccount;
-public class GetAccountByIdQueryHandler : IHandler<GetAccountByIdQuery, BankAccountModel>
+public class GetBankAccountByIdQueryHandler : IHandler<GetBankAccountByIdQuery, BankAccountModel>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.BankAccount> _bankAccountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _bankAccountRepository;
     private readonly IMapper _mapper;
 
-    public GetAccountByIdQueryHandler(IGenericRepository<Infrastructure.Entities.BankAccount> bankAccountRepository, IMapper mapper)
+    public GetBankAccountByIdQueryHandler(IGenericRepository<Infrastructure.Entities.Bank.BankAccount> bankAccountRepository, IMapper mapper)
     {
         _bankAccountRepository = bankAccountRepository;
         _mapper = mapper;
     }
 
-    public async Task<BankAccountModel> ExecuteAsync(GetAccountByIdQuery query)
+    public async Task<BankAccountModel> ExecuteAsync(GetBankAccountByIdQuery query)
     {
         var accounts = await _bankAccountRepository.GetAsync(x => x.UserId == query.UserId, null, "Mutations");
         var account = accounts.FirstOrDefault(x => x.Id == query.AccountId) 

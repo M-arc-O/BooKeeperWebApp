@@ -4,9 +4,9 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Commands.Book;
 public class DeleteBookCommandHandler : BookCommandBase, IHandler<DeleteBookCommand, Guid>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
 
-    public DeleteBookCommandHandler(IGenericRepository<Infrastructure.Entities.Book> bookRepository)
+    public DeleteBookCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository)
         : base(bookRepository)
     {
         _bookRepository = bookRepository;

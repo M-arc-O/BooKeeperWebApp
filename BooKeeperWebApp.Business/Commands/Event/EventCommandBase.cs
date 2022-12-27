@@ -4,14 +4,14 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Event;
 public abstract class EventCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Event> _eventRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
 
-    protected EventCommandBase(IGenericRepository<Infrastructure.Entities.Event> eventRepository)
+    protected EventCommandBase(IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository)
     {
         _eventRepository = eventRepository;
     }
 
-    protected virtual async Task<Infrastructure.Entities.Event> GetEventAsync(Guid userId, Guid eventId)
+    protected virtual async Task<Infrastructure.Entities.Bank.Event> GetEventAsync(Guid userId, Guid eventId)
     {
         var entitie = await _eventRepository.GetByIdAsync(eventId) ?? throw new NotFoundException($"Event with id '{eventId}' not found.");
 

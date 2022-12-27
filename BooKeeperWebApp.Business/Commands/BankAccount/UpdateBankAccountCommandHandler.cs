@@ -8,10 +8,10 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public class UpdateBankAccountCommandHandler : BankAccountCommandBase, IHandler<UpdateBankAccountCommand, BankAccountModel>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.BankAccount> _bankAccountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _bankAccountRepository;
     private readonly IMapper _mapper;
 
-    public UpdateBankAccountCommandHandler(IGenericRepository<Infrastructure.Entities.BankAccount> bankAccountRepository, IMapper mapper)
+    public UpdateBankAccountCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.BankAccount> bankAccountRepository, IMapper mapper)
         : base(bankAccountRepository)
     {
         _bankAccountRepository = bankAccountRepository;
@@ -29,7 +29,7 @@ public class UpdateBankAccountCommandHandler : BankAccountCommandBase, IHandler<
 
         bankAccount.Name = command.Name;
         bankAccount.Number = command.Number;
-        bankAccount.Type = (AccountType)command.Type;
+        bankAccount.Type = (BankAccountType)command.Type;
         bankAccount.StartAmount = command.StartAmount;
         _bankAccountRepository.Update(bankAccount);
 

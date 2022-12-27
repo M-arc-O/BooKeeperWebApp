@@ -9,10 +9,10 @@ public class AddMultipleMutationsCommandHandler : MutationCommandBase, IHandler<
     private readonly IMapper _mapper;
 
     public AddMultipleMutationsCommandHandler(
-        IGenericRepository<Infrastructure.Entities.BankAccount> accountRepository,
-        IGenericRepository<Infrastructure.Entities.Book> bookRepository,
-        IGenericRepository<Infrastructure.Entities.Event> eventRepository,
-        IGenericRepository<Infrastructure.Entities.Mutation> mutationRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.BankAccount> accountRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Mutation> mutationRepository,
         IMapper mapper)
         : base(accountRepository, bookRepository, eventRepository, mutationRepository)
     {

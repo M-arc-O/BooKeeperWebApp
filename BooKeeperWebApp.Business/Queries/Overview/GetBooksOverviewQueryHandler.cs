@@ -5,9 +5,9 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Queries.Overview;
 public class GetBooksOverviewQueryHandler : IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
 
-    public GetBooksOverviewQueryHandler(IGenericRepository<Infrastructure.Entities.Book> bookRepository)
+    public GetBooksOverviewQueryHandler(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository)
     {
         _bookRepository = bookRepository;
     }

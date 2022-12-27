@@ -9,14 +9,14 @@
 
 <h2>@_bankAccountService.Item?.Name</h2>
 
-@if (_bankAccountService.Item!.Type == AccountType.ING ||
-    _bankAccountService.Item.Type == AccountType.INGSavings ||
-    _bankAccountService.Item.Type == AccountType.RegioBank)
+@if (_bankAccountService.Item!.Type == BankAccountType.ING ||
+    _bankAccountService.Item.Type == BankAccountType.INGSavings ||
+    _bankAccountService.Item.Type == BankAccountType.RegioBank)
 {
     <BankDetails />
 }
 
-@if (_bankAccountService.Item!.Type == AccountType.Robeco)
+@if (_bankAccountService.Item!.Type == BankAccountType.Robeco)
 {
     <RobecoDetails />
 }

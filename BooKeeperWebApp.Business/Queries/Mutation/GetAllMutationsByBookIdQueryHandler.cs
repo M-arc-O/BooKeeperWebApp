@@ -7,13 +7,13 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Queries.Mutation;
 public class GetAllMutationsByBookIdQueryHandler : IHandler<GetAllMutationsByBookIdQuery, IEnumerable<MutationModel>>
 {
-    protected readonly IGenericRepository<Infrastructure.Entities.Mutation> _mutationRepository;
-    protected readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
+    protected readonly IGenericRepository<Infrastructure.Entities.Bank.Mutation> _mutationRepository;
+    protected readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
     private readonly IMapper _mapper;
 
     public GetAllMutationsByBookIdQueryHandler(
-        IGenericRepository<Infrastructure.Entities.Mutation> mutationRepository,
-        IGenericRepository<Infrastructure.Entities.Book> bookRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Mutation> mutationRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository,
         IMapper mapper)
     {
         _mutationRepository = mutationRepository;

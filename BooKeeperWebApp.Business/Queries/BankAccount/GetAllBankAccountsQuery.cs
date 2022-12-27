@@ -1,15 +1,12 @@
 ﻿using BooKeeperWebApp.Business.CQRS;
 
 namespace BooKeeperWebApp.Business.Queries.BankAccount;
-public class GetAccountByIdQuery : IQuery
+public class GetAllBankAccountsQuery : IQuery
 {
     public Guid UserId { get; }
 
-    public Guid AccountId { get; }
-
-    public GetAccountByIdQuery(Guid userId, Guid accountId)
+    public GetAllBankAccountsQuery(Guid userId)
     {
         UserId = userId;
-        AccountId = accountId;
     }
 }

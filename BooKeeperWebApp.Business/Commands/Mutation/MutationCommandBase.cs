@@ -4,16 +4,16 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Mutation;
 public abstract class MutationCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.BankAccount> _accountRepository;
-    private readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
-    private readonly IGenericRepository<Infrastructure.Entities.Event> _eventRepository;
-    protected readonly IGenericRepository<Infrastructure.Entities.Mutation> _mutationRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _accountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
+    protected readonly IGenericRepository<Infrastructure.Entities.Bank.Mutation> _mutationRepository;
 
     protected MutationCommandBase(
-        IGenericRepository<Infrastructure.Entities.BankAccount> accountRepository,
-        IGenericRepository<Infrastructure.Entities.Book> bookRepository,
-        IGenericRepository<Infrastructure.Entities.Event> eventRepository,
-        IGenericRepository<Infrastructure.Entities.Mutation> mutationRepository)
+        IGenericRepository<Infrastructure.Entities.Bank.BankAccount> accountRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository,
+        IGenericRepository<Infrastructure.Entities.Bank.Mutation> mutationRepository)
     {
         _accountRepository = accountRepository;
         _bookRepository = bookRepository;
@@ -21,7 +21,7 @@ public abstract class MutationCommandBase
         _mutationRepository = mutationRepository;
     }
 
-    protected virtual async Task<Infrastructure.Entities.BankAccount> GetAccountAsync(Guid userId, string accountNumber)
+    protected virtual async Task<Infrastructure.Entities.Bank.BankAccount> GetAccountAsync(Guid userId, string accountNumber)
     {
         var accounts = await _accountRepository.GetAsync(x => x.Number!.ToLower().Equals(accountNumber.ToLower()));
         var account = accounts.FirstOrDefault() ?? throw new NotFoundException($"Bank account with number '{accountNumber}' not found.");
@@ -34,7 +34,7 @@ public abstract class MutationCommandBase
         return account;
     }
 
-    protected virtual async Task<Infrastructure.Entities.Book> GetBookAsync(Guid userId, Guid bookId)
+    protected virtual async Task<Infrastructure.Entities.Bank.Book> GetBookAsync(Guid userId, Guid bookId)
     {
         var book = await _bookRepository.GetByIdAsync(bookId) ?? throw new NotFoundException($"Book with id '{bookId}' not found.");
 
@@ -46,7 +46,7 @@ public abstract class MutationCommandBase
         return book;
     }
 
-    protected virtual async Task<Infrastructure.Entities.Event> GetEventAsync(Guid userId, Guid eventId)
+    protected virtual async Task<Infrastructure.Entities.Bank.Event> GetEventAsync(Guid userId, Guid eventId)
     {
         var entitie = await _eventRepository.GetByIdAsync(eventId) ?? throw new NotFoundException($"Event with id '{eventId}' not found.");
 
@@ -58,7 +58,7 @@ public abstract class MutationCommandBase
         return entitie;
     }
 
-    protected virtual async Task<Infrastructure.Entities.Mutation> GetMutationAsync(Guid userId, Guid mutationId)
+    protected virtual async Task<Infrastructure.Entities.Bank.Mutation> GetMutationAsync(Guid userId, Guid mutationId)
     {
         var mutation = await _mutationRepository.GetByIdAsync(mutationId)
             ?? throw new NotFoundException($"Mutation with id '{mutationId}' not found.");
@@ -73,7 +73,7 @@ public abstract class MutationCommandBase
         return mutation;
     }
 
-    protected virtual async Task<bool> MutionExistsAsync(Infrastructure.Entities.Mutation mutation)
+    protected virtual async Task<bool> MutionExistsAsync(Infrastructure.Entities.Bank.Mutation mutation)
     {
         var events = await _mutationRepository.GetAsync(x => x.Date == mutation!.Date &&
             x.AccountNumber.Equals(mutation!.AccountNumber) &&
@@ -86,7 +86,7 @@ public abstract class MutationCommandBase
         return events.Any();
     }
 
-    protected async Task<Infrastructure.Entities.Mutation> CreateMutation(AddMutationCommand command)
+    protected async Task<Infrastructure.Entities.Bank.Mutation> CreateMutation(AddMutationCommand command)
     {
         var entitie = new Infrastructure.Entities.Mutation
         {

@@ -7,10 +7,10 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Event;
 public class UpdateEventCommandHandler : EventCommandBase, IHandler<UpdateEventCommand, EventModel>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Event> _eventRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
     private readonly IMapper _mapper;
 
-    public UpdateEventCommandHandler(IGenericRepository<Infrastructure.Entities.Event> eventRepository, IMapper mapper)
+    public UpdateEventCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository, IMapper mapper)
         : base(eventRepository)
     {
         _eventRepository = eventRepository;

@@ -7,7 +7,7 @@ public class BankAccountModel
     public Guid UserId { get; set; }
     public string? Name { get; set; }
     public string? Number { get; set; }
-    public AccountType Type { get; set; }
+    public BankAccountType Type { get; set; }
     public double StartAmount { get; set; }
     public double CurrentAmount { get; set; }
     public ICollection<MutationModel>? Mutations { get; set; }

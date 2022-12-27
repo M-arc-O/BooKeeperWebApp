@@ -4,14 +4,14 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Book;
 public abstract class BookCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
 
-    protected BookCommandBase(IGenericRepository<Infrastructure.Entities.Book> bookRepository)
+    protected BookCommandBase(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository)
     {
         _bookRepository = bookRepository;
     }
 
-    protected virtual async Task<Infrastructure.Entities.Book> GetBookAsync(Guid userId, Guid bookId)
+    protected virtual async Task<Infrastructure.Entities.Bank.Book> GetBookAsync(Guid userId, Guid bookId)
     {
         var book = await _bookRepository.GetByIdAsync(bookId) ?? throw new NotFoundException($"Book with id '{bookId}' not found.");
 

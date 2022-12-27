@@ -106,8 +106,8 @@
 @code {
     private bool parsingCsv = false;
     private string errorMessage = string.Empty;
-    private List<EnumSelectModel<AccountType>> accountTypes = EnumSelectModel<AccountType>.GetEnumModel();
-    private AccountType? selectedType;
+    private List<EnumSelectModel<BankAccountType>> accountTypes = EnumSelectModel<BankAccountType>.GetEnumModel();
+    private BankAccountType? selectedType;
 
     private List<AddMutationModel> mutations = new();
 
@@ -156,9 +156,9 @@
 
         mutations = selectedType switch
         {
-            AccountType.ING => _csvService.ParseCsv<IngPaymentCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
-            AccountType.INGSavings => _csvService.ParseCsv<IngSavingCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
-            AccountType.RegioBank => _csvService.ParseCsv<RegiobankCsvModel>(',', fileLines).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+            BankAccountType.ING => _csvService.ParseCsv<IngPaymentCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+            BankAccountType.INGSavings => _csvService.ParseCsv<IngSavingCsvModel>(';', fileLines, true, true).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
+            BankAccountType.RegioBank => _csvService.ParseCsv<RegiobankCsvModel>(',', fileLines).Select(x => _mapper.Map<AddMutationModel>(x)).ToList(),
             _ => throw new Exception("Cannot parse this type.")
         };
 

@@ -6,10 +6,10 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Queries.Event;
 public class GetAllEventsQueryHandler : IHandler<GetAllEventsQuery, IEnumerable<EventModel>>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Event> _eventRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
     private readonly IMapper _mapper;
 
-    public GetAllEventsQueryHandler(IGenericRepository<Infrastructure.Entities.Event> eventRepository, IMapper mapper)
+    public GetAllEventsQueryHandler(IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository, IMapper mapper)
     {
         _eventRepository = eventRepository;
         _mapper = mapper;

@@ -4,14 +4,14 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public abstract class BankAccountCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.BankAccount> _bankAccountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _bankAccountRepository;
 
-    protected BankAccountCommandBase(IGenericRepository<Infrastructure.Entities.BankAccount> bankAccountRepository)
+    protected BankAccountCommandBase(IGenericRepository<Infrastructure.Entities.Bank.BankAccount> bankAccountRepository)
     {
         _bankAccountRepository = bankAccountRepository;
     }
 
-    protected virtual async Task<Infrastructure.Entities.BankAccount> GetBankAccountAsync(Guid userId, Guid accountId)
+    protected virtual async Task<Infrastructure.Entities.Bank.BankAccount> GetBankAccountAsync(Guid userId, Guid accountId)
     {
         var bankAccount = await _bankAccountRepository.GetByIdAsync(accountId) ?? throw new NotFoundException($"Bank account with id '{accountId}' not found.");
 

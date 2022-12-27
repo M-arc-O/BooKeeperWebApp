@@ -1,5 +1,7 @@
 ﻿using BooKeeperWebApp.Infrastructure.Configurations;
 using BooKeeperWebApp.Infrastructure.Entities;
+using BooKeeperWebApp.Infrastructure.Entities.Bank;
+using BooKeeperWebApp.Infrastructure.Entities.Investment;
 using Microsoft.EntityFrameworkCore;
 
 namespace BooKeeperWebApp.Infrastructure.Contexts;
@@ -10,6 +12,8 @@ public class BooKeeperWebAppDbContext : DbContext
     public DbSet<Book>? Books { get; set; }
     public DbSet<Event>? Events { get; set; }
     public DbSet<Mutation>? Mutations { get; set; }
+    public DbSet<InvestmentAccount>? InvestmentAccounts { get; set; }
+
 
     public BooKeeperWebAppDbContext(DbContextOptions<BooKeeperWebAppDbContext> options) : base(options)
     {
@@ -21,6 +25,9 @@ public class BooKeeperWebAppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BookConfiguration());
         modelBuilder.ApplyConfiguration(new EventConfiguration());
         modelBuilder.ApplyConfiguration(new MutationConfiguration());
+        modelBuilder.ApplyConfiguration(new InvestmentAccountConfiguration());
+        modelBuilder.ApplyConfiguration(new InvestmentConfiguration());
+        modelBuilder.ApplyConfiguration(new InvestmentValueConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 

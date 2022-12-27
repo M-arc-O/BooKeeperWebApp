@@ -7,10 +7,10 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Queries.Book;
 public class GetBookByIdQueryHandler : IHandler<GetBookByIdQuery, BookModel>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Book> _bookRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
     private readonly IMapper _mapper;
 
-    public GetBookByIdQueryHandler(IGenericRepository<Infrastructure.Entities.Book> bookRepository, IMapper mapper)
+    public GetBookByIdQueryHandler(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository, IMapper mapper)
     {
         _bookRepository = bookRepository;
         _mapper = mapper;

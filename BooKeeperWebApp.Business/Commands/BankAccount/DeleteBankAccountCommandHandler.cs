@@ -4,9 +4,9 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public class DeleteBankAccountCommandHandler : BankAccountCommandBase, IHandler<DeleteBankAccountCommand, Guid>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.BankAccount> _bankAccountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _bankAccountRepository;
 
-    public DeleteBankAccountCommandHandler(IGenericRepository<Infrastructure.Entities.BankAccount> bankAccountRepository)
+    public DeleteBankAccountCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.BankAccount> bankAccountRepository)
         : base(bankAccountRepository)
     {
         _bankAccountRepository = bankAccountRepository;

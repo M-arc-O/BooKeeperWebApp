@@ -13,9 +13,13 @@
 		<None Remove="Scripts\0003-Alter-bank-account-table.sql" />
 		<None Remove="Scripts\0004-Add-book-and-event-tables.sql" />
 		<None Remove="Scripts\0005-Add-mutation-table.sql" />
+		<None Remove="Scripts\0006-Add-investments.sql" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Scripts\0006-Add-investments.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	  <EmbeddedResource Include="Scripts\0005-Add-mutation-table.sql">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>

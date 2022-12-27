@@ -4,9 +4,9 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Commands.Event;
 public class DeleteEventCommandHandler : EventCommandBase, IHandler<DeleteEventCommand, Guid>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Event> _eventRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
 
-    public DeleteEventCommandHandler(IGenericRepository<Infrastructure.Entities.Event> eventRepository)
+    public DeleteEventCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository)
         : base(eventRepository)
     {
         _eventRepository = eventRepository;
