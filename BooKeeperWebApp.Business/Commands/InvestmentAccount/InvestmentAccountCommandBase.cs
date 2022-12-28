@@ -4,7 +4,7 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.InvestmentAccount;
 public abstract class InvestmentAccountCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> _investmentAccountRepository;
+    protected readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> _investmentAccountRepository;
 
     protected InvestmentAccountCommandBase(IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> investmentAccountRepository)
     {

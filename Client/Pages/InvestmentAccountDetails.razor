@@ -1,0 +1,113 @@
+﻿@page "/investmentaccountdetails/{id}"
+@using BooKeeperWebApp.Shared.Dtos.Investment;
+@using BooKeeperWebApp.Shared.Enums;
+@using Client.Components;
+@using Client.Services.Investment;
+
+@inject InvestmentAccountService _investmentAccountService
+@inject InvestmentService _investmentService
+
+<PageTitle>Account details @_investmentAccountService.Item?.Name</PageTitle>
+
+<h2>@_investmentAccountService.Item?.Name</h2>
+
+<div class="container-fluid h-100">
+    <div class="row">
+        <div class="col-3">
+            <RadzenCard>
+                <div class="row">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Account information</RadzenText>
+                </div>
+                <div class="row">
+                    <div class="col-md-7 align-items-center d-flex">
+                        <RadzenLabel Text="Current amount:" />
+                    </div>
+                    <div class="col-md-5">
+                        <RadzenTextBox style="width: 100%;" Name="CurrentAmount" Value="@($"€ {_investmentAccountService.Item?.CurrentAmount.ToString("F2")}")" Disabled="true" />
+                    </div>
+                </div>
+            </RadzenCard>
+        </div>
+    </div>
+    <hr />
+
+    <RadzenTemplateForm TItem="Model" Data=@model Submit=@OnSubmit>
+        <div class="row">
+            <div class="col-2">
+                <RadzenTextBox Name="InvestmentName" Placeholder="Investment name" @bind-Value=@model.Name />
+                <RadzenRequiredValidator Component="InvestmentName" Text="Investment name is required" Popup=true Style="position: absolute" />
+            </div>
+            <div class="col-2">
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Add investment" />
+            </div>
+        </div>
+    </RadzenTemplateForm>
+
+    @if (_investmentAccountService.Item != null && _investmentAccountService.Item!.Investments != null)
+    {
+        <div class="row">
+            <RadzenPanel AllowCollapse="false">
+                <HeaderTemplate>
+                    <h4 class="m-0 d-flex align-items-center">
+                        <RadzenIcon Icon="account_box" Class="me-1" /><b>Investments</b>
+                    </h4>
+                </HeaderTemplate>
+                <ChildContent>
+                    <RadzenCard Class="mt-3">
+                        <RadzenDataList PageSize="12" WrapItems="true" AllowPaging="true"
+                                    Data="@_investmentAccountService.Item!.Investments" TItem="InvestmentDto">
+                            <Template Context="investment">
+                                <RadzenCard Style="width: 300px; max-width: 300px;">
+                                    <div class="row">
+                                        <div class="col-md-8 text-truncate">
+                                            <RadzenBadge BadgeStyle="BadgeStyle.Light" Text=@($"{investment.Name}") Class="me-1" />
+                                        </div>
+                                        <div class="col-md-4 text-end">
+                                            <RadzenBadge BadgeStyle="BadgeStyle.Success" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", investment.Name)}") />
+                                        </div>
+                                    </div>
+                                </RadzenCard>
+                            </Template>
+                        </RadzenDataList>
+                    </RadzenCard>
+                </ChildContent>
+            </RadzenPanel>
+        </div>
+    }
+</div>
+
+@code {
+    class Model
+    {
+        public string Name { get; set; } = string.Empty;
+    }
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    private Model model = new();
+    private int investmentCounter = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _investmentAccountService.RefreshRequested += RefreshMe;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        investmentCounter = 1;
+        await _investmentAccountService.GetById(Guid.Parse(Id!));
+    }
+
+    private async Task OnSubmit(Model model)
+    {
+        await _investmentService.CreateInvestmentAsync(Guid.Parse(Id!), model.Name);
+        await _investmentAccountService.GetById(Guid.Parse(Id!));
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

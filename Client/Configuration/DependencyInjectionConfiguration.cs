@@ -19,6 +19,8 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<NotificationService>();
         services.AddScoped<BankAccountService>();
         services.AddScoped<InvestmentAccountService>();
+        services.AddScoped<InvestmentService>();
+        services.AddScoped<InvestmentValueService>();
         services.AddScoped<BookService>();
         services.AddScoped<EventService>();
         services.AddScoped<MutationService>();

@@ -5,7 +5,6 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.InvestmentAccount;
 public class DeleteInvestmentAccountCommandHandler : InvestmentAccountCommandBase, IHandler<DeleteInvestmentAccountCommand, Guid>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> _investmentAccountRepository;
     private readonly IGenericRepository<Infrastructure.Entities.Investment.Investment> _investmentRepository;
     private readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentValue> _investmentValueRepository;
 
@@ -15,7 +14,6 @@ public class DeleteInvestmentAccountCommandHandler : InvestmentAccountCommandBas
         IGenericRepository<Infrastructure.Entities.Investment.InvestmentValue> investmentValueRepository)
         : base(investmentAccountRepository)
     {
-        _investmentAccountRepository = investmentAccountRepository;
         _investmentRepository = investmentRepository;
         _investmentValueRepository = investmentValueRepository;
     }

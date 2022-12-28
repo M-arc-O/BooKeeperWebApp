@@ -1,5 +1,4 @@
-﻿using BooKeeperWebApp.Infrastructure.Entities.Investment;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BooKeeperWebApp.Infrastructure.Configurations.Investment;

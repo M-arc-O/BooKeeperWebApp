@@ -4,7 +4,7 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Book;
 public abstract class BookCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
+    protected readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
 
     protected BookCommandBase(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository)
     {

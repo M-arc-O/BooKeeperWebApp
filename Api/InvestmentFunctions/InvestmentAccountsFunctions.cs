@@ -32,7 +32,7 @@ namespace Api.InvestmentFunctions
 
             var user = await GetUserAsync(req);
             var query = new GetAllInvestmentAccountsQuery(user.Id);
-            var investmentAccounts = await _excecutor.ExecuteAsync<GetAllInvestmentAccountsQuery, IEnumerable<InvestmentAccountModel>>(query);
+            var investmentAccounts = await _excecutor.ExecuteAsync<GetAllInvestmentAccountsQuery, IEnumerable<InvestmentAccountModel>>((GetAllInvestmentAccountsQuery)query);
             await response.WriteAsJsonAsync(investmentAccounts.Select(x => _mapper.Map<InvestmentAccountDto>(x)));
 
             return response;
@@ -46,7 +46,7 @@ namespace Api.InvestmentFunctions
 
             var user = await GetUserAsync(req);
             var query = new GetInvestmentAccountByIdQuery(user.Id, id);
-            var account = await _excecutor.ExecuteAsync<GetInvestmentAccountByIdQuery, InvestmentAccountModel>(query);
+            var account = await _excecutor.ExecuteAsync<GetInvestmentAccountByIdQuery, InvestmentAccountModel>((GetInvestmentAccountByIdQuery)query);
             await response.WriteAsJsonAsync(_mapper.Map<InvestmentAccountDto>(account));
 
             return response;

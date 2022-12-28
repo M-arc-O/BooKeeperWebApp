@@ -4,7 +4,7 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Event;
 public abstract class EventCommandBase
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
+    protected readonly IGenericRepository<Infrastructure.Entities.Bank.Event> _eventRepository;
 
     protected EventCommandBase(IGenericRepository<Infrastructure.Entities.Bank.Event> eventRepository)
     {

@@ -7,13 +7,11 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Book;
 public class UpdateBookCommandHandler : BookCommandBase, IHandler<UpdateBookCommand, BookModel>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
     private readonly IMapper _mapper;
 
     public UpdateBookCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository, IMapper mapper)
         : base(bookRepository)
     {
-        _bookRepository = bookRepository;
         _mapper = mapper;
     }
 

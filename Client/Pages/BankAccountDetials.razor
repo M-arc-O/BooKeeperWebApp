@@ -12,25 +12,28 @@
 
 <div class="container-fluid h-100">
     <div class="row">
-        <div class="col-6">
-            <RadzenFieldset Text="Account information">
+        <div class="col-4">
+            <RadzenCard>
                 <div class="row">
-                    <div class="col-md-3 align-items-center d-flex">
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Account information</RadzenText>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 align-items-center d-flex">
                         <RadzenLabel Text="Account number:" />
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <RadzenTextBox style="width: 100%;" Name="AccountNumber" Value="@_bankAccountService.Item?.Number" Disabled="true" />
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 align-items-center d-flex">
+                    <div class="col-md-6 align-items-center d-flex">
                         <RadzenLabel Text="Current amount:" />
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <RadzenTextBox style="width: 100%;" Name="CurrentAmount" Value="@($"€ {_bankAccountService.Item?.CurrentAmount.ToString("F2")}")" Disabled="true" />
                     </div>
                 </div>
-            </RadzenFieldset>
+            </RadzenCard>
         </div>
     </div>
     <div class="row jusitify-content-left">

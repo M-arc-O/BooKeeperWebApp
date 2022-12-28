@@ -5,7 +5,6 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.BankAccount;
 public class DeleteBankAccountCommandHandler : BankAccountCommandBase, IHandler<DeleteBankAccountCommand, Guid>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _bankAccountRepository;
     private readonly IGenericRepository<Infrastructure.Entities.Bank.Mutation> _mutationRepository;
 
     public DeleteBankAccountCommandHandler(
@@ -13,7 +12,6 @@ public class DeleteBankAccountCommandHandler : BankAccountCommandBase, IHandler<
         IGenericRepository<Infrastructure.Entities.Bank.Mutation> mutationRepository)
         : base(bankAccountRepository)
     {
-        _bankAccountRepository = bankAccountRepository;
         _mutationRepository = mutationRepository;
     }
 

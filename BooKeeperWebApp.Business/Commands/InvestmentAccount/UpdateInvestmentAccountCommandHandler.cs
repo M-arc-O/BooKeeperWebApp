@@ -8,13 +8,11 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.InvestmentAccount;
 public class UpdateInvestmentAccountCommandHandler : InvestmentAccountCommandBase, IHandler<UpdateInvestmentAccountCommand, InvestmentAccountModel>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> _investmentAccountRepository;
     private readonly IMapper _mapper;
 
     public UpdateInvestmentAccountCommandHandler(IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> investmentAccountRepository, IMapper mapper)
         : base(investmentAccountRepository)
     {
-        _investmentAccountRepository = investmentAccountRepository;
         _mapper = mapper;
     }
 

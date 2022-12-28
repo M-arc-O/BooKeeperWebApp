@@ -5,12 +5,9 @@ using BooKeeperWebApp.Shared.Exceptions;
 namespace BooKeeperWebApp.Business.Commands.Book;
 public class DeleteBookCommandHandler : BookCommandBase, IHandler<DeleteBookCommand, Guid>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Bank.Book> _bookRepository;
-
     public DeleteBookCommandHandler(IGenericRepository<Infrastructure.Entities.Bank.Book> bookRepository)
         : base(bookRepository)
     {
-        _bookRepository = bookRepository;
     }
 
     public async Task<Guid> ExecuteAsync(DeleteBookCommand command)
