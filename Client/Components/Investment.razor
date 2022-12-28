@@ -1,0 +1,183 @@
+﻿@using BooKeeperWebApp.Shared.Dtos.Investment;
+@using BooKeeperWebApp.Shared.Models.Investment;
+@using Client.Services.Investment;
+
+@inject InvestmentService _investmentService
+@inject DialogService _dialogService
+@inject NotificationService _notificationService
+
+<RadzenTemplateForm TItem="InvestmentModel" Data=@newModel Submit=@OnSubmit>
+    <div class="row">
+        <div class="col-2">
+            <RadzenTextBox Name="InvestmentName" Placeholder="Investment name" @bind-Value=@newModel.Name />
+            <RadzenRequiredValidator Component="InvestmentName" Text="Investment name is required" Popup=true Style="position: absolute" />
+        </div>
+        <div class="col-2">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Add investment" />
+        </div>
+    </div>
+</RadzenTemplateForm>
+
+@if (InvestmentAccount != null && InvestmentAccount.Investments != null)
+{
+    <div class="row">
+        <RadzenPanel AllowCollapse="false">
+            <HeaderTemplate>
+                <h4 class="m-0 d-flex align-items-center">
+                    <RadzenIcon Icon="account_box" Class="me-1" /><b>Investments</b>
+                </h4>
+            </HeaderTemplate>
+            <ChildContent>
+                <RadzenCard Class="mt-3">
+                    <RadzenDataList PageSize="12" WrapItems="true" AllowPaging="true" Data="@InvestmentAccount.Investments" TItem="InvestmentDto">
+                        <Template Context="investment">
+                            <RadzenCard Style="width: 350px; max-width: 350px;">
+                                <div class="row">
+                                    <div class="col-md-7 text-truncate">
+                                        @if (editId != investment.Id)
+                                        {
+                                            <RadzenTextBox @bind-Value=investment.Name Disabled=true />
+                                        }
+                                        else
+                                        {
+                                            <RadzenTextBox @bind-Value=editModel.Name Disabled=false />
+                                        }
+                                    </div>
+                                    <div class="col-md-5 justify-content-end">
+                                        @if (editId != investment.Id)
+                                        {
+                                            <RadzenButton IsBusy=@(_investmentService.Creating || _investmentService.Updating || _investmentService.Deleting)
+                                                  Click=@(() => OnEditClick(investment))
+                                                  Icon="edit"
+                                                  ButtonStyle="ButtonStyle.Light"
+                                                  Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium" />
+                                        }
+                                        else
+                                        {
+                                            <RadzenButton IsBusy=@(_investmentService.Creating || _investmentService.Updating || _investmentService.Deleting)
+                                                  Click=@(() => OnSaveClick(investment))
+                                                  Icon="save"
+                                                  ButtonStyle="ButtonStyle.Success"
+                                                  Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium" />
+                                            <RadzenButton IsBusy=@(_investmentService.Creating || _investmentService.Updating || _investmentService.Deleting)
+                                                  Click=@(() => OnDeleteClick(investment.Id))
+                                                  Icon="delete"
+                                                  ButtonStyle="ButtonStyle.Danger"
+                                                  Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium" />
+                                            <RadzenButton IsBusy=@(_investmentService.Creating || _investmentService.Updating || _investmentService.Deleting)
+                                                  Click=@OnCancelClick
+                                                  Icon="close"
+                                                  ButtonStyle="ButtonStyle.Light"
+                                                  Variant="Variant.Flat"
+                                                  Size="ButtonSize.Medium" />
+                                        }
+                                    </div>
+                                </div>
+                                <InvestmentValue Investment="investment" />
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
+                </RadzenCard>
+            </ChildContent>
+        </RadzenPanel>
+    </div>
+}
+
+@code {
+    class InvestmentModel
+    {
+        public string Name { get; set; } = string.Empty;
+    }
+
+    [Parameter]
+    public InvestmentAccountDto? InvestmentAccount { get; set; }
+
+    private InvestmentModel newModel = new();
+    private InvestmentModel editModel = new();
+    private Guid editId = Guid.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _investmentService.RefreshRequested += RefreshMe;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _investmentService.Items = InvestmentAccount.Investments?.ToList()!;
+    }
+
+    private async Task OnSubmit(InvestmentModel model)
+    {
+        await _investmentService.CreateInvestmentAsync(InvestmentAccount.Id, model.Name);
+    }
+
+    private void OnEditClick(InvestmentDto investment)
+    {
+        editId = investment.Id;
+        editModel = new InvestmentModel { Name = investment.Name };
+    }
+
+    private async Task OnSaveClick(InvestmentDto investment)
+    {
+        if (investment.Id != Guid.Empty)
+        {
+            if (string.IsNullOrEmpty(editModel.Name))
+            {
+                _notificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error: ",
+                        Detail = "Investment name cannot be empty",
+                        Duration = 4000
+                    });
+            }
+            else
+            {
+                bool result = await _investmentService.UpdateAsync(new AddInvestmentModel(InvestmentAccount.Id, editModel.Name), investment.Id);
+
+                if (result)
+                {
+                    investment.Name = editModel.Name;
+                    editId = Guid.Empty;
+                }
+            }
+        }
+    }
+
+    private async Task OnDeleteClick(Guid id)
+    {
+        try
+        {
+            if (id != Guid.Empty)
+            {
+                var confirmResult = await _dialogService.Confirm(
+                    $"Are you sure you want to delete '{editModel.Name}', this cannot be undone.",
+                    "Warning!",
+                    new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
+
+                if (confirmResult.HasValue && confirmResult.Value)
+                {
+                    await _investmentService.DeleteAsync(id);
+                }
+            }
+        }
+        finally
+        {
+            editId = Guid.Empty;
+        }
+    }
+
+    private void OnCancelClick()
+    {
+        editId = Guid.Empty;
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

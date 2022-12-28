@@ -1,0 +1,57 @@
+﻿@using BooKeeperWebApp.Shared.Dtos.Investment;
+@using Client.Services.Investment;
+
+@inject InvestmentValueService _investmentValueService
+
+<RadzenTemplateForm TItem="Model" Data=@newModel Submit=@OnSubmit>
+    <div class="row">
+        <div class="col-5">
+            <RadzenDatePicker Name="@($"{Investment.Id}Date")" @bind-Value=newModel.Date DateFormat="d" />
+            <RadzenRequiredValidator Component="@($"{Investment.Id}Date")" Text="Date is required" Popup=true Style="position: absolute" />
+        </div>
+        <div class="col-5">
+            <RadzenNumeric Name="@($"{Investment.Id}Value")" Placeholder="Enter value" @bind-Value=newModel.Value TValue="double" Step="0.5" />
+            <RadzenRequiredValidator Component="@($"{Investment.Id}Value")" Text="Value is required" Popup=true Style="position: absolute" />
+        </div>
+        <div class="col-2">
+            <RadzenButton ButtonType="ButtonType.Submit"
+                          Icon="check"
+                          ButtonStyle="ButtonStyle.Success"
+                          Variant="Variant.Flat"
+                          Size="ButtonSize.Medium" />
+        </div>
+    </div>
+</RadzenTemplateForm>
+
+<div class="row">
+    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@Investment.Values" TItem="InvestmentValueDto" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+        <Template Context="value">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Date</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(value.Date) </RadzenText>
+                    </div>
+                </div>
+            </div>
+        </Template>
+    </RadzenDataList>
+</div>
+
+@code {
+    class Model
+    {
+        public DateTime Date { get; set; } = DateTime.Now;
+        public double Value { get; set; }
+    }
+
+    [Parameter]
+    public InvestmentDto Investment { get; set; }
+
+    private Model newModel = new();
+
+    private async Task OnSubmit(Model model)
+    {
+        
+    }
+}
