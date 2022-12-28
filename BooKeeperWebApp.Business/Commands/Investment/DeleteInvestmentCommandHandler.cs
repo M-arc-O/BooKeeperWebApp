@@ -21,7 +21,7 @@ public class DeleteInvestmentCommandHandler : InvestmentCommandBase, IHandler<De
         var investments = await _investmentRepository.GetAsync(
             x => x.Id == command.InvestmentId,
             null,
-            "Investments,Investments.Values");
+            "Values");
         var investment = investments.FirstOrDefault() ?? throw new NotFoundException($"Investment account with id '{command.InvestmentId}' not found.");
 
         await CheckIfUserHasAccesToInvestment(command.UserId, investment);

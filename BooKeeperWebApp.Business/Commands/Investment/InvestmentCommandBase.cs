@@ -18,7 +18,7 @@ public abstract class InvestmentCommandBase
     protected virtual async Task<Infrastructure.Entities.Investment.Investment> GetInvestmentAsync(Guid userId, Guid investmentId)
     {
         var investment = await _investmentRepository.GetByIdAsync(investmentId)
-            ?? throw new NotFoundException($"Investment account with id '{investmentId}' not found.");
+            ?? throw new NotFoundException($"Investment with id '{investmentId}' not found.");
 
         await CheckIfUserHasAccesToInvestment(userId, investment);
 
@@ -31,7 +31,7 @@ public abstract class InvestmentCommandBase
 
         if (account!.UserId != userId)
         {
-            throw new UnauthorizedAccessException($"User with id '{userId}' does not have access to investment account with id '{investment.Id}'.");
+            throw new UnauthorizedAccessException($"User with id '{userId}' does not have access to investment with id '{investment.Id}'.");
         }
     }
 

@@ -18,7 +18,7 @@ public class GetInvestmentAccountByIdQueryHandler : IHandler<GetInvestmentAccoun
 
     public async Task<InvestmentAccountModel> ExecuteAsync(GetInvestmentAccountByIdQuery query)
     {
-        var accounts = await _investmentAccountRepository.GetAsync(x => x.UserId == query.UserId, null, "Investments");
+        var accounts = await _investmentAccountRepository.GetAsync(x => x.UserId == query.UserId, null, "Investments,Investments.Values");
         var account = accounts.FirstOrDefault(x => x.Id == query.AccountId) 
             ?? throw new NotFoundException($"Account with id '{query.AccountId}' could not be found.");
     

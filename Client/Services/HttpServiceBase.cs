@@ -15,7 +15,7 @@ public enum ActionType
 public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseDto
 {
     protected readonly HttpClient _httpClient;
-    protected readonly NotificationService _notifactionService;
+    protected readonly NotificationService _notificationService;
     protected readonly string _baseUrl;
 
     public bool Loading;
@@ -29,7 +29,7 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
     protected HttpServiceBase(HttpClient httpClient, NotificationService notificationService, string baseUrl)
     {
         _httpClient = httpClient;
-        _notifactionService = notificationService;
+        _notificationService = notificationService;
         _baseUrl = baseUrl;
         Item = (DtoType?)Activator.CreateInstance(typeof(DtoType));
     }
@@ -75,7 +75,7 @@ public abstract class HttpServiceBase<DtoType, ModelType> where DtoType : IBaseD
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadFromJsonAsync<ErrorDto>();
-            _notifactionService.Notify(new NotificationMessage
+            _notificationService.Notify(new NotificationMessage
             {
                 Severity = NotificationSeverity.Error,
                 Summary = "Error: ",
