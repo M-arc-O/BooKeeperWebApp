@@ -3,6 +3,7 @@ using BooKeeperWebApp.Business.Commands.Book;
 using BooKeeperWebApp.Business.Commands.Event;
 using BooKeeperWebApp.Business.Commands.Investment;
 using BooKeeperWebApp.Business.Commands.InvestmentAccount;
+using BooKeeperWebApp.Business.Commands.InvestmentValue;
 using BooKeeperWebApp.Business.Commands.Mutation;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models.Bank;
@@ -60,6 +61,9 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<AddInvestmentCommand, InvestmentModel>, AddInvestmentCommandHandler>();
         services.AddScoped<IHandler<UpdateInvestmentCommand, InvestmentModel>, UpdateInvestmentCommandHandler>();
         services.AddScoped<IHandler<DeleteInvestmentCommand, Guid>, DeleteInvestmentCommandHandler>();
+
+        services.AddScoped<IHandler<AddInvestmentValueCommand, InvestmentValueModel>, AddInvestmentValueCommandHandler>();
+        services.AddScoped<IHandler<DeleteInvestmentValueCommand, Guid>, DeleteInvestmentValueCommandHandler>();
 
         services.AddScoped<IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>, GetBooksOverviewQueryHandler>();
         services.AddScoped<IHandler<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>, GetAccountsOverviewQueryHandler>();

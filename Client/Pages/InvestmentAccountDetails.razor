@@ -6,6 +6,7 @@
 
 @inject InvestmentAccountService _investmentAccountService
 @inject InvestmentService _investmentService
+@inject InvestmentValueService _investmentValueService
 
 <PageTitle>Account details @_investmentAccountService.Item?.Name</PageTitle>
 
@@ -44,6 +45,7 @@
         await base.OnInitializedAsync();
         _investmentAccountService.RefreshRequested += RefreshMe;
         _investmentService.RefreshRequested += LoadAccount;
+        _investmentValueService.RefreshRequested += LoadAccount;
     }
 
     protected override void OnParametersSet()

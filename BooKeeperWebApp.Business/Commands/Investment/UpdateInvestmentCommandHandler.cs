@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models.Investment;
-using BooKeeperWebApp.Infrastructure.Enums;
 using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
 

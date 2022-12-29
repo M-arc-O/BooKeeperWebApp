@@ -1,2 +1,2 @@
 ﻿namespace BooKeeperWebApp.Shared.Models.Investment;
-public record AddInvestmentValueModel(DateTime Date, double Value);
+public record AddInvestmentValueModel(Guid InvestmentId, DateTime Date, double Value);

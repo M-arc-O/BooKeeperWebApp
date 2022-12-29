@@ -12,15 +12,9 @@ public class InvestmentValueService : HttpServiceBase<InvestmentValueDto, AddInv
 
     }
 
-    public async Task<bool> CreateInvestmentAccountAsync(InvestmentValueDto value)
+    public async Task<bool> CreateInvestmentValueAsync(Guid investmentId, DateTime date, double value)
     {
-        var investmentValue = new AddInvestmentValueModel(value.Date, value.Value);
+        var investmentValue = new AddInvestmentValueModel(investmentId, date, value);
         return await CreateAsync(investmentValue);
-    }
-
-    public async Task<bool> UpdateInvestmentAccountAsync(InvestmentValueDto value)
-    {
-        var investmentValue = new AddInvestmentValueModel(value.Date, value.Value);
-        return await UpdateAsync(investmentValue, value.Id);
     }
 }

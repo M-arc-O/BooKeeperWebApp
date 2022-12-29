@@ -105,14 +105,14 @@
         _investmentService.RefreshRequested += RefreshMe;
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        _investmentService.Items = InvestmentAccount.Investments?.ToList()!;
+        _investmentService.Items = InvestmentAccount?.Investments?.ToList()!;
     }
 
     private async Task OnSubmit(InvestmentModel model)
     {
-        await _investmentService.CreateInvestmentAsync(InvestmentAccount.Id, model.Name);
+        await _investmentService.CreateInvestmentAsync(InvestmentAccount!.Id, model.Name);
     }
 
     private void OnEditClick(InvestmentDto investment)
