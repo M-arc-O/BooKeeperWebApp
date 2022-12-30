@@ -5,28 +5,43 @@ using BooKeeperWebApp.Infrastructure.Repositories;
 namespace BooKeeperWebApp.Business.Queries.Overview;
 public class GetAccountsOverviewQueryHandler : IHandler<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>
 {
-    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _accountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Bank.BankAccount> _bankAccountRepository;
+    private readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> _investmentAccountRepository;
 
-    public GetAccountsOverviewQueryHandler(IGenericRepository<Infrastructure.Entities.Bank.BankAccount> accountRepository)
+    public GetAccountsOverviewQueryHandler(
+        IGenericRepository<Infrastructure.Entities.Bank.BankAccount> accountRepository,
+        IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> investmentAccountRepository)
     {
-        _accountRepository = accountRepository;
+        _bankAccountRepository = accountRepository;
+        _investmentAccountRepository = investmentAccountRepository;
     }
 
     public async Task<IEnumerable<OverviewAccountModel>> ExecuteAsync(GetAccountsOverviewQuery query)
     {
-        var accounts = await _accountRepository.GetAsync(x => x.UserId == query.UserId);
+        var bankAccounts = await _bankAccountRepository.GetAsync(x => x.UserId == query.UserId);
+        var investmentAccounts = await _investmentAccountRepository.GetAsync(x => x.UserId == query.UserId);
 
         var retVal = new List<OverviewAccountModel>();
 
-        Parallel.ForEach(accounts, account =>
+        foreach (var account in bankAccounts)
         {
-            var overviewBook = new OverviewAccountModel
+            var overviewAccount = new OverviewAccountModel
             {
                 AccountName = account.Name!,
                 Amount = account.CurrentAmount
             };
-            retVal.Add(overviewBook);
-        });
+            retVal.Add(overviewAccount);
+        }
+
+        foreach (var account in investmentAccounts)
+        {
+            var overviewAccount = new OverviewAccountModel
+            {
+                AccountName = account.Name!,
+                Amount = account.CurrentAmount
+            };
+            retVal.Add(overviewAccount);
+        }
 
         return retVal;
     }
