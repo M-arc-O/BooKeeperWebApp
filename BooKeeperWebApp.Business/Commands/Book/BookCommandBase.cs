@@ -1,5 +1,4 @@
-﻿using BooKeeperWebApp.Infrastructure.Entities;
-using BooKeeperWebApp.Infrastructure.Repositories;
+﻿using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
 
 namespace BooKeeperWebApp.Business.Commands.Book;

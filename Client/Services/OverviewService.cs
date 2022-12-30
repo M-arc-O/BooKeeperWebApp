@@ -34,10 +34,10 @@ public class OverviewService
         RefreshRequested?.Invoke();
     }
 
-    public virtual async Task LoadBooksAsync()
+    public virtual async Task LoadBooksAsync(int year)
     {
         LoadingBooks = true;
-        Books = await GetItems<OverviewBookDto>("getbooks") ?? new();
+        Books = await GetItems<OverviewBookDto>($"getbooks/{year}") ?? new();
         LoadingBooks = false;
         RefreshRequested?.Invoke();
     }

@@ -20,7 +20,7 @@ public class UpdateBankAccountCommandHandler : BankAccountCommandBase, IHandler<
     {
         var bankAccount = await GetBankAccountAsync(command.UserId, command.AccountId);
 
-        if (command.Number != bankAccount.Number && await NumberTakenAsync(command.Number))
+        if (command.Number != bankAccount.Number && await NumberTakenAsync(command.UserId, command.Number))
         {
             throw new ValidationException($"Account with number '{command.Number}' already exists");
         }

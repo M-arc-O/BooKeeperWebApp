@@ -29,7 +29,7 @@ public class AddBankAccountCommandHandler : BankAccountCommandBase, IHandler<Add
             CurrentAmount = command.StartAmount
         };
 
-        if (await NumberTakenAsync(command.Number))
+        if (await NumberTakenAsync(command.UserId, command.Number))
         {
             throw new ValidationException($"Account with number '{command.Number}' already exists");
         }

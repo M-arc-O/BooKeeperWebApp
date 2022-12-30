@@ -23,9 +23,9 @@ public abstract class BankAccountCommandBase
         return bankAccount;
     }
 
-    protected virtual async Task<bool> NumberTakenAsync(string number)
+    protected virtual async Task<bool> NumberTakenAsync(Guid userId, string number)
     {
-        var accounts = await _bankAccountRepository.GetAsync(x => x.Number!.ToLower().Equals(number.ToLower()));
+        var accounts = await _bankAccountRepository.GetAsync(x => x.UserId == userId && x.Number!.ToLower().Equals(number.ToLower()));
         return accounts.Any();
     }
 }

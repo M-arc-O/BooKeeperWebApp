@@ -52,6 +52,11 @@
                     <div class="row">
                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Books (@DateTime.Now.Year)</RadzenText>
                     </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <RadzenDropDown Data="@years" @bind-Value="selectedYear" Change="YearChanged" />
+                        </div>
+                    </div>
                     @if (_overviewService.LoadingBooks)
                     {
                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Loading books</RadzenText>
@@ -91,12 +96,27 @@
 </div>
 
 @code {
+    private List<int> years = new();
+    private int selectedYear;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        for (int i = 2020; i <= DateTime.Now.Year; i++)
+        {
+            years.Add(i);
+        }
+        selectedYear = DateTime.Now.Year;
+
         _overviewService.RefreshRequested += RefreshMe;
         _overviewService.LoadAccountsAsync();
-        _overviewService.LoadBooksAsync();
+        _overviewService.LoadBooksAsync(selectedYear);
+    }
+
+    private void YearChanged()
+    {
+        _overviewService.LoadBooksAsync(selectedYear);
     }
 
     public void Dispose()

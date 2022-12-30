@@ -23,12 +23,12 @@ namespace Api
         }
 
         [Function("GetBooksOverview")]
-        public async Task<HttpResponseData> GetBooksOverview([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getbooks")] HttpRequestData req)
+        public async Task<HttpResponseData> GetBooksOverview([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getbooks/{year}")] HttpRequestData req, int year)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
 
             var user = await GetUserAsync(req);
-            var query = new GetBooksOverviewQuery(user.Id, DateTime.Now);
+            var query = new GetBooksOverviewQuery(user.Id, new DateTime(year, 1, 1));
             var books = await _excecutor.ExecuteAsync<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>(query);
             await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewBookDto>(x)));
 
