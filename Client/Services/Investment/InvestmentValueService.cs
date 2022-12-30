@@ -17,4 +17,11 @@ public class InvestmentValueService : HttpServiceBase<InvestmentValueDto, AddInv
         var investmentValue = new AddInvestmentValueModel(investmentId, date, value);
         return await CreateAsync(investmentValue);
     }
+
+    public override async Task<bool> DeleteAsync(Guid id)
+    {
+        Deleting = true;
+        var result = await _httpClient.DeleteAsync($"{_baseUrl}{id}/delete");
+        return await HandleResult(result, (ActionType)(-1));
+    }
 }

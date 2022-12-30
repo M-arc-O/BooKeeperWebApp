@@ -19,7 +19,7 @@
                             AllowPaging="false"
                             AllowSorting="false"
                             EditMode="DataGridEditMode.Single"
-                            Data="@_eventService.Item?.Mutations"
+                            Data="@_eventService.Item?.Mutations?.OrderByDescending(x => x.Date)"
                             TItem="MutationDto">
                 <Columns>
                     <RadzenDataGridColumn TItem="MutationDto" Property="Date" Title="Date" FormatString="{0,8:dd/MM/yyyy}" Width="75px" />

@@ -3,8 +3,8 @@
 @using Client.Components
 @using Client.Services.Bank;
 
-@inject BookService BookService;
-@inject DialogService DialogService;
+@inject BookService _bookService;
+@inject DialogService _dialogService;
 
 <PageTitle>Books</PageTitle>
 <div class="container-fluid h-100">
@@ -22,13 +22,13 @@
                                                    Change="OnNameTextBoxChange" />
                                 </div>
                                 <div class="col-md-auto">
-                                    <RadzenButton IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
+                                    <RadzenButton IsBusy=@(_bookService.Creating || _bookService.Updating || _bookService.Deleting)
                                                   Click=@OnSaveClick
                                                   Variant="Variant.Outlined"
                                                   ButtonStyle="ButtonStyle.Secondary"
                                                   Size="ButtonSize.Medium"
                                                   Icon="save" />
-                                    <RadzenButton IsBusy=@(BookService.Creating || BookService.Updating || BookService.Deleting)
+                                    <RadzenButton IsBusy=@(_bookService.Creating || _bookService.Updating || _bookService.Deleting)
                                                   Click=@OnDeleteClick
                                                   Variant="Variant.Outlined"
                                                   ButtonStyle="ButtonStyle.Danger"
@@ -44,7 +44,7 @@
                             <RadzenListBox @ref="bookListBox"
                                            AllowFiltering="true"
                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                           Data=@BookService.Items
+                                           Data=@_bookService.Items
                                            TValue="BookDto"
                                            TextProperty="Name"
                                            ValueProperty="Id"
@@ -75,9 +75,14 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await BookService.LoadAsync();
+        await _bookService.LoadAsync();
 
-        BookService.RefreshRequested += RefreshMe;
+        _bookService.RefreshRequested += RefreshMe;
+    }
+    
+    public void Dispose()
+    {
+        _bookService.RefreshRequested -= RefreshMe;
     }
 
     void OnNameTextBoxChange()
@@ -93,24 +98,24 @@
         selectedBook.Name = bookName;
         if (selectedBook.Id == Guid.Empty)
         {
-            await BookService.CreateBookAsync(selectedBook);
+            await _bookService.CreateBookAsync(selectedBook);
         }
         else
         {
-            await BookService.UpdateBookAsync(selectedBook);
+            await _bookService.UpdateBookAsync(selectedBook);
         }
     }
 
     async Task OnDeleteClick()
     {
-        var confirmResult = await DialogService.Confirm(
+        var confirmResult = await _dialogService.Confirm(
                     $"Are you sure you want to delete '{selectedBook.Name}', this cannot be undone.",
                     "Warning!",
                     new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
 
         if (confirmResult.HasValue && confirmResult.Value)
         {
-            if (await BookService.DeleteAsync(selectedBook.Id))
+            if (await _bookService.DeleteAsync(selectedBook.Id))
             {
                 ResetSelectedItem();
             }
@@ -119,7 +124,7 @@
 
     void OnListBoxChange(object id)
     {
-        selectedBook = BookService.Items.First(x => x.Id == (Guid)id);
+        selectedBook = _bookService.Items.First(x => x.Id == (Guid)id);
         bookName = selectedBook.Name!;
     }
 

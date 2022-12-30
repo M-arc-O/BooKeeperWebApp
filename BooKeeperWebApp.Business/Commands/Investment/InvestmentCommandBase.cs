@@ -35,9 +35,9 @@ public abstract class InvestmentCommandBase
         }
     }
 
-    protected virtual async Task<bool> NameTakenAsync(string name)
+    protected virtual async Task<bool> NameTakenAsync(Guid investmentAccountId, string name)
     {
-        var accounts = await _investmentRepository.GetAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
+        var accounts = await _investmentRepository.GetAsync(x => x.InvestmentAccountId == investmentAccountId && x.Name!.ToLower().Equals(name.ToLower()));
         return accounts.Any();
     }
 }

@@ -3,8 +3,8 @@
 @using Client.Components
 @using Client.Services.Bank;
 
-@inject EventService EventService;
-@inject DialogService DialogService;
+@inject EventService _eventService;
+@inject DialogService _dialogService;
 
 <PageTitle>Events</PageTitle>
 <div class="container-fluid h-100">
@@ -22,13 +22,13 @@
                                                    Change="OnNameTextBoxChange" />
                                 </div>
                                 <div class="col-md-auto">
-                                    <RadzenButton IsBusy=@(EventService.Creating || EventService.Updating || EventService.Deleting)
+                                    <RadzenButton IsBusy=@(_eventService.Creating || _eventService.Updating || _eventService.Deleting)
                                                   Click=@OnSaveClick
                                                   Variant="Variant.Outlined"
                                                   ButtonStyle="ButtonStyle.Secondary"
                                                   Size="ButtonSize.Medium"
                                                   Icon="save" />
-                                    <RadzenButton IsBusy=@(EventService.Creating || EventService.Updating || EventService.Deleting)
+                                    <RadzenButton IsBusy=@(_eventService.Creating || _eventService.Updating || _eventService.Deleting)
                                                   Click=@OnDeleteClick
                                                   Variant="Variant.Outlined"
                                                   ButtonStyle="ButtonStyle.Danger"
@@ -44,7 +44,7 @@
                             <RadzenListBox @ref="eventListBox"
                                            AllowFiltering="true"
                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                           Data=@EventService.Items
+                                           Data=@_eventService.Items
                                            TValue="EventDto"
                                            TextProperty="Name"
                                            ValueProperty="Id"
@@ -75,9 +75,14 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await EventService.LoadAsync();
+        await _eventService.LoadAsync();
 
-        EventService.RefreshRequested += RefreshMe;
+        _eventService.RefreshRequested += RefreshMe;
+    }
+
+    public void Dispose()
+    {
+        _eventService.RefreshRequested -= RefreshMe;
     }
 
     void OnNameTextBoxChange()
@@ -93,24 +98,24 @@
         selectedEvent.Name = eventName;
         if (selectedEvent.Id == Guid.Empty)
         {
-            await EventService.CreateEventAsync(selectedEvent);
+            await _eventService.CreateEventAsync(selectedEvent);
         }
         else
         {
-            await EventService.UpdateEventAsync(selectedEvent);
+            await _eventService.UpdateEventAsync(selectedEvent);
         }
     }
 
     async Task OnDeleteClick()
     {
-        var confirmResult = await DialogService.Confirm(
+        var confirmResult = await _dialogService.Confirm(
                     $"Are you sure you want to delete '{selectedEvent.Name}', this cannot be undone.",
                     "Warning!",
                     new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
 
         if (confirmResult.HasValue && confirmResult.Value)
         {
-            if (await EventService.DeleteAsync(selectedEvent.Id))
+            if (await _eventService.DeleteAsync(selectedEvent.Id))
             {
                 ResetSelectedItem();
             }
@@ -119,7 +124,7 @@
 
     void OnListBoxChange(object id)
     {
-        selectedEvent = EventService.Items.First(x => x.Id == (Guid)id);
+        selectedEvent = _eventService.Items.First(x => x.Id == (Guid)id);
         eventName = selectedEvent.Name!;
     }
 

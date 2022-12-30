@@ -27,7 +27,7 @@ public class AddInvestmentCommandHandler : InvestmentCommandBase, IHandler<AddIn
             Name = command.Name
         };
 
-        if (await NameTakenAsync(command.Name))
+        if (await NameTakenAsync(command.InvestmentAccountId, command.Name))
         {
             throw new ValidationException($"Investment with name '{command.Name}' already exists");
         }

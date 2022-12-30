@@ -22,7 +22,7 @@ public class UpdateInvestmentCommandHandler : InvestmentCommandBase, IHandler<Up
     {
         var investment = await GetInvestmentAsync(command.UserId, command.InvestmentId);
 
-        if (command.Name != investment.Name && await NameTakenAsync(command.Name))
+        if (command.Name != investment.Name && await NameTakenAsync(investment.InvestmentAccountId, command.Name))
         {
             throw new ValidationException($"Account with name '{command.Name}' already exists");
         }

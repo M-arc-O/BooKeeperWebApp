@@ -23,8 +23,7 @@ public abstract class InvestmentValueCommandBase
         var investmentValue = await _investmentValueRepository.GetByIdAsync(valueId) 
             ?? throw new NotFoundException($"Investment value with id '{valueId}' not found.");
 
-        var investment = await _investmentRepository.GetByIdAsync(investmentValue.InvestmentId);
-        var investmentAccount = await _investmentAccountRepository.GetByIdAsync(investment!.InvestmentAccountId);
+        var investmentAccount = await GetInvestmentAccount(investmentValue.InvestmentId);
 
         if (investmentAccount!.UserId != userId)
         {
@@ -34,9 +33,20 @@ public abstract class InvestmentValueCommandBase
         return investmentValue;
     }
 
-    protected virtual async Task<bool> DateTakenAsync(DateTime date)
+    protected virtual async Task<Infrastructure.Entities.Investment.InvestmentAccount?> GetInvestmentAccount(Guid InvestmentId)
     {
-        var accounts = await _investmentValueRepository.GetAsync(x => x.Date.Date == date.Date);
+        var investment = await _investmentRepository.GetByIdAsync(InvestmentId);
+        return await _investmentAccountRepository.GetByIdAsync(investment!.InvestmentAccountId);
+    }
+
+    protected virtual async Task<List<Infrastructure.Entities.Investment.InvestmentValue>> GetInvestmentValues(Guid InvestmentId)
+    {
+        return await _investmentValueRepository.GetAsync(x => x.InvestmentId == InvestmentId, x => x.OrderByDescending(x => x.Date));
+    }
+
+    protected virtual async Task<bool> DateTakenAsync(Guid investmentId, DateTime date)
+    {
+        var accounts = await _investmentValueRepository.GetAsync(x => x.InvestmentId == investmentId && x.Date.Date == date.Date);
         return accounts.Any();
     }
 }

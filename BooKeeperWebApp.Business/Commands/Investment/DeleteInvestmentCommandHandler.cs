@@ -26,6 +26,14 @@ public class DeleteInvestmentCommandHandler : InvestmentCommandBase, IHandler<De
 
         await CheckIfUserHasAccesToInvestment(command.UserId, investment);
 
+        var latestValue = investment.Values.OrderByDescending(x => x.Date).FirstOrDefault();
+
+        if (latestValue != null)
+        {
+            var account = await _investmentAccountRepository.GetByIdAsync(investment!.InvestmentAccountId);
+            account!.CurrentAmount -= latestValue.Value;
+        }
+
         Parallel.ForEach(investment.Values!, (value) =>
         {
             _investmentValueRepository.Delete(value);

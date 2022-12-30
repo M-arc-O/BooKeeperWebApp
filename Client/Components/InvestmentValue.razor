@@ -2,6 +2,7 @@
 @using Client.Services.Investment;
 
 @inject InvestmentValueService _investmentValueService
+@inject DialogService _dialogService
 
 <RadzenTemplateForm TItem="Model" Data=@newModel Submit=@OnSubmit>
     <div class="row">
@@ -25,7 +26,7 @@
 </RadzenTemplateForm>
 
 <div class="row">
-    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@Investment?.Values" TItem="InvestmentValueDto" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@Investment?.Values.OrderByDescending(x => x.Date)" TItem="InvestmentValueDto" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
         <Template Context="value">
             <div class="container">
                 <div class="row">
@@ -36,6 +37,14 @@
                     <div class="col">
                         <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H5" class="mb-0">Value</RadzenText>
                         <RadzenText TextStyle="TextStyle.Body2" class="mb-sm-2 mb-lg-0">@(value.Value.ToString("N2")) </RadzenText>
+                    </div>
+                    <div class="col">
+                        <RadzenButton IsBusy=@(_investmentValueService.Creating || _investmentValueService.Deleting)
+                                      Click=@(() => OnDeleteClick(value.Id))
+                                      Icon="delete"
+                                      ButtonStyle="ButtonStyle.Danger"
+                                      Variant="Variant.Flat"
+                                      Size="ButtonSize.Medium" />
                     </div>
                 </div>
             </div>
@@ -62,6 +71,24 @@
 
     private async Task OnSubmit(Model model)
     {
-        await _investmentValueService.CreateInvestmentValueAsync(Investment!.Id, model.Date, model.Value);
+        var result = await _investmentValueService.CreateInvestmentValueAsync(Investment!.Id, model.Date, model.Value);
+
+        if (result)
+        {
+            newModel = new();
+        }
+    }
+
+    private async Task OnDeleteClick(Guid id)
+    {
+        var confirmResult = await _dialogService.Confirm(
+                    $"Are you sure you want to delete this value?",
+                    "Warning!",
+                    new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No", Style = "" });
+
+        if (confirmResult.HasValue && confirmResult.Value)
+        {
+            await _investmentValueService.DeleteAsync(id);
+        }
     }
 }

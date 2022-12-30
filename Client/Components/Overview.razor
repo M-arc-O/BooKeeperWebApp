@@ -83,6 +83,11 @@
         _overviewService.LoadBooksAsync();
     }
 
+    public void Dispose()
+    {
+        _overviewService.RefreshRequested -= RefreshMe;
+    }
+
     private void RefreshMe()
     {
         StateHasChanged();

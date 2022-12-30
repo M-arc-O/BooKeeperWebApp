@@ -32,7 +32,7 @@
             }            
             @if (_investmentAccountService.Loading)
             {
-                <RadzenPanelMenuItem Icon="credit_card" id="Loader">
+                <RadzenPanelMenuItem Icon="card_travel" id="Loader">
                     <Template>
                         <RadzenLabel Text="Investment Accounts" />
                         <RadzenButton Variant="Variant.Text" IsBusy=true ButtonStyle="ButtonStyle.Light" />
@@ -64,6 +64,12 @@
         _investmentAccountService.RefreshRequested += RefreshMe;
         _bankAccountService.LoadAsync();
         _investmentAccountService.LoadAsync();
+    }
+
+    public void Dispose()
+    {
+        _bankAccountService.RefreshRequested -= RefreshMe;
+        _investmentAccountService.RefreshRequested -= RefreshMe;
     }
 
     private string GetBankAccountPath(BankAccountDto account)

@@ -26,6 +26,7 @@ public class AddBankAccountCommandHandler : BankAccountCommandBase, IHandler<Add
             Number = command.Number,
             Type = (BankAccountType)command.Type,
             StartAmount = command.StartAmount,
+            CurrentAmount = command.StartAmount
         };
 
         if (await NumberTakenAsync(command.Number))
