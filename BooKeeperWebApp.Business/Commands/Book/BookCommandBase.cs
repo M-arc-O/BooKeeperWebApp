@@ -1,4 +1,5 @@
-﻿using BooKeeperWebApp.Infrastructure.Repositories;
+﻿using BooKeeperWebApp.Infrastructure.Entities;
+using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
 
 namespace BooKeeperWebApp.Business.Commands.Book;
@@ -31,9 +32,9 @@ public abstract class BookCommandBase
         }
     }
 
-    protected virtual async Task<bool> NameTakenAsync(string name)
+    protected virtual async Task<bool> NameTakenAsync(Guid userId, string name)
     {
-        var books = await _bookRepository.GetAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
+        var books = await _bookRepository.GetAsync(x => x.UserId == userId && x.Name!.ToLower().Equals(name.ToLower()));
         return books.Any();
     }
 }

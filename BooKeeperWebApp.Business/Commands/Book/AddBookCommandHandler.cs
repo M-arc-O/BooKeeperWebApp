@@ -26,7 +26,7 @@ public class AddBookCommandHandler : BookCommandBase, IHandler<AddBookCommand, B
 
         ValidateName(command.Name);
 
-        if (await NameTakenAsync(command.Name))
+        if (await NameTakenAsync(command.UserId, command.Name))
         {
             throw new ValidationException($"Book with name '{command.Name}' already exists");
         }

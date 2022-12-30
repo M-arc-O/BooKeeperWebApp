@@ -26,7 +26,7 @@ public class AddEventCommandHandler : EventCommandBase, IHandler<AddEventCommand
 
         ValidateName(command.Name);
 
-        if (await NameTakenAsync(command.Name))
+        if (await NameTakenAsync(command.UserId, command.Name))
         {
             throw new ValidationException($"Event with name '{command.Name}' already exists");
         }

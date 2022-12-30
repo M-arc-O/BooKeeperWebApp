@@ -21,7 +21,7 @@ public class UpdateBookCommandHandler : BookCommandBase, IHandler<UpdateBookComm
 
         ValidateName(command.Name);
 
-        if (command.Name != book.Name && await NameTakenAsync(command.Name))
+        if (command.Name != book.Name && await NameTakenAsync(command.UserId, command.Name))
         {
             throw new ValidationException($"Account with number '{command.Name}' already exists");
         }

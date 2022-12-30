@@ -31,9 +31,9 @@ public abstract class EventCommandBase
         }
     }
 
-    protected virtual async Task<bool> NameTakenAsync(string name)
+    protected virtual async Task<bool> NameTakenAsync(Guid userId, string name)
     {
-        var events = await _eventRepository.GetAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
+        var events = await _eventRepository.GetAsync(x => x.UserId == userId && x.Name!.ToLower().Equals(name.ToLower()));
         return events.Any();
     }
 }

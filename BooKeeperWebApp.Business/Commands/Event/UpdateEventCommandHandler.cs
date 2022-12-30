@@ -21,7 +21,7 @@ public class UpdateEventCommandHandler : EventCommandBase, IHandler<UpdateEventC
 
         ValidateName(command.Name);
 
-        if (command.Name != entitie.Name && await NameTakenAsync(command.Name))
+        if (command.Name != entitie.Name && await NameTakenAsync(command.UserId, command.Name))
         {
             throw new ValidationException($"Account with number '{command.Name}' already exists");
         }
