@@ -23,20 +23,20 @@
                         @foreach (var account in _overviewService.Accounts)
                         {
                             <div class="row jusitify-content-left">
-                                <div class="col-9">
+                                <div class="col-8">
                                     @account.AccountName
                                 </div>
-                                <div class="col-3 text-end">
+                                <div class="col-4 text-end">
                                     @account.Amount.ToString("N2")
                                 </div>
                             </div>
                         }
                         <hr />
                         <div class="row jusitify-content-left rz-border-radius-4">
-                            <div class="col-9">
+                            <div class="col-8">
                                 Total
                             </div>
-                            <div class="col-3 text-end">
+                            <div class="col-4 text-end">
                                 @_overviewService.Accounts.Sum(x => x.Amount).ToString("N2")
                             </div>
                         </div>
@@ -73,19 +73,19 @@
                                     FilterMode="FilterMode.Simple">
                             <Columns>
                                 <RadzenDataGridColumn TItem="OverviewBookDto" Property="BookName" Width="200px" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JanuariAmount" Title="Januari" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="FebruariAmount" Title="Februari" FormatString="{0:N2}" Width="100px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="MarchAmount" Title="March" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="AprilAmount" Title="April" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="MayAmount" Title="May" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JuneAmount" Title="June" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JulyAmount" Title="July" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="AugustAmount" Title="August" FormatString="{0:N2}" Width="75px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="SeptemberAmount" Title="September" FormatString="{0:N2}" Width="100px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="OctoberAmount" Title="October" FormatString="{0:N2}" Width="100px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="NovemberAmount" Title="November" FormatString="{0:N2}" Width="100px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="DecemberAmount" Title="December" FormatString="{0:N2}" Width="100px" Filterable="false" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="TotalAmount" Title="Total" FormatString="{0:N2}" Filterable="false" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JanuariAmount" Title="Januari" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="FebruariAmount" Title="Februari" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="MarchAmount" Title="March" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="AprilAmount" Title="April" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="MayAmount" Title="May" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JuneAmount" Title="June" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JulyAmount" Title="July" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="AugustAmount" Title="August" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="SeptemberAmount" Title="September" FormatString="{0:N2}" Width="110px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="OctoberAmount" Title="October" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="NovemberAmount" Title="November" FormatString="{0:N2}" Width="105px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="DecemberAmount" Title="December" FormatString="{0:N2}" Width="105px" Filterable="false" TextAlign="TextAlign.Right" />
+                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="TotalAmount" Title="Total" FormatString="{0:N2}" Filterable="false" TextAlign="TextAlign.Right" />
                             </Columns>
                         </RadzenDataGrid>
                     }

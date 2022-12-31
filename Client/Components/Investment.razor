@@ -30,21 +30,21 @@
             </HeaderTemplate>
             <ChildContent>
                 <RadzenCard Class="mt-3">
-                    <RadzenDataList PageSize="12" WrapItems="true" AllowPaging="true" Data="@InvestmentAccount.Investments" TItem="InvestmentDto">
+                    <RadzenDataList PageSize="6" WrapItems="true" AllowPaging="true" Data="@InvestmentAccount.Investments" TItem="InvestmentDto">
                         <Template Context="investment">
-                            <RadzenCard Style="width: 350px; max-width: 350px;">
+                            <RadzenCard Style="width: 450px; max-width: 450px;">
                                 <div class="row">
-                                    <div class="col-md-7 text-truncate">
+                                    <div class="col-md-8 text-truncate">
                                         @if (editId != investment.Id)
                                         {
-                                            <RadzenTextBox @bind-Value=investment.Name Disabled=true />
+                                            <RadzenTextBox @bind-Value=investment.Name Disabled=true Style="width: 100%;"/>
                                         }
                                         else
                                         {
-                                            <RadzenTextBox @bind-Value=editModel.Name Disabled=false />
+                                            <RadzenTextBox @bind-Value=editModel.Name Disabled=false Style="width: 100%;" />
                                         }
                                     </div>
-                                    <div class="col-md-5 justify-content-end">
+                                    <div class="col-md-4 justify-content-end">
                                         @if (editId != investment.Id)
                                         {
                                             <RadzenButton IsBusy=@(_investmentService.Creating || _investmentService.Updating || _investmentService.Deleting)

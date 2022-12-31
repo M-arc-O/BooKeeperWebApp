@@ -26,7 +26,10 @@
 </RadzenTemplateForm>
 
 <div class="row">
-    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@Investment?.Values.OrderByDescending(x => x.Date)" TItem="InvestmentValueDto" PageSize="4" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true">
+    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@Investment?.Values.OrderByDescending(x => x.Date)" TItem="InvestmentValueDto" 
+        PageSize="4" 
+        PagerHorizontalAlign="HorizontalAlign.Left" 
+        ShowPagingSummary="false">
         <Template Context="value">
             <div class="container">
                 <div class="row">
