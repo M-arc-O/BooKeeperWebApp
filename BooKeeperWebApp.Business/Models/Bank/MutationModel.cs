@@ -13,5 +13,5 @@ public class MutationModel
 
     public Guid AccountId { get; set; }
     public BookModel Book { get; set; }
-    public BookModel? Event { get; set; }
+    public EventModel? Event { get; set; }
 }

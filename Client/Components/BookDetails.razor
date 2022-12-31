@@ -15,9 +15,12 @@
                 <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
             }
             <RadzenDataGrid AllowAlternatingRows="false"
-                            AllowFiltering="false"
-                            AllowPaging="false"
-                            AllowSorting="false"
+                            AllowPaging="true"
+                            PageSize="10"
+                            AllowSorting="true"
+                            AllowFiltering="true"
+                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                            FilterMode="FilterMode.Simple"
                             EditMode="DataGridEditMode.Single"
                             Data="@_bookService.Item?.Mutations?.OrderByDescending(x => x.Date)"
                             TItem="MutationDto">
