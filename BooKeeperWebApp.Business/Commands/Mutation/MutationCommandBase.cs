@@ -23,13 +23,8 @@ public abstract class MutationCommandBase
 
     protected virtual async Task<Infrastructure.Entities.Bank.BankAccount> GetAccountAsync(Guid userId, string accountNumber)
     {
-        var accounts = await _accountRepository.GetAsync(x => x.Number!.ToLower().Equals(accountNumber.ToLower()));
+        var accounts = await _accountRepository.GetAsync(x => x.UserId == userId && x.Number!.ToLower().Equals(accountNumber.ToLower()));
         var account = accounts.FirstOrDefault() ?? throw new NotFoundException($"Bank account with number '{accountNumber}' not found.");
-
-        if (account.UserId != userId)
-        {
-            throw new UnauthorizedAccessException($"User with id '{userId}' does not have access to bank account with id '{account.Id}'.");
-        }
 
         return account;
     }
