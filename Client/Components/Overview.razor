@@ -48,75 +48,19 @@
     <div class="row">
         <div class="col-12">
             <RadzenCard>
-                <div class="container-fluid h-100">
-                    <div class="row">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Books (@DateTime.Now.Year)</RadzenText>
-                    </div>
-                    <div class="row">
-                        <div class="col-2">
-                            <RadzenDropDown Data="@years" @bind-Value="selectedYear" Change="YearChanged" />
-                        </div>
-                    </div>
-                    @if (_overviewService.LoadingBooks)
-                    {
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Loading books</RadzenText>
-                        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
-                    }
-                    else
-                    {
-                        <RadzenDataGrid Data="@_overviewService.Books" TItem="OverviewBookDto"
-                                    AllowPaging="true"
-                                    PageSize="10"
-                                    AllowSorting="true"
-                                    AllowFiltering="true"
-                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                    FilterMode="FilterMode.Simple">
-                            <Columns>
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="BookName" Width="200px" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JanuariAmount" Title="Januari" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="FebruariAmount" Title="Februari" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="MarchAmount" Title="March" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="AprilAmount" Title="April" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="MayAmount" Title="May" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JuneAmount" Title="June" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="JulyAmount" Title="July" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="AugustAmount" Title="August" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="SeptemberAmount" Title="September" FormatString="{0:N2}" Width="110px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="OctoberAmount" Title="October" FormatString="{0:N2}" Width="95px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="NovemberAmount" Title="November" FormatString="{0:N2}" Width="105px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="DecemberAmount" Title="December" FormatString="{0:N2}" Width="105px" Filterable="false" TextAlign="TextAlign.Right" />
-                                <RadzenDataGridColumn TItem="OverviewBookDto" Property="TotalAmount" Title="Total" FormatString="{0:N2}" Filterable="false" TextAlign="TextAlign.Right" />
-                            </Columns>
-                        </RadzenDataGrid>
-                    }
-                </div>
+                <BookOverview />
             </RadzenCard>
         </div>
     </div>
 </div>
 
 @code {
-    private List<int> years = new();
-    private int selectedYear;
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        for (int i = 2020; i <= DateTime.Now.Year; i++)
-        {
-            years.Add(i);
-        }
-        selectedYear = DateTime.Now.Year;
-
         _overviewService.RefreshRequested += RefreshMe;
         _overviewService.LoadAccountsAsync();
-        _overviewService.LoadBooksAsync(selectedYear);
-    }
-
-    private void YearChanged()
-    {
-        _overviewService.LoadBooksAsync(selectedYear);
     }
 
     public void Dispose()
