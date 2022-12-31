@@ -14,6 +14,9 @@ public class OverviewService
     public bool LoadingAccounts;
     public List<OverviewAccountDto> Accounts = new();
 
+    public bool LoadingAccountChart;
+    public List<OverviewDateValueDto> AccountChartValues = new();
+
     public bool LoadingBooks;
     public List<OverviewBookDto> Books = new();
 
@@ -30,6 +33,14 @@ public class OverviewService
     {
         LoadingAccounts = true;
         Accounts = await GetItems<OverviewAccountDto>("getaccounts") ?? new();
+        LoadingAccounts = false;
+        RefreshRequested?.Invoke();
+    }
+
+    public virtual async Task LoadAccountChartAsync()
+    {
+        LoadingAccounts = true;
+        AccountChartValues = await GetItems<OverviewDateValueDto>("getaccountchart") ?? new();
         LoadingAccounts = false;
         RefreshRequested?.Invoke();
     }

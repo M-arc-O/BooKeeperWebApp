@@ -65,7 +65,8 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IHandler<AddInvestmentValueCommand, InvestmentValueModel>, AddInvestmentValueCommandHandler>();
         services.AddScoped<IHandler<DeleteInvestmentValueCommand, Guid>, DeleteInvestmentValueCommandHandler>();
 
-        services.AddScoped<IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>, GetBooksOverviewQueryHandler>();
         services.AddScoped<IHandler<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>, GetAccountsOverviewQueryHandler>();
+        services.AddScoped<IHandler<GetAccountChartOverviewQuery, IEnumerable<OverviewDateValueModel>>, GetAccountChartOverviewQueryHandler>();
+        services.AddScoped<IHandler<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>, GetBooksOverviewQueryHandler>();
     }
 }

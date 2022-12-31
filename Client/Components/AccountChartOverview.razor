@@ -1,0 +1,50 @@
+﻿@using BooKeeperWebApp.Shared.Dtos;
+@using BooKeeperWebApp.Shared.Dtos.Overview;
+
+@inject OverviewService _overviewService
+
+<RadzenChart>
+    <RadzenAreaSeries Smooth="true" Data="@_overviewService.AccountChartValues" CategoryProperty="Date" Title="2022" ValueProperty="Value" RenderingOrder="1">
+        <RadzenSeriesDataLabels Visible="true" />
+    </RadzenAreaSeries>
+    <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+    <RadzenValueAxis Formatter="@FormatAsEuro">
+        <RadzenGridLines Visible="true" />
+        <RadzenAxisTitle Text="Amount in Euros" />
+    </RadzenValueAxis>
+</RadzenChart>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _overviewService.RefreshRequested += RefreshMe;
+        _overviewService.LoadAccountChartAsync();
+    }
+
+    private string FormatAsEuro(object value)
+    {
+        return ((double)value).ToString("N0");
+    }
+
+    private string FormatAsMonth(object value)
+    {
+        if (value != null)
+        {
+            return Convert.ToDateTime(value).ToString("MMM");
+        }
+
+        return string.Empty;
+    }
+
+    public void Dispose()
+    {
+        _overviewService.RefreshRequested -= RefreshMe;
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

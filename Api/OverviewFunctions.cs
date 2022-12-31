@@ -22,19 +22,6 @@ namespace Api
             _mapper = mapper;
         }
 
-        [Function("GetBooksOverview")]
-        public async Task<HttpResponseData> GetBooksOverview([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getbooks/{year}")] HttpRequestData req, int year)
-        {
-            var response = req.CreateResponse(HttpStatusCode.OK);
-
-            var user = await GetUserAsync(req);
-            var query = new GetBooksOverviewQuery(user.Id, new DateTime(year, 1, 1));
-            var books = await _excecutor.ExecuteAsync<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>(query);
-            await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewBookDto>(x)));
-
-            return response;
-        }
-
         [Function("GetAccountsOverview")]
         public async Task<HttpResponseData> GetAccountsOverview([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getaccounts")] HttpRequestData req)
         {
@@ -44,6 +31,32 @@ namespace Api
             var query = new GetAccountsOverviewQuery(user.Id, DateTime.Now);
             var books = await _excecutor.ExecuteAsync<GetAccountsOverviewQuery, IEnumerable<OverviewAccountModel>>(query);
             await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewAccountDto>(x)));
+
+            return response;
+        }
+
+        [Function("GetAccountChart")]
+        public async Task<HttpResponseData> GetAccountChart([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getaccountchart")] HttpRequestData req)
+        {
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            var user = await GetUserAsync(req);
+            var query = new GetAccountChartOverviewQuery(user.Id);
+            var books = await _excecutor.ExecuteAsync<GetAccountChartOverviewQuery, IEnumerable<OverviewDateValueModel>>(query);
+            await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewDateValueDto>(x)));
+
+            return response;
+        }
+
+        [Function("GetBooksOverview")]
+        public async Task<HttpResponseData> GetBooksOverview([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getbooks/{year}")] HttpRequestData req, int year)
+        {
+            var response = req.CreateResponse(HttpStatusCode.OK);
+
+            var user = await GetUserAsync(req);
+            var query = new GetBooksOverviewQuery(user.Id, new DateTime(year, 1, 1));
+            var books = await _excecutor.ExecuteAsync<GetBooksOverviewQuery, IEnumerable<OverviewBookModel>>(query);
+            await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewBookDto>(x)));
 
             return response;
         }

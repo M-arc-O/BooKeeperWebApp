@@ -32,8 +32,9 @@ public static class DependencyInjectionConfiguration
             mc.AddProfile(new InvestmentAccountProfiles());
             mc.AddProfile(new InvestmentProfiles());
             mc.AddProfile(new InvestmentValueProfiles());
-            mc.AddProfile(new OverviewBookProfiles());
             mc.AddProfile(new OverviewAccountProfiles());
+            mc.AddProfile(new OverviewDateValueProfiles());
+            mc.AddProfile(new OverviewBookProfiles());
             mc.AddProfile(new UserProfiles());
 
             mc.AddProfile(new BankAccountModelProfiles());
