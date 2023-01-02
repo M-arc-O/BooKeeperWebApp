@@ -1,5 +1,6 @@
 ﻿using BooKeeperWebApp.Shared.Dtos;
 using BooKeeperWebApp.Shared.Dtos.Overview;
+using BooKeeperWebApp.Shared.Enums;
 using Radzen;
 using System.Net.Http.Json;
 
@@ -37,11 +38,11 @@ public class OverviewService
         RefreshRequested?.Invoke();
     }
 
-    public virtual async Task LoadAccountChartAsync()
+    public virtual async Task LoadAccountChartAsync(Guid accountId, TimespanType timespanType, int numberOfYears)
     {
-        LoadingAccounts = true;
-        AccountChartValues = await GetItems<OverviewDateValueDto>("getaccountchart") ?? new();
-        LoadingAccounts = false;
+        LoadingAccountChart = true;
+        AccountChartValues = await GetItems<OverviewDateValueDto>($"getaccountchart/{accountId}/{Convert.ToInt32(timespanType)}/{numberOfYears}") ?? new();
+        LoadingAccountChart = false;
         RefreshRequested?.Invoke();
     }
 

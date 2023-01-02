@@ -5,6 +5,7 @@ using BooKeeperWebApp.Business.Models.Overview;
 using BooKeeperWebApp.Business.Queries.Overview;
 using BooKeeperWebApp.Business.Services;
 using BooKeeperWebApp.Shared.Dtos.Overview;
+using BooKeeperWebApp.Shared.Enums;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -36,12 +37,16 @@ namespace Api
         }
 
         [Function("GetAccountChart")]
-        public async Task<HttpResponseData> GetAccountChart([HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getaccountchart")] HttpRequestData req)
+        public async Task<HttpResponseData> GetAccountChart(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "overview/getaccountchart/{accountId}/{timespanType}/{numberOf}")] HttpRequestData req,
+            Guid accountId,
+            TimespanType timespanType,
+            int numberOf)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
 
             var user = await GetUserAsync(req);
-            var query = new GetAccountChartOverviewQuery(user.Id);
+            var query = new GetAccountChartOverviewQuery(user.Id, accountId, timespanType, numberOfYears);
             var books = await _excecutor.ExecuteAsync<GetAccountChartOverviewQuery, IEnumerable<OverviewDateValueModel>>(query);
             await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewDateValueDto>(x)));
 

@@ -22,21 +22,21 @@
                     {
                         @foreach (var account in _overviewService.Accounts)
                         {
-                            <div class="row jusitify-content-left">
-                                <div class="col-8">
+                            <div class="row justify-content-between">
+                                <div class="col-md-auto">
                                     @account.AccountName
                                 </div>
-                                <div class="col-4 text-end">
+                                <div class="col-md-auto text-end">
                                     @account.Amount.ToString("N2")
                                 </div>
                             </div>
                         }
                         <hr />
-                        <div class="row jusitify-content-left rz-border-radius-4">
-                            <div class="col-8">
+                        <div class="row justify-content-between">
+                            <div class="col-md-auto">
                                 Total
                             </div>
-                            <div class="col-4 text-end">
+                            <div class="col-md-auto text-end">
                                 @_overviewService.Accounts.Sum(x => x.Amount).ToString("N2")
                             </div>
                         </div>

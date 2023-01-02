@@ -1,26 +1,114 @@
 ﻿@using BooKeeperWebApp.Shared.Dtos;
 @using BooKeeperWebApp.Shared.Dtos.Overview;
+@using BooKeeperWebApp.Shared.Enums;
+@using Client.Models;
+@using Client.Services.Bank;
+@using Client.Services.Investment;
 
 @inject OverviewService _overviewService
+@inject BankAccountService _bankAccountService
+@inject InvestmentAccountService _investmentAccountService
 
-<RadzenChart>
-    <RadzenAreaSeries Smooth="true" Data="@_overviewService.AccountChartValues" CategoryProperty="Date" Title="2022" ValueProperty="Value" RenderingOrder="1">
-        <RadzenSeriesDataLabels Visible="true" />
-    </RadzenAreaSeries>
-    <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
-    <RadzenValueAxis Formatter="@FormatAsEuro">
-        <RadzenGridLines Visible="true" />
-        <RadzenAxisTitle Text="Amount in Euros" />
-    </RadzenValueAxis>
-</RadzenChart>
+<div class="container-fluid h-100">
+    <div class="row">
+        @if (_bankAccountService.Loading || _investmentAccountService.Loading)
+        {
+            <RadzenText Text="Loading accounts" />
+            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        }
+        else
+        {
+            <div class="col-md-auto">
+                <RadzenText Text="Account:" />
+                <RadzenDropDown Data="@accounts" @bind-Value="selectedAccount" Change="@SelectedAccountChangedAsync" TextProperty="Name" />
+            </div>
+            <div class="col-md-auto">
+                <RadzenText Text="Type:" />
+                <RadzenDropDown @bind-Value="selectedtimespanType"
+                            Data="@timespanTypes"
+                            TextProperty="EnumString"
+                            ValueProperty="EnumValue"
+                            Change="@SelectedTimespanTypeChangedAsync" />
+            </div>
+            <div class="col-md-auto">
+                <RadzenText Text="@(selectedtimespanType == TimespanType.Years ? "Number of years:": "Number of months:")" Style="margin-bottom: 9px;" />
+                <RadzenNumeric TValue="int" Change="@NumberOfYearsChangedAsync" @bind-Value="numberOf" />
+            </div>
+        }
+    </div>
+    <div class="row">
+        @if (_overviewService.LoadingAccountChart)
+        {
+            <RadzenText Text="Loading data" />
+            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+        }
+        else
+        {
+            <RadzenChart>
+                <RadzenAreaSeries Smooth="true" Data="@_overviewService.AccountChartValues" CategoryProperty="Date" Title="@selectedAccount.Name" ValueProperty="Value" RenderingOrder="1">
+                    <RadzenSeriesDataLabels Visible="true" />
+                </RadzenAreaSeries>
+                <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+                <RadzenValueAxis Formatter="@FormatAsEuro">
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Amount in Euros" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        }
+    </div>
+</div>
 
 @code {
+    private class Model
+    {
+        public string? Name { get; set; }
+        public Guid Id { get; set; }
+    }
+
+    private List<Model> accounts = new();
+    private Model selectedAccount = new();
+
+    private List<EnumSelectModel<TimespanType>> timespanTypes = EnumSelectModel<TimespanType>.GetEnumModel();
+    private TimespanType selectedtimespanType = TimespanType.Years;
+
+    private int numberOf = 1;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await FillAccountDropDownAsync();
 
         _overviewService.RefreshRequested += RefreshMe;
-        _overviewService.LoadAccountChartAsync();
+        _bankAccountService.RefreshRequested += RefreshMe;
+        _investmentAccountService.RefreshRequested += RefreshMe;
+    }
+
+    private async Task SelectedAccountChangedAsync()
+    {
+        await _overviewService.LoadAccountChartAsync(selectedAccount.Id, selectedtimespanType, numberOf);
+    }
+
+    private async Task SelectedTimespanTypeChangedAsync()
+    {
+        numberOf = selectedtimespanType switch
+        {
+            TimespanType.Years => 1,
+            TimespanType.Months => 12,
+            _ => throw new Exception("Unknown timespanType")
+        };
+
+        if (!string.IsNullOrEmpty(selectedAccount.Name))
+        {
+            await _overviewService.LoadAccountChartAsync(selectedAccount.Id, selectedtimespanType, numberOf);
+        }
+    }
+
+    private async Task NumberOfYearsChangedAsync(int value)
+    {
+        if (!string.IsNullOrEmpty(selectedAccount.Name))
+        {
+            await _overviewService.LoadAccountChartAsync(selectedAccount.Id, selectedtimespanType, numberOf);
+        }
     }
 
     private string FormatAsEuro(object value)
@@ -41,10 +129,49 @@
     public void Dispose()
     {
         _overviewService.RefreshRequested -= RefreshMe;
+        _bankAccountService.RefreshRequested -= RefreshMe;
+        _investmentAccountService.RefreshRequested -= RefreshMe;
     }
 
-    private void RefreshMe()
+    private async void RefreshMe()
     {
+        await FillAccountDropDownAsync();
         StateHasChanged();
+    }
+
+    private async Task FillAccountDropDownAsync()
+    {
+        var totalAccountName = "Total";
+        accounts = new();
+
+        accounts.Add(new Model
+            {
+                Name = totalAccountName,
+                Id = Guid.Empty
+            });
+
+        foreach (var account in _bankAccountService.Items)
+        {
+            accounts.Add(new Model
+                {
+                    Name = account.Name,
+                    Id = account.Id
+                });
+        }
+
+        foreach (var account in _investmentAccountService.Items)
+        {
+            accounts.Add(new Model
+                {
+                    Name = account.Name,
+                    Id = account.Id
+                });
+        }
+
+        if (string.IsNullOrEmpty(selectedAccount.Name))
+        {
+            selectedAccount = accounts!.First(x => x.Name!.Equals(totalAccountName));
+            await _overviewService.LoadAccountChartAsync(selectedAccount.Id, selectedtimespanType, numberOf);
+        }
     }
 }
