@@ -13,5 +13,13 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
         builder.HasMany(x => x.Mutations)
             .WithOne()
             .HasForeignKey("AccountId");
+
+        builder.HasMany(x => x.MonthlyValues)
+            .WithOne()
+            .HasForeignKey("AccountId");
+
+        builder.HasMany(x => x.YearlyValues)
+            .WithOne()
+            .HasForeignKey("AccountId");
     }
 }

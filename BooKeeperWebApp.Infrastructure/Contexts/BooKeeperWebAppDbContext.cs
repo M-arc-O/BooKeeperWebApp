@@ -32,6 +32,9 @@ public class BooKeeperWebAppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new InvestmentConfiguration());
         modelBuilder.ApplyConfiguration(new InvestmentValueConfiguration());
 
+        modelBuilder.ApplyConfiguration(new MonthlyValueConfiguration());
+        modelBuilder.ApplyConfiguration(new YearlyValueConfiguration());
+
         modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 

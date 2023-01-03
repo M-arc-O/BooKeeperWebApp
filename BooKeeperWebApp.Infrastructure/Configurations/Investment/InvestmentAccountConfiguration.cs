@@ -12,6 +12,14 @@ public class InvestmentAccountConfiguration : IEntityTypeConfiguration<Investmen
 
         builder.HasMany(x => x.Investments)
             .WithOne()
-            .HasForeignKey("InvestmentAccountId"); ;
+            .HasForeignKey("InvestmentAccountId");
+
+        builder.HasMany(x => x.MonthlyValues)
+            .WithOne()
+            .HasForeignKey("AccountId");
+
+        builder.HasMany(x => x.YearlyValues)
+            .WithOne()
+            .HasForeignKey("AccountId");
     }
 }

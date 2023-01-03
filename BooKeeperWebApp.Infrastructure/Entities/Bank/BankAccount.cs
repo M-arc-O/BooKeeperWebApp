@@ -11,4 +11,6 @@ public class BankAccount
     public double StartAmount { get; set; }
     public double CurrentAmount { get; set; }
     public ICollection<Mutation>? Mutations { get; set; }
+    public ICollection<MonthlyValue>? MonthlyValues { get; set; }
+    public ICollection<YearlyValue>? YearlyValues { get; set; }
 }

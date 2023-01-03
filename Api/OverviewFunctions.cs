@@ -46,7 +46,7 @@ namespace Api
             var response = req.CreateResponse(HttpStatusCode.OK);
 
             var user = await GetUserAsync(req);
-            var query = new GetAccountChartOverviewQuery(user.Id, accountId, timespanType, numberOfYears);
+            var query = new GetAccountChartOverviewQuery(user.Id, accountId, timespanType, numberOf);
             var books = await _excecutor.ExecuteAsync<GetAccountChartOverviewQuery, IEnumerable<OverviewDateValueModel>>(query);
             await response.WriteAsJsonAsync(books.Select(x => _mapper.Map<OverviewDateValueDto>(x)));
 
