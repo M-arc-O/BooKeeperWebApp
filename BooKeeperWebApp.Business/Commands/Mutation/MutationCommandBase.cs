@@ -23,7 +23,7 @@ public abstract class MutationCommandBase
 
     protected virtual async Task<Infrastructure.Entities.Bank.BankAccount> GetAccountAsync(Guid userId, string accountNumber)
     {
-        var accounts = await _accountRepository.GetAsync(x => x.UserId == userId && x.Number!.ToLower().Equals(accountNumber.ToLower()));
+        var accounts = await _accountRepository.GetAsync(x => x.UserId == userId && x.Number!.ToLower().Equals(accountNumber.ToLower()), null, "MonthlyValues,YearlyValues");
         var account = accounts.FirstOrDefault() ?? throw new NotFoundException($"Bank account with number '{accountNumber}' not found.");
 
         return account;
@@ -31,12 +31,8 @@ public abstract class MutationCommandBase
 
     protected virtual async Task<Infrastructure.Entities.Bank.Book> GetBookAsync(Guid userId, Guid bookId)
     {
-        var book = await _bookRepository.GetByIdAsync(bookId) ?? throw new NotFoundException($"Book with id '{bookId}' not found.");
-
-        if (book.UserId != userId)
-        {
-            throw new UnauthorizedAccessException($"User with id '{userId}' does not have access to book with id '{bookId}'.");
-        }
+        var books = await _bookRepository.GetAsync(x => x.UserId == userId && x.Id == bookId, null, "MonthlyValues,YearlyValues");
+        var book = books.FirstOrDefault() ?? throw new NotFoundException($"Book with number '{bookId}' not found.");
 
         return book;
     }
@@ -98,7 +94,7 @@ public abstract class MutationCommandBase
             Book = await GetBookAsync(command.UserId, command.BookId),
         };
 
-        entitie.Account.CurrentAmount += entitie.Amount;
+        UpdateAmountAndValues(entitie);
 
         if (command.EventId.HasValue)
         {
@@ -113,5 +109,76 @@ public abstract class MutationCommandBase
         await _mutationRepository.InsertAsync(entitie);
 
         return entitie;
+    }
+
+    private static void UpdateAmountAndValues(Infrastructure.Entities.Bank.Mutation entitie)
+    {
+        entitie.Account.CurrentAmount += entitie.Amount;
+
+        UpdateAccountValues(entitie);
+
+        UpdateBookValues(entitie);
+    }
+
+    private static void UpdateAccountValues(Infrastructure.Entities.Bank.Mutation entitie)
+    {
+        var monthlyValue = entitie.Account?.MonthlyValues?.FirstOrDefault(x => x.Date.Year == entitie.Date.Year && x.Date.Month == entitie.Date.Month);
+        if (monthlyValue == null)
+        {
+            monthlyValue = new Infrastructure.Entities.MonthlyValue
+            {
+                AccountId = entitie.Account!.Id,
+                Date = entitie.Date
+            };
+
+            entitie.Account.MonthlyValues!.Add(monthlyValue);
+        }
+
+        monthlyValue!.Value += entitie.Amount;
+
+        var yearlyValue = entitie.Account?.YearlyValues?.FirstOrDefault(x => x.Year == entitie.Date.Year);
+        if (yearlyValue == null)
+        {
+            yearlyValue = new Infrastructure.Entities.YearlyValue
+            {
+                AccountId = entitie.Account!.Id,
+                Year = entitie.Date.Year
+            };
+
+            entitie.Account.YearlyValues!.Add(yearlyValue);
+        }
+
+        yearlyValue!.Value += entitie.Amount;
+    }
+
+    private static void UpdateBookValues(Infrastructure.Entities.Bank.Mutation entitie)
+    {
+        var monthlyValue = entitie.Book?.MonthlyValues?.FirstOrDefault(x => x.Date.Year == entitie.Date.Year && x.Date.Month == entitie.Date.Month);
+        if (monthlyValue == null)
+        {
+            monthlyValue = new Infrastructure.Entities.MonthlyValue
+            {
+                AccountId = entitie.Account!.Id,
+                Date = entitie.Date
+            };
+
+            entitie.Book!.MonthlyValues!.Add(monthlyValue);
+        }
+
+        monthlyValue!.Value += entitie.Amount;
+
+        var yearlyValue = entitie.Book?.YearlyValues?.FirstOrDefault(x => x.Year == entitie.Date.Year);
+        if (yearlyValue == null)
+        {
+            yearlyValue = new Infrastructure.Entities.YearlyValue
+            {
+                AccountId = entitie.Account!.Id,
+                Year = entitie.Date.Year
+            };
+
+            entitie.Book!.YearlyValues!.Add(yearlyValue);
+        }
+
+        yearlyValue!.Value += entitie.Amount;
     }
 }

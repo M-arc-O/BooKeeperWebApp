@@ -19,6 +19,9 @@ public static class DependencyInjectionConfirugation
         services.AddScoped<IGenericRepository<Investment>, GenericRepository<Investment>>();
         services.AddScoped<IGenericRepository<InvestmentValue>, GenericRepository<InvestmentValue>>();
 
+        services.AddScoped<IGenericRepository<MonthlyValue>, GenericRepository<MonthlyValue>>();
+        services.AddScoped<IGenericRepository<YearlyValue>, GenericRepository<YearlyValue>>();
+
         services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
     }
 }
