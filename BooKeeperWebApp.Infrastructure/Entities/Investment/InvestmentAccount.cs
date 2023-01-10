@@ -9,6 +9,4 @@ public  class InvestmentAccount
     public InvestmentAccountType Type { get; set; }
     public double CurrentAmount { get; set; }
     public ICollection<Investment>? Investments { get; set; }
-    public ICollection<MonthlyValue>? MonthlyValues { get; set; }
-    public ICollection<YearlyValue>? YearlyValues { get; set; }
 }

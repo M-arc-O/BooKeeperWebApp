@@ -1,5 +1,4 @@
 ﻿using BooKeeperWebApp.Business.CQRS;
-using BooKeeperWebApp.Infrastructure.Entities.Bank;
 using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Exceptions;
 
@@ -8,21 +7,15 @@ public class DeleteInvestmentAccountCommandHandler : InvestmentAccountCommandBas
 {
     private readonly IGenericRepository<Infrastructure.Entities.Investment.Investment> _investmentRepository;
     private readonly IGenericRepository<Infrastructure.Entities.Investment.InvestmentValue> _investmentValueRepository;
-    private readonly IGenericRepository<Infrastructure.Entities.MonthlyValue> _monthlyValueRepository;
-    private readonly IGenericRepository<Infrastructure.Entities.YearlyValue> _yearlyValueRepository;
 
     public DeleteInvestmentAccountCommandHandler(
         IGenericRepository<Infrastructure.Entities.Investment.InvestmentAccount> investmentAccountRepository,
         IGenericRepository<Infrastructure.Entities.Investment.Investment> investmentRepository,
-        IGenericRepository<Infrastructure.Entities.Investment.InvestmentValue> investmentValueRepository,
-        IGenericRepository<Infrastructure.Entities.MonthlyValue> monthlyValueRepository,
-        IGenericRepository<Infrastructure.Entities.YearlyValue> yearlyValueRepository)
+        IGenericRepository<Infrastructure.Entities.Investment.InvestmentValue> investmentValueRepository)
         : base(investmentAccountRepository)
     {
         _investmentRepository = investmentRepository;
         _investmentValueRepository = investmentValueRepository;
-        _monthlyValueRepository = monthlyValueRepository;
-        _yearlyValueRepository = yearlyValueRepository;
     }
 
     public async Task<Guid> ExecuteAsync(DeleteInvestmentAccountCommand command)
@@ -40,16 +33,6 @@ public class DeleteInvestmentAccountCommandHandler : InvestmentAccountCommandBas
                 _investmentValueRepository.Delete(value);
             }
             _investmentRepository.Delete(investment);
-        }
-
-        foreach (var monlthlyValue in investmentAccount.MonthlyValues!)
-        {
-            _monthlyValueRepository.Delete(monlthlyValue);
-        }
-
-        foreach (var yearlyValue in investmentAccount.YearlyValues!)
-        {
-            _yearlyValueRepository.Delete(yearlyValue);
         }
 
         _investmentAccountRepository.Delete(investmentAccount);

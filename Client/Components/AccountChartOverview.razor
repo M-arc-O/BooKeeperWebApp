@@ -48,7 +48,7 @@
                 <RadzenAreaSeries Smooth="true" Data="@_overviewService.AccountChartValues" CategoryProperty="Date" Title="@selectedAccount.Name" ValueProperty="Value" RenderingOrder="1">
                     <RadzenSeriesDataLabels Visible="true" />
                 </RadzenAreaSeries>
-                <RadzenCategoryAxis Padding="20" Formatter="@FormatAsMonth" />
+                <RadzenCategoryAxis Padding="20" Formatter="@FormatCategoryAxis" />
                 <RadzenValueAxis Formatter="@FormatAsEuro">
                     <RadzenGridLines Visible="true" />
                     <RadzenAxisTitle Text="Amount in Euros" />
@@ -71,7 +71,7 @@
     private List<EnumSelectModel<TimespanType>> timespanTypes = EnumSelectModel<TimespanType>.GetEnumModel();
     private TimespanType selectedtimespanType = TimespanType.Years;
 
-    private int numberOf = 1;
+    private int numberOf = 5;
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,7 +92,7 @@
     {
         numberOf = selectedtimespanType switch
         {
-            TimespanType.Years => 1,
+            TimespanType.Years => 5,
             TimespanType.Months => 12,
             _ => throw new Exception("Unknown timespanType")
         };
@@ -116,11 +116,18 @@
         return ((double)value).ToString("N0");
     }
 
-    private string FormatAsMonth(object value)
+    private string FormatCategoryAxis(object value)
     {
         if (value != null)
         {
-            return Convert.ToDateTime(value).ToString("MMM");
+            if (selectedtimespanType == TimespanType.Months)
+            {
+                return Convert.ToDateTime(value).ToString("yy-MMM");
+            }
+            else
+            {
+                return Convert.ToDateTime(value).ToString("yyyy");
+            }
         }
 
         return string.Empty;
