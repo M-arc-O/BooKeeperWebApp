@@ -1,10 +1,7 @@
 ﻿using BooKeeperWebApp.Business.CQRS;
 using BooKeeperWebApp.Business.Models.Overview;
-using BooKeeperWebApp.Infrastructure.Entities;
 using BooKeeperWebApp.Infrastructure.Repositories;
 using BooKeeperWebApp.Shared.Enums;
-using System.Security.Principal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BooKeeperWebApp.Business.Queries.Overview;
 public class GetAccountChartOverviewQueryHandler : IHandler<GetAccountChartOverviewQuery, IEnumerable<OverviewDateValueModel>>
